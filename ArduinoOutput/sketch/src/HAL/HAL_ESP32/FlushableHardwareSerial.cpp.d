@@ -1,0 +1,3 @@
+/Users/zzcc/Documents/卖钱模型/Marlin-bugfix-2.0.x/ArduinoOutput/sketch/src/HAL/HAL_ESP32/FlushableHardwareSerial.cpp.o: \
+ /Users/zzcc/Documents/卖钱模型/Marlin-bugfix-2.0.x/ArduinoOutput/sketch/src/HAL/HAL_ESP32/FlushableHardwareSerial.cpp \
+ /Users/zzcc/Documents/卖钱模型/Marlin-bugfix-2.0.x/ArduinoOutput/sketch/src/HAL/HAL_ESP32/FlushableHardwareSerial.h
