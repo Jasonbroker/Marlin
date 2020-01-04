@@ -740,6 +740,7 @@ static const menu_t & get_main_expert(uint8_t nr, menu_t &opt)
     return opt;
 }
 
+// main interface
 void drawMainExpert(uint8_t nr, uint8_t &flags)
 {
     uint8_t menu_index = 0;

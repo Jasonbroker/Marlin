@@ -167,8 +167,6 @@ static void lcd_preferences_item(uint8_t nr, uint8_t offsetY, uint8_t flags)
     else if (nr == index++)
         strcpy_P(buffer, PSTR("Version"));
     else if (nr == index++)
-        strcpy_P(buffer, PSTR("Runtime stats"));
-    else if (nr == index++)
         strcpy_P(buffer, PSTR("Factory reset"));
     else
         strcpy_P(buffer, PSTR("???"));
