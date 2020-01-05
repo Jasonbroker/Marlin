@@ -171,6 +171,13 @@
   //#define E_MUX2_PIN 44  // Needed for 5 to 8 inputs
 #endif
 
+#define ZZC_ULTIMAKER
+
+#ifdef ZZC_ULTIMAKER
+#define 
+
+#endif
+
 /**
  * Prusa Multi-Material Unit v2
  *

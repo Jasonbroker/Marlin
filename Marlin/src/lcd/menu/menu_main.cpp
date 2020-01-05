@@ -55,6 +55,12 @@ void menu_configuration();
   void menu_user();
 #endif
 
+#define MENU_ULTIMAKER_2 MOTHERBOARD == BOARD_ULTIMAIN_2
+
+#if MENU_ULTIMAKER_2
+  void menu_user();
+#endif
+
 #if ENABLED(ADVANCED_PAUSE_FEATURE)
   void _menu_temp_filament_op(const PauseMode, const int8_t);
   void menu_change_filament();
@@ -170,6 +176,10 @@ void menu_main() {
     #else
       SUBMENU(MSG_USER_MENU, menu_user);
     #endif
+  #endif
+      
+  #if MENU_ULTIMAKER_2
+      SUBMENU_P(PSTR("zzc setting"), menu_user);
   #endif
 
   #if ENABLED(ADVANCED_PAUSE_FEATURE)
