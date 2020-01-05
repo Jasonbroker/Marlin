@@ -747,9 +747,9 @@ void drawMainExpert(uint8_t nr, uint8_t &flags)
     if (nr == menu_index++)
     {
         LCDMenu::drawMenuString_P(LCD_CHAR_MARGIN_LEFT+2
-                                , 17
+                                , 1
                                 , 52
-                                , 13
+                                , 21
                                 , PSTR("PREHEAT")
                                 , ALIGN_LEFT | ALIGN_VCENTER
                                 , flags);
@@ -757,9 +757,9 @@ void drawMainExpert(uint8_t nr, uint8_t &flags)
     else if (nr == menu_index++)
     {
         LCDMenu::drawMenuString_P(LCD_CHAR_MARGIN_LEFT+2
-                                , 31
+                                , 22
                                 , 52
-                                , 13
+                                , 21
                                 , PSTR("PRINT")
                                 , ALIGN_LEFT | ALIGN_VCENTER
                                 , flags);
@@ -767,9 +767,9 @@ void drawMainExpert(uint8_t nr, uint8_t &flags)
     else if (nr == menu_index++)
     {
         LCDMenu::drawMenuString_P(LCD_CHAR_MARGIN_LEFT+2
-                                , 45
+                                , 43
                                 , 52
-                                , 13
+                                , 21
                                 , PSTR("ADVANCED")
                                 , ALIGN_LEFT | ALIGN_VCENTER
                                 , flags);
@@ -777,19 +777,19 @@ void drawMainExpert(uint8_t nr, uint8_t &flags)
     else if (nr == menu_index++)
     {
         LCDMenu::drawMenuString_P(LCD_GFX_WIDTH/2 + LCD_CHAR_MARGIN_LEFT+3
-                                , 17
+                                , 1
                                 , 52
-                                , 13
-                                , PSTR("SETTINGS")
+                                , 21
+                                , PSTR("MATERIAL")
                                 , ALIGN_LEFT | ALIGN_VCENTER
                                 , flags);
     }
     else if (nr == menu_index++)
     {
         LCDMenu::drawMenuString_P(LCD_GFX_WIDTH/2 + LCD_CHAR_MARGIN_LEFT+3
-                                , 31
+                                , 22
                                 , 52
-                                , 13
+                                , 21
                                 , PSTR("MOVE")
                                 , ALIGN_LEFT | ALIGN_VCENTER
                                 , flags);
@@ -797,9 +797,9 @@ void drawMainExpert(uint8_t nr, uint8_t &flags)
     else if (nr == menu_index++)
     {
         LCDMenu::drawMenuString_P(LCD_GFX_WIDTH/2 + LCD_CHAR_MARGIN_LEFT+3
-                                , 45
+                                , 43
                                 , 52
-                                , 13
+                                , 21
                                 , PSTR("CHANGE")
                                 , ALIGN_LEFT | ALIGN_VCENTER
                                 , flags);
@@ -813,10 +813,10 @@ void lcd_menu_main()
     if (ui_mode & UI_MODE_EXPERT)
     {
         lcd_lib_draw_vline(LCD_GFX_WIDTH/2, 5, 60);
-        lcd_lib_set(0, 0, LCD_GFX_WIDTH-1, 12);
-        lcd_lib_clear(LCD_GFX_WIDTH/2, 1, LCD_GFX_WIDTH/2, 12);
-        lcd_lib_clear_string_center_atP(32, 4, PSTR("START"));
-        lcd_lib_clear_string_center_atP(96, 4, PSTR("MATERIAL"));
+        // lcd_lib_set(0, 0, LCD_GFX_WIDTH-1, 12);
+        // lcd_lib_clear(LCD_GFX_WIDTH/2, 1, LCD_GFX_WIDTH/2, 12);
+        // lcd_lib_clear_string_center_atP(32, 4, PSTR("START"));
+        // lcd_lib_clear_string_center_atP(96, 4, PSTR("MATERIAL"));
     }
     else
     {
