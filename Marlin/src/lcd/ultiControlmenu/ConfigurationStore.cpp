@@ -60,10 +60,11 @@ void Config_StoreSettings()
   EEPROM_WRITE_VAR(i,planner.settings.min_feedrate_mm_s);
   EEPROM_WRITE_VAR(i,planner.settings.min_travel_feedrate_mm_s);
   EEPROM_WRITE_VAR(i,planner.settings.min_segment_time_us);
-  EEPROM_WRITE_VAR(i,planner.max_jerk);
-  EEPROM_WRITE_VAR(i,max_z_jerk);
-  EEPROM_WRITE_VAR(i,max_e_jerk);
+  EEPROM_WRITE_VAR(i,planner.max_jerk.x);
+  EEPROM_WRITE_VAR(i,planner.max_jerk.z);
+  EEPROM_WRITE_VAR(i,planner.max_jerk.e);
   EEPROM_WRITE_VAR(i,add_homeing);
+  
   #ifndef ULTIPANEL
   int plaPreheatHotendTemp = PREHEAT_1_TEMP_HOTEND, plaPreheatHPBTemp = PREHEAT_1_TEMP_BED, plaPreheatFanSpeed = PREHEAT_1_FAN_SPEED;
   int absPreheatHotendTemp = PREHEAT_2_TEMP_HOTEND, absPreheatHPBTemp = PREHEAT_2_TEMP_BED, absPreheatFanSpeed = PREHEAT_2_FAN_SPEED;
