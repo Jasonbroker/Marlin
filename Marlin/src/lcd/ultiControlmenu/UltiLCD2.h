@@ -1,6 +1,6 @@
 #ifndef ULTI_LCD2_H
 #define ULTI_LCD2_H
-
+#include <Arduino.h>
 #include "../../inc/MarlinConfigPre.h"
 
 #ifdef ENABLE_ULTILCD2

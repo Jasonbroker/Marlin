@@ -2,7 +2,7 @@
 #define FILAMENT_SENSOR_H
 
 #include "../../../Configuration.h"
-#include "../../pins/ramps/pins_ULTIMAKER.h"
+#include "../../pins/pins.h"
 
 // @NEB filament outage handling
 void filament_sensor_init();

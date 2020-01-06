@@ -7,6 +7,7 @@
 #include "tinkergnome.h"
 #include <avr/pgmspace.h>
 
+
 /**
  * Implementation of the LCD display routines for a SSD1309 OLED graphical display connected with i2c.
  **/
