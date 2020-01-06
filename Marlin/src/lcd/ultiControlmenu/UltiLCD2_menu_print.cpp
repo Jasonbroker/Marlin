@@ -279,7 +279,7 @@ static void lcd_sd_menu_filename_callback(uint8_t nr, uint8_t offsetY, uint8_t f
             if (strlen(buffer) < LCD_CACHE_TEXT_SIZE_SHORT)
                 LCD_CACHE_FILENAME(idx)[LCD_CACHE_TEXT_SIZE_SHORT-1] = '\0';
             LCD_CACHE_TYPE(idx) = card.filenameIsDir() ? 1 : 0;
-            if (card.errorCode() && card.sdInserted())
+            if (card.errorCode() && card.isMounted())
             {
                 // On a read error reset the file position and try to keep going. (not pretty, but these read errors are annoying as hell)
                 card.clearError();
@@ -303,7 +303,7 @@ static void lcd_sd_menu_filename_callback(uint8_t nr, uint8_t offsetY, uint8_t f
             }
             // nothing in cache - load from card
             card.getFilenameFromNr(buffer, nr - 1);
-            if (card.errorCode() && card.sdInserted())
+            if (card.errorCode() && card.isMounted())
             {
                 // On a read error try to keep going with short file name. (not pretty, but these read errors are annoying as hell)
                 card.clearError();
@@ -459,7 +459,7 @@ void lcd_sd_menu_details_callback(uint8_t nr)
 
 void lcd_menu_print_select()
 {
-    if (!card.sdInserted())
+    if (!card.isMounted())
     {
         LED_GLOW
         lcd_lib_encoder_pos = MAIN_MENU_ITEM_POS(0);
@@ -1236,7 +1236,7 @@ static void lcd_menu_print_tune_retraction()
         else if (IS_SELECTED_SCROLL(1))
             LCD_EDIT_SETTING_FLOAT001(retract_length, "Retract length", "mm", 0, 50);
         else if (IS_SELECTED_SCROLL(2))
-            LCD_EDIT_SETTING_SPEED(retract_feedrate, "Retract speed", "mm/sec", 0, max_feedrate[E_AXIS] * 60);
+            LCD_EDIT_SETTING_SPEED(retract_feedrate, "Retract speed", "mm/sec", 0, planner.settings.max_feedrate_mm_s[E_AXIS] * 60);
         else if (IS_SELECTED_SCROLL(3))
             LCD_EDIT_SETTING_FLOAT001(end_of_print_retraction, "End of print retract", "mm", 0, 50);
 #if EXTRUDERS > 1

@@ -538,22 +538,22 @@ static void lcd_store_steps()
 
 static void lcd_steps_x()
 {
-    lcd_tune_value(axis_steps_per_mm[X_AXIS], 0.0f, 9999.0f, 0.01f);
+    lcd_tune_value(planner.settings.axis_steps_per_mm[X_AXIS], 0.0f, 9999.0f, 0.01f);
 }
 
 static void lcd_steps_y()
 {
-    lcd_tune_value(axis_steps_per_mm[Y_AXIS], 0.0f, 9999.0f, 0.01f);
+    lcd_tune_value(planner.settings.axis_steps_per_mm[Y_AXIS], 0.0f, 9999.0f, 0.01f);
 }
 
 static void lcd_steps_z()
 {
-    lcd_tune_value(axis_steps_per_mm[Z_AXIS], 0.0f, 9999.0f, 0.01f);
+    lcd_tune_value(planner.settings.axis_steps_per_mm[Z_AXIS], 0.0f, 9999.0f, 0.01f);
 }
 
 static void lcd_steps_e1()
 {
-    lcd_tune_value(axis_steps_per_mm[E_AXIS], 0.0f, 9999.0f, 0.01f);
+    lcd_tune_value(planner.settings.axis_steps_per_mm[E_AXIS], 0.0f, 9999.0f, 0.01f);
 }
 
 #if EXTRUDERS > 1
@@ -658,7 +658,7 @@ static void drawStepsSubmenu(uint8_t nr, uint8_t &flags)
             flags |= MENU_STATUSLINE;
         }
         lcd_lib_draw_string_leftP(18, PSTR("X"));
-        float_to_string2(axis_steps_per_mm[X_AXIS], buffer, NULL);
+        float_to_string2(planner.settings.axis_steps_per_mm[X_AXIS], buffer, NULL);
         LCDMenu::drawMenuString((LCD_CHAR_MARGIN_LEFT*2)+LCD_CHAR_SPACING
                                 , 18
                                 , LCD_CHAR_SPACING*7
@@ -676,7 +676,7 @@ static void drawStepsSubmenu(uint8_t nr, uint8_t &flags)
             flags |= MENU_STATUSLINE;
         }
         lcd_lib_draw_string_leftP(28, PSTR("Y"));
-        float_to_string2(axis_steps_per_mm[Y_AXIS], buffer, NULL);
+        float_to_string2(planner.settings.axis_steps_per_mm[Y_AXIS], buffer, NULL);
         LCDMenu::drawMenuString((LCD_CHAR_MARGIN_LEFT*2)+LCD_CHAR_SPACING
                                 , 28
                                 , LCD_CHAR_SPACING*7
@@ -694,7 +694,7 @@ static void drawStepsSubmenu(uint8_t nr, uint8_t &flags)
             flags |= MENU_STATUSLINE;
         }
         lcd_lib_draw_string_leftP(38, PSTR("Z"));
-        float_to_string2(axis_steps_per_mm[Z_AXIS], buffer, NULL);
+        float_to_string2(planner.settings.axis_steps_per_mm[Z_AXIS], buffer, NULL);
         LCDMenu::drawMenuString((LCD_CHAR_MARGIN_LEFT*2)+LCD_CHAR_SPACING
                                 , 38
                                 , LCD_CHAR_SPACING*7
@@ -712,7 +712,7 @@ static void drawStepsSubmenu(uint8_t nr, uint8_t &flags)
             flags |= MENU_STATUSLINE;
         }
         lcd_lib_draw_stringP(LCD_GFX_WIDTH - (LCD_CHAR_MARGIN_RIGHT*2) - (LCD_CHAR_SPACING*9), 18, PSTR("E1"));
-        float_to_string2(axis_steps_per_mm[E_AXIS], buffer, NULL);
+        float_to_string2(planner.settings.axis_steps_per_mm[E_AXIS], buffer, NULL);
         LCDMenu::drawMenuString(LCD_GFX_WIDTH - LCD_CHAR_MARGIN_RIGHT - (LCD_CHAR_SPACING*7)
                                 , 18
                                 , LCD_CHAR_SPACING*7
@@ -749,7 +749,7 @@ static void drawStepsSubmenu(uint8_t nr, uint8_t &flags)
             flags |= MENU_STATUSLINE;
         }
         lcd_lib_draw_string_leftP(20, PSTR("X"));
-        float_to_string2(axis_steps_per_mm[X_AXIS], buffer, NULL);
+        float_to_string2(planner.settings.axis_steps_per_mm[X_AXIS], buffer, NULL);
         LCDMenu::drawMenuString(LCD_CHAR_MARGIN_LEFT+LCD_CHAR_SPACING*2
                                 , 20
                                 , LCD_CHAR_SPACING*7
@@ -767,7 +767,7 @@ static void drawStepsSubmenu(uint8_t nr, uint8_t &flags)
             flags |= MENU_STATUSLINE;
         }
         lcd_lib_draw_string_leftP(32, PSTR("Y"));
-        float_to_string2(axis_steps_per_mm[Y_AXIS], buffer, NULL);
+        float_to_string2(planner.settings.axis_steps_per_mm[Y_AXIS], buffer, NULL);
         LCDMenu::drawMenuString(LCD_CHAR_MARGIN_LEFT+LCD_CHAR_SPACING*2
                                 , 32
                                 , LCD_CHAR_SPACING*7
@@ -785,7 +785,7 @@ static void drawStepsSubmenu(uint8_t nr, uint8_t &flags)
             flags |= MENU_STATUSLINE;
         }
         lcd_lib_draw_stringP(LCD_GFX_WIDTH - LCD_CHAR_MARGIN_RIGHT - (LCD_CHAR_SPACING*9), 20, PSTR("Z"));
-        float_to_string2(axis_steps_per_mm[Z_AXIS], buffer, NULL);
+        float_to_string2(planner.settings.axis_steps_per_mm[Z_AXIS], buffer, NULL);
         LCDMenu::drawMenuString(LCD_GFX_WIDTH - LCD_CHAR_MARGIN_RIGHT - (LCD_CHAR_SPACING*7)
                                 , 20
                                 , LCD_CHAR_SPACING*7
@@ -803,7 +803,7 @@ static void drawStepsSubmenu(uint8_t nr, uint8_t &flags)
             flags |= MENU_STATUSLINE;
         }
         lcd_lib_draw_stringP(LCD_GFX_WIDTH - LCD_CHAR_MARGIN_RIGHT - (LCD_CHAR_SPACING*9), 32, PSTR("E"));
-        float_to_string2(axis_steps_per_mm[E_AXIS], buffer, NULL);
+        float_to_string2(planner.settings.axis_steps_per_mm[E_AXIS], buffer, NULL);
         LCDMenu::drawMenuString(LCD_GFX_WIDTH - LCD_CHAR_MARGIN_RIGHT - (LCD_CHAR_SPACING*7)
                                 , 32
                                 , LCD_CHAR_SPACING*7
@@ -1196,7 +1196,7 @@ void lcd_menu_axisdirection()
 
 static void lcd_preset_retract_speed()
 {
-    lcd_tune_speed(retract_feedrate, 0, max_feedrate[E_AXIS]*60);
+    lcd_tune_speed(retract_feedrate, 0, planner.settings.max_feedrate_mm_s[E_AXIS]*60);
 }
 
 static void lcd_preset_retract_length()
@@ -1685,22 +1685,22 @@ static void lcd_store_maxspeed()
 
 static void lcd_preset_maxspeed_x()
 {
-    lcd_tune_value(max_feedrate[X_AXIS], 0, 999, 1.0);
+    lcd_tune_value(planner.settings.max_feedrate_mm_s[X_AXIS], 0, 999, 1.0);
 }
 
 static void lcd_preset_maxspeed_y()
 {
-    lcd_tune_value(max_feedrate[Y_AXIS], 0, 999, 1.0);
+    lcd_tune_value(planner.settings.max_feedrate_mm_s[Y_AXIS], 0, 999, 1.0);
 }
 
 static void lcd_preset_maxspeed_z()
 {
-    lcd_tune_value(max_feedrate[Z_AXIS], 0, 99, 1.0);
+    lcd_tune_value(planner.settings.max_feedrate_mm_s[Z_AXIS], 0, 99, 1.0);
 }
 
 static void lcd_preset_maxspeed_e()
 {
-    lcd_tune_value(max_feedrate[E_AXIS], 0, 99, 1.0);
+    lcd_tune_value(planner.settings.max_feedrate_mm_s[E_AXIS], 0, 99, 1.0);
 }
 
 // create menu options for "Max speed"
@@ -1790,7 +1790,7 @@ static void drawMaxSpeedSubmenu(uint8_t nr, uint8_t &flags)
             flags |= MENU_STATUSLINE;
         }
         lcd_lib_draw_string_leftP(20, PSTR("X"));
-        int_to_string(max_feedrate[X_AXIS], buffer, PSTR(UNIT_SPEED));
+        int_to_string(planner.settings.max_feedrate_mm_s[X_AXIS], buffer, PSTR(UNIT_SPEED));
         LCDMenu::drawMenuString(LCD_CHAR_MARGIN_LEFT+2*LCD_CHAR_SPACING
                               , 20
                               , 7*LCD_CHAR_SPACING
@@ -1808,7 +1808,7 @@ static void drawMaxSpeedSubmenu(uint8_t nr, uint8_t &flags)
             flags |= MENU_STATUSLINE;
         }
         lcd_lib_draw_string_leftP(35, PSTR("Y"));
-        int_to_string(max_feedrate[Y_AXIS], buffer, PSTR(UNIT_SPEED));
+        int_to_string(planner.settings.max_feedrate_mm_s[Y_AXIS], buffer, PSTR(UNIT_SPEED));
         LCDMenu::drawMenuString(LCD_CHAR_MARGIN_LEFT+2*LCD_CHAR_SPACING
                               , 35
                               , 7*LCD_CHAR_SPACING
@@ -1826,7 +1826,7 @@ static void drawMaxSpeedSubmenu(uint8_t nr, uint8_t &flags)
             flags |= MENU_STATUSLINE;
         }
         lcd_lib_draw_stringP(LCD_GFX_WIDTH-LCD_CHAR_MARGIN_RIGHT-8*LCD_CHAR_SPACING, 20, PSTR("Z"));
-        int_to_string(max_feedrate[Z_AXIS], buffer, PSTR(UNIT_SPEED));
+        int_to_string(planner.settings.max_feedrate_mm_s[Z_AXIS], buffer, PSTR(UNIT_SPEED));
         LCDMenu::drawMenuString(LCD_GFX_WIDTH-LCD_CHAR_MARGIN_RIGHT-6*LCD_CHAR_SPACING
                               , 20
                               , 6*LCD_CHAR_SPACING
@@ -1844,7 +1844,7 @@ static void drawMaxSpeedSubmenu(uint8_t nr, uint8_t &flags)
             flags |= MENU_STATUSLINE;
         }
         lcd_lib_draw_stringP(LCD_GFX_WIDTH-LCD_CHAR_MARGIN_RIGHT-8*LCD_CHAR_SPACING, 35, PSTR("E"));
-        int_to_string(max_feedrate[E_AXIS], buffer, PSTR(UNIT_SPEED));
+        int_to_string(planner.settings.max_feedrate_mm_s[E_AXIS], buffer, PSTR(UNIT_SPEED));
         LCDMenu::drawMenuString(LCD_GFX_WIDTH-LCD_CHAR_MARGIN_RIGHT-6*LCD_CHAR_SPACING
                               , 35
                               , 6*LCD_CHAR_SPACING
@@ -1888,7 +1888,7 @@ static void lcd_preset_acceleration()
 
 static void lcd_preset_jerk()
 {
-    lcd_tune_value(max_xy_jerk, 0, 100, 1.0);
+    lcd_tune_value(planner.max_jerk.x, 0, 100, 1.0);
 }
 
 // create menu options for "acceleration and jerk"
@@ -1987,7 +1987,7 @@ static void drawAccelerationSubmenu(uint8_t nr, uint8_t &flags)
         }
 
         lcd_lib_draw_string_leftP(35, PSTR("X/Y Jerk"));
-        int_to_string(max_xy_jerk, buffer, PSTR("mm/s"));
+        int_to_string(planner.max_jerk.x, buffer, PSTR("mm/s"));
         LCDMenu::drawMenuString(LCD_GFX_WIDTH-LCD_CHAR_MARGIN_RIGHT-7*LCD_CHAR_SPACING
                               , 35
                               , 7*LCD_CHAR_SPACING

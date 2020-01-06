@@ -116,7 +116,7 @@ void tinkergnome_init()
 #endif
         eeprom_write_block(pidBed, (uint8_t*)EEPROM_PID_BED, sizeof(pidBed));
 
-        SET_STEPS_E2(axis_steps_per_mm[E_AXIS]);
+        SET_STEPS_E2(planner.settings.axis_steps_per_mm[E_AXIS]);
     }
     if (version > 5)
     {
@@ -452,7 +452,7 @@ static void lcd_tune_swap_length()
 
 static void lcd_tune_retract_speed()
 {
-    lcd_tune_speed(retract_feedrate, 0, max_feedrate[E_AXIS]*60);
+    lcd_tune_speed(retract_feedrate, 0, planner.settings.max_feedrate_mm_s[E_AXIS]*60);
 }
 
 static void lcd_print_tune_accel()
@@ -462,7 +462,7 @@ static void lcd_print_tune_accel()
 
 static void lcd_print_tune_xyjerk()
 {
-    lcd_tune_value(max_xy_jerk, 0, 100, 1.0);
+    lcd_tune_value(planner.max_jerk.x, 0, 100, 1.0);
 }
 
 #if defined(BABYSTEPPING)
@@ -476,10 +476,10 @@ static void init_babystepping()
 
 static void _lcd_babystep(const uint8_t axis)
 {
-    int diff = lcd_lib_encoder_pos*axis_steps_per_mm[axis]/200;
+    int diff = lcd_lib_encoder_pos*planner.settings.axis_steps_per_mm[axis]/200;
     if (diff)
     {
-        FLOAT_SETTING(axis) += (float)diff/axis_steps_per_mm[axis];
+        FLOAT_SETTING(axis) += (float)diff/planner.settings.axis_steps_per_mm[axis];
         babystepsTodo[axis] += diff;
         lcd_lib_encoder_pos = 0;
     }
@@ -951,7 +951,7 @@ static void drawPrintSubmenu (uint8_t nr, uint8_t &flags)
             }
 
             lcd_lib_draw_string_leftP(42, PSTR("X/Y Jerk"));
-            int_to_string(max_xy_jerk, buffer, PSTR("mm/s"));
+            int_to_string(planner.max_jerk.x, buffer, PSTR("mm/s"));
             LCDMenu::drawMenuString(LCD_GFX_WIDTH-LCD_CHAR_MARGIN_RIGHT-7*LCD_CHAR_SPACING
                                   , 42
                                   , 7*LCD_CHAR_SPACING
@@ -1039,7 +1039,7 @@ static void drawPrintSubmenu (uint8_t nr, uint8_t &flags)
             lcd_lib_draw_string_leftP(15, PSTR("Z"));
 
             // calculate current z position
-            float_to_string2(st_get_position(Z_AXIS) / axis_steps_per_mm[Z_AXIS], buffer, 0);
+            float_to_string2(st_get_position(Z_AXIS) / planner.settings.axis_steps_per_mm[Z_AXIS], buffer, 0);
             LCDMenu::drawMenuString(LCD_CHAR_MARGIN_LEFT+12
                                     , 15
                                     , LCD_CHAR_SPACING*strlen(buffer)
@@ -1513,7 +1513,7 @@ void lcd_menu_printing_tg()
             lcd_lib_draw_string_leftP(15, PSTR("Z"));
 
             // calculate current z position
-            float_to_string2(st_get_position(Z_AXIS) / axis_steps_per_mm[Z_AXIS], buffer, 0);
+            float_to_string2(st_get_position(Z_AXIS) / planner.settings.axis_steps_per_mm[Z_AXIS], buffer, 0);
             lcd_lib_draw_string(LCD_CHAR_MARGIN_LEFT+12, 15, buffer);
 #endif
         }
@@ -1607,7 +1607,7 @@ static void init_target_positions()
     delayMove = false;
     for (uint8_t i=0; i<NUM_AXIS; ++i)
     {
-        TARGET_POS(i) = current_position[i] = st_get_position(i)/axis_steps_per_mm[i];
+        TARGET_POS(i) = current_position[i] = st_get_position(i)/planner.settings.axis_steps_per_mm[i];
     }
 }
 
@@ -1688,7 +1688,7 @@ static void drawSimpleBuildplateSubmenu(uint8_t nr, uint8_t &flags)
         // z position
         char buffer[32] = {0};
         lcd_lib_draw_stringP(LCD_CHAR_MARGIN_LEFT+5*LCD_CHAR_SPACING, 40, PSTR("Z"));
-        float_to_string2(st_get_position(Z_AXIS) / axis_steps_per_mm[Z_AXIS], buffer, PSTR("mm"));
+        float_to_string2(st_get_position(Z_AXIS) / planner.settings.axis_steps_per_mm[Z_AXIS], buffer, PSTR("mm"));
         LCDMenu::drawMenuString(LCD_CHAR_MARGIN_LEFT+7*LCD_CHAR_SPACING
                               , 40
                               , 48
@@ -1738,7 +1738,7 @@ void lcd_menu_simple_buildplate_init()
 {
     lcd_lib_clear();
 
-    float zPos = st_get_position(Z_AXIS) / axis_steps_per_mm[Z_AXIS];
+    float zPos = st_get_position(Z_AXIS) / planner.settings.axis_steps_per_mm[Z_AXIS];
     if ((commands_queued() < 1) && (zPos < 35.01f))
     {
         menu.replace_menu(menu_t(lcd_simple_buildplate_init, lcd_menu_simple_buildplate, lcd_simple_buildplate_quit, 0), false);
@@ -2109,7 +2109,7 @@ static void stopMove()
     delayMove = true;
     for (uint8_t i=0; i<NUM_AXIS; ++i)
     {
-        TARGET_POS(i) = current_position[i] = constrain(st_get_position(i)/axis_steps_per_mm[i], min_pos[i], max_pos[i]);
+        TARGET_POS(i) = current_position[i] = constrain(st_get_position(i)/planner.settings.axis_steps_per_mm[i], min_pos[i], max_pos[i]);
     }
     plan_set_position(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS], current_position[E_AXIS], active_extruder, true);
 }
@@ -2226,7 +2226,7 @@ static void drawMoveDetails()
 
 static void pos2string(uint8_t flags, uint8_t axis, char *buffer)
 {
-    float_to_string2((flags & MENU_ACTIVE) ? TARGET_POS(axis) : st_get_position(axis) / axis_steps_per_mm[axis], buffer, PSTR("mm"));
+    float_to_string2((flags & MENU_ACTIVE) ? TARGET_POS(axis) : st_get_position(axis) / planner.settings.axis_steps_per_mm[axis], buffer, PSTR("mm"));
 }
 
 // create menu options for "move axes"
@@ -2826,10 +2826,10 @@ static void lcd_extrude_init_pull()
     digipot_current(2, motor_current_setting[2]*2/3);
 #endif
     //increase max. feedrate and reduce acceleration
-    OLD_FEEDRATE = max_feedrate[E_AXIS];
+    OLD_FEEDRATE = planner.settings.max_feedrate_mm_s[E_AXIS];
     OLD_ACCEL = retract_acceleration;
     OLD_JERK = max_e_jerk;
-    max_feedrate[E_AXIS] = float(FILAMENT_FAST_STEPS) / e_steps_per_unit(active_extruder);
+    planner.settings.max_feedrate_mm_s[E_AXIS] = float(FILAMENT_FAST_STEPS) / e_steps_per_unit(active_extruder);
     retract_acceleration = float(FILAMENT_LONG_ACCELERATION_STEPS) / e_steps_per_unit(active_extruder);
     max_e_jerk = FILAMENT_LONG_MOVE_JERK;
 }
@@ -2837,7 +2837,7 @@ static void lcd_extrude_init_pull()
 static void lcd_extrude_quit_pull()
 {
     // reset feeedrate and acceleration to default
-    max_feedrate[E_AXIS] = OLD_FEEDRATE;
+    planner.settings.max_feedrate_mm_s[E_AXIS] = OLD_FEEDRATE;
     retract_acceleration = OLD_ACCEL;
     max_e_jerk = OLD_JERK;
     //Set E motor power to default.
@@ -2857,7 +2857,7 @@ static void lcd_extrude_pull()
         if (printing_state == PRINT_STATE_NORMAL && !blocks_queued())
         {
             TARGET_POS(E_AXIS) -= FILAMENT_REVERSAL_LENGTH / volume_to_filament_length[active_extruder];
-            plan_buffer_line(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS], TARGET_POS(E_AXIS), max_feedrate[E_AXIS]*0.7f, active_extruder);
+            plan_buffer_line(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS], TARGET_POS(E_AXIS), planner.settings.max_feedrate_mm_s[E_AXIS]*0.7f, active_extruder);
         }
     } else {
         quickStop();

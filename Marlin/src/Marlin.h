@@ -379,3 +379,6 @@ void protected_pin_err();
 
 extern const char NUL_STR[], G28_STR[], M21_STR[], M23_STR[], M24_STR[],
                   SP_X_STR[], SP_Y_STR[], SP_Z_STR[], SP_E_STR[];
+
+// zzc added
+float add_homeing[3]={0,0,0};

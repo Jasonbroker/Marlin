@@ -174,7 +174,6 @@ private:
   //
   static SdFile root, workDir, workDirParents[MAX_DIR_DEPTH];
   static uint8_t workDirDepth;
-
   //
   // Alphabetical file and folder sorting
   //

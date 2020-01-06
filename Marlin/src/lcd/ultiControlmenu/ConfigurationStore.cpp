@@ -112,19 +112,19 @@ void Config_PrintSettings()
     SERIAL_ECHO_START;
     SERIAL_ECHOLNPGM("Steps per unit:");
     SERIAL_ECHO_START;
-    SERIAL_ECHOPAIR("  M92 X",axis_steps_per_mm[X_AXIS]);
-    SERIAL_ECHOPAIR(" Y",axis_steps_per_mm[Y_AXIS]);
-    SERIAL_ECHOPAIR(" Z",axis_steps_per_mm[Z_AXIS]);
-    SERIAL_ECHOPAIR(" E",axis_steps_per_mm[E_AXIS]);
+    SERIAL_ECHOPAIR("  M92 X",planner.settings.axis_steps_per_mm[X_AXIS]);
+    SERIAL_ECHOPAIR(" Y",planner.settings.axis_steps_per_mm[Y_AXIS]);
+    SERIAL_ECHOPAIR(" Z",planner.settings.axis_steps_per_mm[Z_AXIS]);
+    SERIAL_ECHOPAIR(" E",planner.settings.axis_steps_per_mm[E_AXIS]);
     SERIAL_EOL;
 
     SERIAL_ECHO_START;
     SERIAL_ECHOLNPGM("Maximum feedrates (mm/s):");
     SERIAL_ECHO_START;
-    SERIAL_ECHOPAIR("  M203 X",max_feedrate[X_AXIS]);
-    SERIAL_ECHOPAIR(" Y",max_feedrate[Y_AXIS] );
-    SERIAL_ECHOPAIR(" Z", max_feedrate[Z_AXIS] );
-    SERIAL_ECHOPAIR(" E", max_feedrate[E_AXIS]);
+    SERIAL_ECHOPAIR("  M203 X",planner.settings.max_feedrate_mm_s[X_AXIS]);
+    SERIAL_ECHOPAIR(" Y",planner.settings.max_feedrate_mm_s[Y_AXIS] );
+    SERIAL_ECHOPAIR(" Z", planner.settings.max_feedrate_mm_s[Z_AXIS] );
+    SERIAL_ECHOPAIR(" E", planner.settings.max_feedrate_mm_s[E_AXIS]);
     SERIAL_EOL;
 
     SERIAL_ECHO_START;
@@ -148,9 +148,9 @@ void Config_PrintSettings()
     SERIAL_ECHOPAIR("  M205 S",minimumfeedrate );
     SERIAL_ECHOPAIR(" T" ,mintravelfeedrate );
     SERIAL_ECHOPAIR(" B" ,minsegmenttime );
-    SERIAL_ECHOPAIR(" X" ,max_xy_jerk );
-    SERIAL_ECHOPAIR(" Z" ,max_z_jerk);
-    SERIAL_ECHOPAIR(" E" ,max_e_jerk);
+    SERIAL_ECHOPAIR(" X" ,planner.max_jerk.x);
+    SERIAL_ECHOPAIR(" Z" ,planner.max_jerk.z);
+    SERIAL_ECHOPAIR(" E" ,planner.max_jerk.e);
     SERIAL_EOL;
 
     SERIAL_ECHO_START;
@@ -184,8 +184,8 @@ void Config_RetrieveSettings()
     if (strncmp(ver,stored_ver,3) == 0)
     {
         // version number match
-        EEPROM_READ_VAR(i,axis_steps_per_mm);
-        EEPROM_READ_VAR(i,max_feedrate);
+        EEPROM_READ_VAR(i,planner.settings.axis_steps_per_mm);
+        EEPROM_READ_VAR(i,planner.settings.max_feedrate_mm_s);
         EEPROM_READ_VAR(i,max_acceleration_units_per_sq_second);
 
         // steps per sq second need to be updated to agree with the units per sq second (as they are what is used in the planner)
@@ -196,9 +196,9 @@ void Config_RetrieveSettings()
         EEPROM_READ_VAR(i,minimumfeedrate);
         EEPROM_READ_VAR(i,mintravelfeedrate);
         EEPROM_READ_VAR(i,minsegmenttime);
-        EEPROM_READ_VAR(i,max_xy_jerk);
-        EEPROM_READ_VAR(i,max_z_jerk);
-        EEPROM_READ_VAR(i,max_e_jerk);
+        EEPROM_READ_VAR(i,planner.max_jerk.x);
+        EEPROM_READ_VAR(i,planner.max_jerk.z));
+        EEPROM_READ_VAR(i,planner.max_jerk.e);
         EEPROM_READ_VAR(i,add_homeing);
         #ifndef ULTIPANEL
         int plaPreheatHotendTemp, plaPreheatHPBTemp, plaPreheatFanSpeed;

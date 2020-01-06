@@ -135,6 +135,10 @@ Stepper stepper; // Singleton
   uint32_t Stepper::motor_current_setting[3]; // Initialized by settings.load()
 #endif
 
+#if MOTOR_CURRENT_PWM_XY_PIN > -1
+  int motor_current_setting[3] = DEFAULT_PWM_MOTOR_CURRENT;
+#endif
+
 // private:
 
 block_t* Stepper::current_block; // (= nullptr) A pointer to the block currently being traced
