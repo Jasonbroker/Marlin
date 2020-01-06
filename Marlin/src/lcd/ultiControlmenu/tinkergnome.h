@@ -31,11 +31,11 @@ void lcd_menu_expert_recover();
 void reset_printing_state();
 void endofprint_retract_store();
 
-FORCE_INLINE void lcd_print_tune_nozzle0() { lcd_tune_value(target_temperature[0], 0, get_maxtemp(0) - 15); }
+FORCE_INLINE void lcd_print_tune_nozzle0() { lcd_tune_value((uint16_t &)thermalManager.temp_hotend[0].target, 0, thermalManager.temp_range[0].maxtemp - 15); }
 #if EXTRUDERS > 1
 FORCE_INLINE void lcd_print_tune_nozzle1() { lcd_tune_value(target_temperature[1], 0, get_maxtemp(1) - 15); }
 #endif
 #if TEMP_SENSOR_BED != 0
-FORCE_INLINE void lcd_print_tune_bed() { lcd_tune_value(target_temperature_bed, 0, BED_MAXTEMP - 15); }
+FORCE_INLINE void lcd_print_tune_bed() { lcd_tune_value((uint16_t &)thermalManager.temp_bed.target, 0, BED_MAXTEMP - 15); }
 #endif
 #endif //TINKERGNOME_H

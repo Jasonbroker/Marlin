@@ -60,13 +60,13 @@ void Config_StoreSettings()
   EEPROM_WRITE_VAR(i,planner.settings.min_feedrate_mm_s);
   EEPROM_WRITE_VAR(i,planner.settings.min_travel_feedrate_mm_s);
   EEPROM_WRITE_VAR(i,planner.settings.min_segment_time_us);
-  EEPROM_WRITE_VAR(i,max_xy_jerk);
+  EEPROM_WRITE_VAR(i,planner.max_jerk);
   EEPROM_WRITE_VAR(i,max_z_jerk);
   EEPROM_WRITE_VAR(i,max_e_jerk);
   EEPROM_WRITE_VAR(i,add_homeing);
   #ifndef ULTIPANEL
-  int plaPreheatHotendTemp = PLA_PREHEAT_HOTEND_TEMP, plaPreheatHPBTemp = PLA_PREHEAT_HPB_TEMP, plaPreheatFanSpeed = PLA_PREHEAT_FAN_SPEED;
-  int absPreheatHotendTemp = ABS_PREHEAT_HOTEND_TEMP, absPreheatHPBTemp = ABS_PREHEAT_HPB_TEMP, absPreheatFanSpeed = ABS_PREHEAT_FAN_SPEED;
+  int plaPreheatHotendTemp = PREHEAT_1_TEMP_HOTEND, plaPreheatHPBTemp = PREHEAT_1_TEMP_BED, plaPreheatFanSpeed = PREHEAT_1_FAN_SPEED;
+  int absPreheatHotendTemp = PREHEAT_2_TEMP_HOTEND, absPreheatHPBTemp = PREHEAT_2_TEMP_BED, absPreheatFanSpeed = PREHEAT_2_FAN_SPEED;
   #endif
   EEPROM_WRITE_VAR(i,plaPreheatHotendTemp);
   EEPROM_WRITE_VAR(i,plaPreheatHPBTemp);
@@ -271,12 +271,12 @@ void Config_ResetDefault()
     max_e_jerk=DEFAULT_EJERK;
     add_homeing[0] = add_homeing[1] = add_homeing[2] = 0;
 #ifdef ULTIPANEL
-    plaPreheatHotendTemp = PLA_PREHEAT_HOTEND_TEMP;
-    plaPreheatHPBTemp = PLA_PREHEAT_HPB_TEMP;
-    plaPreheatFanSpeed = PLA_PREHEAT_FAN_SPEED;
-    absPreheatHotendTemp = ABS_PREHEAT_HOTEND_TEMP;
-    absPreheatHPBTemp = ABS_PREHEAT_HPB_TEMP;
-    absPreheatFanSpeed = ABS_PREHEAT_FAN_SPEED;
+    plaPreheatHotendTemp = PREHEAT_1_TEMP_HOTEND;
+    plaPreheatHPBTemp = PREHEAT_1_TEMP_BED;
+    plaPreheatFanSpeed = PREHEAT_1_FAN_SPEED;
+    absPreheatHotendTemp = PREHEAT_2_TEMP_HOTEND;
+    absPreheatHPBTemp = PREHEAT_2_TEMP_BED;
+    absPreheatFanSpeed = PREHEAT_2_FAN_SPEED;
 #endif
 #ifdef PIDTEMP
     Kp = DEFAULT_Kp;

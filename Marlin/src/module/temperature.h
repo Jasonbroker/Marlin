@@ -339,6 +339,10 @@ class Temperature {
       #endif
     #endif
 
+    #if HOTENDS
+      static temp_range_t temp_range[HOTENDS];
+    #endif
+
   private:
 
     #if EARLY_WATCHDOG
@@ -359,10 +363,6 @@ class Temperature {
     #if ENABLED(PID_EXTRUSION_SCALING)
       static int32_t last_e_position, lpq[LPQ_MAX_LEN];
       static lpq_ptr_t lpq_ptr;
-    #endif
-
-    #if HOTENDS
-      static temp_range_t temp_range[HOTENDS];
     #endif
 
     #if HAS_HEATED_BED
