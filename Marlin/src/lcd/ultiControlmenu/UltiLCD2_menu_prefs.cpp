@@ -2605,8 +2605,8 @@ static bool autotune_callback(uint8_t state, uint8_t cycle, float kp, float ki, 
             // PID tuning successful
             if (lcd_cache[1] == 1)
             {
-                _PID_Kp[0] = kp;
-                _PID_Ki[0] = scalePID_i(ki);
+                _PID_Kp(0) = kp;
+                _PID_Ki(0) = scalePID_i(ki);
                 _PID_Kd(0) = scalePID_d(kd);
             }
 #if (EXTRUDERS > 1)

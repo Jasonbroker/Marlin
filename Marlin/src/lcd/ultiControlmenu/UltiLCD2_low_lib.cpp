@@ -870,9 +870,9 @@ void lcd_lib_tick()
     _BEEP(10, 50);
 //	for (int a =0; a<10; ++a)
 //    {
-//        WRITE(BEEPER, HIGH);
+//        WRITE(BEEPER_PIN, HIGH);
 //        _delay_us (50);
-//        WRITE(BEEPER, LOW);
+//        WRITE(BEEPER_PIN, LOW);
 //        _delay_us(50);
 //    }
 }
