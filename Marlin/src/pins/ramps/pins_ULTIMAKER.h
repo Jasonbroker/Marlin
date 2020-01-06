@@ -107,12 +107,60 @@
 //
 // Misc. Functions
 //
+#ifdef ENABLE_ULTILCD2
+
+#define SDPOWER_PIN                     -1
 #define SDSS               53
+#define MAX6675_SS_PIN                  13  // A13 or D13 (?) => PK5 or PB7
 #define LED_PIN            13
-#define PS_ON_PIN          12
+#define PS_ON_PIN                   24  // PA2 (?)
+#define KILL_PIN                    -1
 #define SUICIDE_PIN        54
 #define CASE_LIGHT_PIN      8
+#define SAFETY_TRIGGERED_PIN        28  // PA6, PIN to detect the safety circuit has triggered
+#define MAIN_VOLTAGE_MEASURE_PIN    14  // PK6, Analogue PIN to measure the main voltage, with a 100k - 4k7 resistor divider.
 
+#undef MOTOR_CURRENT_PWM_XY_PIN
+#undef MOTOR_CURRENT_PWM_Z_PIN
+#undef MOTOR_CURRENT_PWM_E_PIN
+#define MOTOR_CURRENT_PWM_XY_PIN    44  // PL5
+#define MOTOR_CURRENT_PWM_Z_PIN     45  // PL4
+#define MOTOR_CURRENT_PWM_E_PIN     46  // PL3
+
+#define MOTOR_CURRENT_PWM_RANGE 2000
+
+//arduino pin which triggers an piezzo beeper
+#define BEEPER_PIN                      18  // PD3 / TXD1
+
+#define LCD_PINS_RS                 20  // PD1 / SDA
+#define LCD_PINS_ENABLE             15  // PJ0 / RXD3
+#define LCD_PINS_D4                 14  // PJ1 / TXD3
+#define LCD_PINS_D5                 21  // PD0 / SCL
+#define LCD_PINS_D6                 5   // PE3
+#define LCD_PINS_D7                 6   // PH3
+
+//buttons are directly attached
+#define BTN_EN1                     40  // PG1
+#define BTN_EN2                     41  // PG0
+#define BTN_ENC                     19  // PD2 / RXD1, the click
+
+#define BLEN_C                      2
+#define BLEN_B                      1
+#define BLEN_A                      0
+
+#define SD_DETECT_PIN                39  // PG2
+
+//encoder rotation values
+#define encrot0                     0
+#define encrot1                     1
+#define encrot2                     3
+#define encrot3                     2
+
+#ifndef FILAMENT_SENSOR_PIN
+  #define FILAMENT_SENSOR_PIN         -1  // PC7 = D30; PD7 = D38
+#endif
+
+#endif
 //
 // LCD / Controller
 //

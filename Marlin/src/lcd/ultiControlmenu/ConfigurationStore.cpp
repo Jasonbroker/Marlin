@@ -52,14 +52,14 @@ void Config_StoreSettings()
   char ver[4]= "000";
   int i=EEPROM_OFFSET;
   EEPROM_WRITE_VAR(i,ver); // invalidate data first
-  EEPROM_WRITE_VAR(i,axis_steps_per_unit);
-  EEPROM_WRITE_VAR(i,max_feedrate);
-  EEPROM_WRITE_VAR(i,max_acceleration_units_per_sq_second);
-  EEPROM_WRITE_VAR(i,acceleration);
-  EEPROM_WRITE_VAR(i,retract_acceleration);
-  EEPROM_WRITE_VAR(i,minimumfeedrate);
-  EEPROM_WRITE_VAR(i,mintravelfeedrate);
-  EEPROM_WRITE_VAR(i,minsegmenttime);
+  EEPROM_WRITE_VAR(i,planner.settings.axis_steps_per_mm);
+  EEPROM_WRITE_VAR(i,planner.settings.max_feedrate_mm_s);
+  EEPROM_WRITE_VAR(i,planner.settings.max_acceleration_mm_per_s2);
+  EEPROM_WRITE_VAR(i,planner.settings.acceleration);
+  EEPROM_WRITE_VAR(i,planner.settings.retract_acceleration);
+  EEPROM_WRITE_VAR(i,planner.settings.min_feedrate_mm_s);
+  EEPROM_WRITE_VAR(i,planner.settings.min_travel_feedrate_mm_s);
+  EEPROM_WRITE_VAR(i,planner.settings.min_segment_time_us);
   EEPROM_WRITE_VAR(i,max_xy_jerk);
   EEPROM_WRITE_VAR(i,max_z_jerk);
   EEPROM_WRITE_VAR(i,max_e_jerk);
@@ -111,10 +111,10 @@ void Config_PrintSettings()
     SERIAL_ECHO_START;
     SERIAL_ECHOLNPGM("Steps per unit:");
     SERIAL_ECHO_START;
-    SERIAL_ECHOPAIR("  M92 X",axis_steps_per_unit[X_AXIS]);
-    SERIAL_ECHOPAIR(" Y",axis_steps_per_unit[Y_AXIS]);
-    SERIAL_ECHOPAIR(" Z",axis_steps_per_unit[Z_AXIS]);
-    SERIAL_ECHOPAIR(" E",axis_steps_per_unit[E_AXIS]);
+    SERIAL_ECHOPAIR("  M92 X",axis_steps_per_mm[X_AXIS]);
+    SERIAL_ECHOPAIR(" Y",axis_steps_per_mm[Y_AXIS]);
+    SERIAL_ECHOPAIR(" Z",axis_steps_per_mm[Z_AXIS]);
+    SERIAL_ECHOPAIR(" E",axis_steps_per_mm[E_AXIS]);
     SERIAL_EOL;
 
     SERIAL_ECHO_START;
@@ -183,7 +183,7 @@ void Config_RetrieveSettings()
     if (strncmp(ver,stored_ver,3) == 0)
     {
         // version number match
-        EEPROM_READ_VAR(i,axis_steps_per_unit);
+        EEPROM_READ_VAR(i,axis_steps_per_mm);
         EEPROM_READ_VAR(i,max_feedrate);
         EEPROM_READ_VAR(i,max_acceleration_units_per_sq_second);
 
@@ -253,7 +253,7 @@ void Config_ResetDefault()
     long tmp3[]=DEFAULT_MAX_ACCELERATION;
     for (short i=0;i<4;i++)
     {
-        axis_steps_per_unit[i]=tmp1[i];
+        axis_steps_per_mm[i]=tmp1[i];
         max_feedrate[i]=tmp2[i];
         max_acceleration_units_per_sq_second[i]=tmp3[i];
     }

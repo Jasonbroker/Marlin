@@ -130,8 +130,10 @@
 
 // Choose the name from boards.h that matches your setup
 #ifndef MOTHERBOARD
-  #define MOTHERBOARD 72
+  #define MOTHERBOARD BOARD_ULTIMAKER
 #endif
+
+#define NUM_AXIS 4
 
 // Name displayed in the LCD "Ready" message and Info menu
 //#define CUSTOM_MACHINE_NAME "3D Printer"

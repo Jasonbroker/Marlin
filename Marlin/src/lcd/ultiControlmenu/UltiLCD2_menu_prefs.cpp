@@ -538,22 +538,22 @@ static void lcd_store_steps()
 
 static void lcd_steps_x()
 {
-    lcd_tune_value(axis_steps_per_unit[X_AXIS], 0.0f, 9999.0f, 0.01f);
+    lcd_tune_value(axis_steps_per_mm[X_AXIS], 0.0f, 9999.0f, 0.01f);
 }
 
 static void lcd_steps_y()
 {
-    lcd_tune_value(axis_steps_per_unit[Y_AXIS], 0.0f, 9999.0f, 0.01f);
+    lcd_tune_value(axis_steps_per_mm[Y_AXIS], 0.0f, 9999.0f, 0.01f);
 }
 
 static void lcd_steps_z()
 {
-    lcd_tune_value(axis_steps_per_unit[Z_AXIS], 0.0f, 9999.0f, 0.01f);
+    lcd_tune_value(axis_steps_per_mm[Z_AXIS], 0.0f, 9999.0f, 0.01f);
 }
 
 static void lcd_steps_e1()
 {
-    lcd_tune_value(axis_steps_per_unit[E_AXIS], 0.0f, 9999.0f, 0.01f);
+    lcd_tune_value(axis_steps_per_mm[E_AXIS], 0.0f, 9999.0f, 0.01f);
 }
 
 #if EXTRUDERS > 1
@@ -658,7 +658,7 @@ static void drawStepsSubmenu(uint8_t nr, uint8_t &flags)
             flags |= MENU_STATUSLINE;
         }
         lcd_lib_draw_string_leftP(18, PSTR("X"));
-        float_to_string2(axis_steps_per_unit[X_AXIS], buffer, NULL);
+        float_to_string2(axis_steps_per_mm[X_AXIS], buffer, NULL);
         LCDMenu::drawMenuString((LCD_CHAR_MARGIN_LEFT*2)+LCD_CHAR_SPACING
                                 , 18
                                 , LCD_CHAR_SPACING*7
@@ -676,7 +676,7 @@ static void drawStepsSubmenu(uint8_t nr, uint8_t &flags)
             flags |= MENU_STATUSLINE;
         }
         lcd_lib_draw_string_leftP(28, PSTR("Y"));
-        float_to_string2(axis_steps_per_unit[Y_AXIS], buffer, NULL);
+        float_to_string2(axis_steps_per_mm[Y_AXIS], buffer, NULL);
         LCDMenu::drawMenuString((LCD_CHAR_MARGIN_LEFT*2)+LCD_CHAR_SPACING
                                 , 28
                                 , LCD_CHAR_SPACING*7
@@ -694,7 +694,7 @@ static void drawStepsSubmenu(uint8_t nr, uint8_t &flags)
             flags |= MENU_STATUSLINE;
         }
         lcd_lib_draw_string_leftP(38, PSTR("Z"));
-        float_to_string2(axis_steps_per_unit[Z_AXIS], buffer, NULL);
+        float_to_string2(axis_steps_per_mm[Z_AXIS], buffer, NULL);
         LCDMenu::drawMenuString((LCD_CHAR_MARGIN_LEFT*2)+LCD_CHAR_SPACING
                                 , 38
                                 , LCD_CHAR_SPACING*7
@@ -712,7 +712,7 @@ static void drawStepsSubmenu(uint8_t nr, uint8_t &flags)
             flags |= MENU_STATUSLINE;
         }
         lcd_lib_draw_stringP(LCD_GFX_WIDTH - (LCD_CHAR_MARGIN_RIGHT*2) - (LCD_CHAR_SPACING*9), 18, PSTR("E1"));
-        float_to_string2(axis_steps_per_unit[E_AXIS], buffer, NULL);
+        float_to_string2(axis_steps_per_mm[E_AXIS], buffer, NULL);
         LCDMenu::drawMenuString(LCD_GFX_WIDTH - LCD_CHAR_MARGIN_RIGHT - (LCD_CHAR_SPACING*7)
                                 , 18
                                 , LCD_CHAR_SPACING*7
@@ -749,7 +749,7 @@ static void drawStepsSubmenu(uint8_t nr, uint8_t &flags)
             flags |= MENU_STATUSLINE;
         }
         lcd_lib_draw_string_leftP(20, PSTR("X"));
-        float_to_string2(axis_steps_per_unit[X_AXIS], buffer, NULL);
+        float_to_string2(axis_steps_per_mm[X_AXIS], buffer, NULL);
         LCDMenu::drawMenuString(LCD_CHAR_MARGIN_LEFT+LCD_CHAR_SPACING*2
                                 , 20
                                 , LCD_CHAR_SPACING*7
@@ -767,7 +767,7 @@ static void drawStepsSubmenu(uint8_t nr, uint8_t &flags)
             flags |= MENU_STATUSLINE;
         }
         lcd_lib_draw_string_leftP(32, PSTR("Y"));
-        float_to_string2(axis_steps_per_unit[Y_AXIS], buffer, NULL);
+        float_to_string2(axis_steps_per_mm[Y_AXIS], buffer, NULL);
         LCDMenu::drawMenuString(LCD_CHAR_MARGIN_LEFT+LCD_CHAR_SPACING*2
                                 , 32
                                 , LCD_CHAR_SPACING*7
@@ -785,7 +785,7 @@ static void drawStepsSubmenu(uint8_t nr, uint8_t &flags)
             flags |= MENU_STATUSLINE;
         }
         lcd_lib_draw_stringP(LCD_GFX_WIDTH - LCD_CHAR_MARGIN_RIGHT - (LCD_CHAR_SPACING*9), 20, PSTR("Z"));
-        float_to_string2(axis_steps_per_unit[Z_AXIS], buffer, NULL);
+        float_to_string2(axis_steps_per_mm[Z_AXIS], buffer, NULL);
         LCDMenu::drawMenuString(LCD_GFX_WIDTH - LCD_CHAR_MARGIN_RIGHT - (LCD_CHAR_SPACING*7)
                                 , 20
                                 , LCD_CHAR_SPACING*7
@@ -803,7 +803,7 @@ static void drawStepsSubmenu(uint8_t nr, uint8_t &flags)
             flags |= MENU_STATUSLINE;
         }
         lcd_lib_draw_stringP(LCD_GFX_WIDTH - LCD_CHAR_MARGIN_RIGHT - (LCD_CHAR_SPACING*9), 32, PSTR("E"));
-        float_to_string2(axis_steps_per_unit[E_AXIS], buffer, NULL);
+        float_to_string2(axis_steps_per_mm[E_AXIS], buffer, NULL);
         LCDMenu::drawMenuString(LCD_GFX_WIDTH - LCD_CHAR_MARGIN_RIGHT - (LCD_CHAR_SPACING*7)
                                 , 32
                                 , LCD_CHAR_SPACING*7

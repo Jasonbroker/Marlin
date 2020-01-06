@@ -70,7 +70,7 @@
 #define BOARD_RIGIDBOARD              1114  // Invent-A-Part RigidBoard
 #define BOARD_RIGIDBOARD_V2           1115  // Invent-A-Part RigidBoard V2
 #define BOARD_SAINSMART_2IN1          1116  // Sainsmart 2-in-1 board
-#define BOARD_ULTIMAKER               72  // Ultimaker
+#define BOARD_ULTIMAKER               1117  // Ultimaker
 #define BOARD_ULTIMAKER_OLD           1118  // Ultimaker (Older electronics. Pre 1.5.4. This is rare)
 #define BOARD_AZTEEG_X3               1119  // Azteeg X3
 #define BOARD_AZTEEG_X3_PRO           1120  // Azteeg X3 Pro

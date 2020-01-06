@@ -112,7 +112,7 @@ void lcd_lib_init()
     SET_OUTPUT(LCD_PINS_D7); WRITE(LCD_PINS_D7, 0); //PH3
 
     //Set the beeper as output.
-    SET_OUTPUT(BEEPER);
+    SET_OUTPUT(BEEPER_PIN);
 
     //Set the encoder bits and encoder button as inputs with pullup
     SET_INPUT(BTN_EN1);
@@ -122,8 +122,8 @@ void lcd_lib_init()
     WRITE(BTN_EN2, 1);
     WRITE(BTN_ENC, 1);
 
-    SET_INPUT(SDCARDDETECT);
-    WRITE(SDCARDDETECT, HIGH);
+    SET_INPUT(SD_DETECT_PIN);
+    WRITE(SD_DETECT_PIN, HIGH);
 
     WRITE(I2C_SDA_PIN, 1);
     WRITE(I2C_SCL_PIN, 1);

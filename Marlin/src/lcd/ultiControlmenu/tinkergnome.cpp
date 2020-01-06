@@ -116,7 +116,7 @@ void tinkergnome_init()
 #endif
         eeprom_write_block(pidBed, (uint8_t*)EEPROM_PID_BED, sizeof(pidBed));
 
-        SET_STEPS_E2(axis_steps_per_unit[E_AXIS]);
+        SET_STEPS_E2(axis_steps_per_mm[E_AXIS]);
     }
     if (version > 5)
     {
@@ -476,10 +476,10 @@ static void init_babystepping()
 
 static void _lcd_babystep(const uint8_t axis)
 {
-    int diff = lcd_lib_encoder_pos*axis_steps_per_unit[axis]/200;
+    int diff = lcd_lib_encoder_pos*axis_steps_per_mm[axis]/200;
     if (diff)
     {
-        FLOAT_SETTING(axis) += (float)diff/axis_steps_per_unit[axis];
+        FLOAT_SETTING(axis) += (float)diff/axis_steps_per_mm[axis];
         babystepsTodo[axis] += diff;
         lcd_lib_encoder_pos = 0;
     }
@@ -1039,7 +1039,7 @@ static void drawPrintSubmenu (uint8_t nr, uint8_t &flags)
             lcd_lib_draw_string_leftP(15, PSTR("Z"));
 
             // calculate current z position
-            float_to_string2(st_get_position(Z_AXIS) / axis_steps_per_unit[Z_AXIS], buffer, 0);
+            float_to_string2(st_get_position(Z_AXIS) / axis_steps_per_mm[Z_AXIS], buffer, 0);
             LCDMenu::drawMenuString(LCD_CHAR_MARGIN_LEFT+12
                                     , 15
                                     , LCD_CHAR_SPACING*strlen(buffer)
@@ -1425,7 +1425,7 @@ void lcd_menu_printing_tg()
             if ((current_block->steps_e > 0) && (current_block->step_event_count > 0) && (current_block->steps_x || current_block->steps_y))
             {
     //                float block_time = current_block->millimeters / current_block->nominal_speed;
-    //                float mm_e = current_block->steps_e / axis_steps_per_unit[E_AXIS];
+    //                float mm_e = current_block->steps_e / axis_steps_per_mm[E_AXIS];
 
                 // calculate live extrusion rate from e speed and filament area
                 float speed_e = current_block->steps_e * current_block->nominal_rate / e_steps_per_unit(current_block->active_extruder) / current_block->step_event_count;
@@ -1513,7 +1513,7 @@ void lcd_menu_printing_tg()
             lcd_lib_draw_string_leftP(15, PSTR("Z"));
 
             // calculate current z position
-            float_to_string2(st_get_position(Z_AXIS) / axis_steps_per_unit[Z_AXIS], buffer, 0);
+            float_to_string2(st_get_position(Z_AXIS) / axis_steps_per_mm[Z_AXIS], buffer, 0);
             lcd_lib_draw_string(LCD_CHAR_MARGIN_LEFT+12, 15, buffer);
 #endif
         }
@@ -1607,7 +1607,7 @@ static void init_target_positions()
     delayMove = false;
     for (uint8_t i=0; i<NUM_AXIS; ++i)
     {
-        TARGET_POS(i) = current_position[i] = st_get_position(i)/axis_steps_per_unit[i];
+        TARGET_POS(i) = current_position[i] = st_get_position(i)/axis_steps_per_mm[i];
     }
 }
 
@@ -1688,7 +1688,7 @@ static void drawSimpleBuildplateSubmenu(uint8_t nr, uint8_t &flags)
         // z position
         char buffer[32] = {0};
         lcd_lib_draw_stringP(LCD_CHAR_MARGIN_LEFT+5*LCD_CHAR_SPACING, 40, PSTR("Z"));
-        float_to_string2(st_get_position(Z_AXIS) / axis_steps_per_unit[Z_AXIS], buffer, PSTR("mm"));
+        float_to_string2(st_get_position(Z_AXIS) / axis_steps_per_mm[Z_AXIS], buffer, PSTR("mm"));
         LCDMenu::drawMenuString(LCD_CHAR_MARGIN_LEFT+7*LCD_CHAR_SPACING
                               , 40
                               , 48
@@ -1738,7 +1738,7 @@ void lcd_menu_simple_buildplate_init()
 {
     lcd_lib_clear();
 
-    float zPos = st_get_position(Z_AXIS) / axis_steps_per_unit[Z_AXIS];
+    float zPos = st_get_position(Z_AXIS) / axis_steps_per_mm[Z_AXIS];
     if ((commands_queued() < 1) && (zPos < 35.01f))
     {
         menu.replace_menu(menu_t(lcd_simple_buildplate_init, lcd_menu_simple_buildplate, lcd_simple_buildplate_quit, 0), false);
@@ -2109,7 +2109,7 @@ static void stopMove()
     delayMove = true;
     for (uint8_t i=0; i<NUM_AXIS; ++i)
     {
-        TARGET_POS(i) = current_position[i] = constrain(st_get_position(i)/axis_steps_per_unit[i], min_pos[i], max_pos[i]);
+        TARGET_POS(i) = current_position[i] = constrain(st_get_position(i)/axis_steps_per_mm[i], min_pos[i], max_pos[i]);
     }
     plan_set_position(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS], current_position[E_AXIS], active_extruder, true);
 }
@@ -2226,7 +2226,7 @@ static void drawMoveDetails()
 
 static void pos2string(uint8_t flags, uint8_t axis, char *buffer)
 {
-    float_to_string2((flags & MENU_ACTIVE) ? TARGET_POS(axis) : st_get_position(axis) / axis_steps_per_unit[axis], buffer, PSTR("mm"));
+    float_to_string2((flags & MENU_ACTIVE) ? TARGET_POS(axis) : st_get_position(axis) / axis_steps_per_mm[axis], buffer, PSTR("mm"));
 }
 
 // create menu options for "move axes"
