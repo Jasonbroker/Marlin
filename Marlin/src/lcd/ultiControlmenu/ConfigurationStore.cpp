@@ -76,9 +76,9 @@ void Config_StoreSettings()
   EEPROM_WRITE_VAR(i,absPreheatHPBTemp);
   EEPROM_WRITE_VAR(i,absPreheatFanSpeed);
   #ifdef PIDTEMP
-    EEPROM_WRITE_VAR(i,Kp);
-    EEPROM_WRITE_VAR(i,Ki);
-    EEPROM_WRITE_VAR(i,Kd);
+    EEPROM_WRITE_VAR(i,_PID_Kp(0));
+    EEPROM_WRITE_VAR(i,_PID_Ki(0));
+    EEPROM_WRITE_VAR(i,_PID_Kd(0));
   #else
 	float dummy = 3000.0f;
     EEPROM_WRITE_VAR(i,dummy);
@@ -86,7 +86,7 @@ void Config_StoreSettings()
     EEPROM_WRITE_VAR(i,dummy);
     EEPROM_WRITE_VAR(i,dummy);
   #endif
-  EEPROM_WRITE_VAR(i,motor_current_setting);
+  EEPROM_WRITE_VAR(i,stepper.motor_current_setting);
   #ifdef ENABLE_ULTILCD2
   EEPROM_WRITE_VAR(i,led_brightness_level);
   EEPROM_WRITE_VAR(i,led_mode);
@@ -164,9 +164,9 @@ void Config_PrintSettings()
     SERIAL_ECHO_START;
     SERIAL_ECHOLNPGM("PID settings:");
     SERIAL_ECHO_START;
-    SERIAL_ECHOPAIR("   M301 P",Kp);
-    SERIAL_ECHOPAIR(" I" ,unscalePID_i(Ki));
-    SERIAL_ECHOPAIR(" D" ,unscalePID_d(Kd));
+    SERIAL_ECHOPAIR("   M301 P",_PID_Kp(0));
+    SERIAL_ECHOPAIR(" I" ,unscalePID_i(_PID_Ki(0)));
+    SERIAL_ECHOPAIR(" D" ,unscalePID_d(_PID_Kd(0)));
     SERIAL_EOL;
 #endif
 }
@@ -214,10 +214,10 @@ void Config_RetrieveSettings()
         float Kp,Ki,Kd;
         #endif
         // do not need to scale PID values as the values in EEPROM are already scaled
-        EEPROM_READ_VAR(i,Kp);
-        EEPROM_READ_VAR(i,Ki);
-        EEPROM_READ_VAR(i,Kd);
-        EEPROM_READ_VAR(i,motor_current_setting);
+        EEPROM_READ_VAR(i,_PID_Kp(0));
+        EEPROM_READ_VAR(i,_PID_Ki(0));
+        EEPROM_READ_VAR(i,_PID_Kd(0));
+        EEPROM_READ_VAR(i,stepper.motor_current_setting);
         #ifdef ENABLE_ULTILCD2
         EEPROM_READ_VAR(i,led_brightness_level);
         EEPROM_READ_VAR(i,led_mode);
@@ -280,9 +280,9 @@ void Config_ResetDefault()
     absPreheatFanSpeed = PREHEAT_2_FAN_SPEED;
 #endif
 #ifdef PIDTEMP
-    Kp = DEFAULT_Kp;
-    Ki = scalePID_i(DEFAULT_Ki);
-    Kd = scalePID_d(DEFAULT_Kd);
+    _PID_Kp(0) = DEFAULT_Kp;
+    _PID_Ki(0) = scalePID_i(DEFAULT_Ki);
+    _PID_Kd(0) = scalePID_d(DEFAULT_Kd);
 
     // call updatePID (similar to when we have processed M301)
     updatePID();
@@ -292,9 +292,9 @@ void Config_ResetDefault()
 //#endif//PID_ADD_EXTRUSION_RATE
 #endif//PIDTEMP
     float tmp_motor_current_setting[]=DEFAULT_PWM_MOTOR_CURRENT;
-    motor_current_setting[0] = tmp_motor_current_setting[0];
-    motor_current_setting[1] = tmp_motor_current_setting[1];
-    motor_current_setting[2] = tmp_motor_current_setting[2];
+    stepper.motor_current_setting[0] = tmp_motor_current_setting[0];
+    stepper.motor_current_setting[1] = tmp_motor_current_setting[1];
+    stepper.motor_current_setting[2] = tmp_motor_current_setting[2];
 
     #ifdef ENABLE_ULTILCD2
     led_brightness_level = 100;

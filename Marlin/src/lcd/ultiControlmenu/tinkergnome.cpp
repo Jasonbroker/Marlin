@@ -140,16 +140,16 @@ void tinkergnome_init()
 #if EXTRUDERS < 2
         float pid2[3];
 #endif // EXTRUDERS
-        pid2[0] = Kp;
-        pid2[1] = Ki;
-        pid2[2] = Kd;
+        pid2[0] = _PID_Kp(0);
+        pid2[1] = _PID_Ki(0);
+        pid2[2] = _PID_Kd(0);
         eeprom_write_block(pid2, (uint8_t*)EEPROM_PID_2, sizeof(pid2));
 
 #if EXTRUDERS > 1 && defined(MOTOR_CURRENT_PWM_E_PIN) && MOTOR_CURRENT_PWM_E_PIN > -1
         motor_current_e2 = motor_current_setting[2];
         SET_MOTOR_CURRENT_E2(motor_current_e2);
 #else
-        SET_MOTOR_CURRENT_E2(motor_current_setting[2]);
+        SET_MOTOR_CURRENT_E2(stepper.motor_current_setting[2]);
 #endif // EXTRUDERS
     }
     if (version > 4)
@@ -2823,7 +2823,7 @@ static void lcd_extrude_init_pull()
 #if EXTRUDERS > 1 && defined(MOTOR_CURRENT_PWM_E_PIN) && MOTOR_CURRENT_PWM_E_PIN > -1
     digipot_current(2, active_extruder ? (motor_current_e2*2/3) : (motor_current_setting[2]*2/3));
 #else
-    digipot_current(2, motor_current_setting[2]*2/3);
+    digipot_current(2, stepper.motor_current_setting[2]*2/3);
 #endif
     //increase max. feedrate and reduce acceleration
     OLD_FEEDRATE = planner.settings.max_feedrate_mm_s[E_AXIS];
@@ -2842,9 +2842,9 @@ static void lcd_extrude_quit_pull()
     max_e_jerk = OLD_JERK;
     //Set E motor power to default.
 #if EXTRUDERS > 1 && defined(MOTOR_CURRENT_PWM_E_PIN) && MOTOR_CURRENT_PWM_E_PIN > -1
-    digipot_current(2, active_extruder ? motor_current_e2 : motor_current_setting[2]);
+    digipot_current(2, active_extruder ? motor_current_e2 : stepper.motor_current_setting[2]);
 #else
-    digipot_current(2, motor_current_setting[2]);
+    digipot_current(2, stepper.motor_current_setting[2]);
 #endif
     // disable E-steppers
     lcd_extrude_quit_move();

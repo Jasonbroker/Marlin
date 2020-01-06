@@ -1419,15 +1419,15 @@ static void lcd_store_motorcurrent()
 #if (EXTRUDERS > 1) && defined(MOTOR_CURRENT_PWM_E_PIN) && (MOTOR_CURRENT_PWM_E_PIN > -1)
     for (uint8_t i=0; i<2; ++i)
     {
-        digipot_current(i, motor_current_setting[i]);
+        digipot_current(i, stepper.motor_current_setting[i]);
     }
     //Set E motor power to default.
-    digipot_current(2, active_extruder ? motor_current_e2 : motor_current_setting[2]);
+    digipot_current(2, active_extruder ? motor_current_e2 : stepper.motor_current_setting[2]);
     SET_MOTOR_CURRENT_E2(motor_current_e2);
 #else
     for (uint8_t i=0; i<3; ++i)
     {
-        digipot_current(i, motor_current_setting[i]);
+        digipot_current(i, stepper.motor_current_setting[i]);
     }
 #endif
     Config_StoreSettings();
@@ -1436,27 +1436,27 @@ static void lcd_store_motorcurrent()
 
 static void lcd_preset_current_xy()
 {
-    if (lcd_tune_value(motor_current_setting[0], 0, 1500))
+    if (lcd_tune_value(stepper.motor_current_setting[0], 0, 1500))
     {
-        digipot_current(0, motor_current_setting[0]);
+        digipot_current(0, stepper.motor_current_setting[0]);
     }
 }
 
 static void lcd_preset_current_z()
 {
-    if (lcd_tune_value(motor_current_setting[1], 0, 1500))
+    if (lcd_tune_value(stepper.motor_current_setting[1], 0, 1500))
     {
-        digipot_current(1, motor_current_setting[1]);
+        digipot_current(1, stepper.motor_current_setting[1]);
     }
 }
 
 static void lcd_preset_current_e()
 {
-    if (lcd_tune_value(motor_current_setting[2], 0, 1500))
+    if (lcd_tune_value(stepper.motor_current_setting[2], 0, 1500))
     {
         if (!active_extruder)
         {
-            digipot_current(2, motor_current_setting[2]);
+            digipot_current(2, stepper.motor_current_setting[2]);
         }
     }
 }
@@ -1563,7 +1563,7 @@ static void drawCurrentSubmenu(uint8_t nr, uint8_t &flags)
             flags |= MENU_STATUSLINE;
         }
         lcd_lib_draw_string_leftP(20, PSTR("X/Y"));
-        int_to_string(motor_current_setting[0], buffer, NULL);
+        int_to_string(stepper.motor_current_setting[0], buffer, NULL);
         LCDMenu::drawMenuString(LCD_CHAR_MARGIN_LEFT+4*LCD_CHAR_SPACING
                               , 20
                               , 4*LCD_CHAR_SPACING
@@ -1581,7 +1581,7 @@ static void drawCurrentSubmenu(uint8_t nr, uint8_t &flags)
             flags |= MENU_STATUSLINE;
         }
         lcd_lib_draw_string_leftP(32, PSTR("Z"));
-        int_to_string(motor_current_setting[1], buffer, NULL);
+        int_to_string(stepper.motor_current_setting[1], buffer, NULL);
         LCDMenu::drawMenuString(LCD_CHAR_MARGIN_LEFT+4*LCD_CHAR_SPACING
                               , 32
                               , 4*LCD_CHAR_SPACING
@@ -1600,7 +1600,7 @@ static void drawCurrentSubmenu(uint8_t nr, uint8_t &flags)
             flags |= MENU_STATUSLINE;
         }
         lcd_lib_draw_stringP(LCD_GFX_WIDTH-LCD_CHAR_MARGIN_RIGHT-7*LCD_CHAR_SPACING, 20, PSTR("E1"));
-        int_to_string(motor_current_setting[2], buffer, NULL);
+        int_to_string(stepper.motor_current_setting[2], buffer, NULL);
         LCDMenu::drawMenuString(LCD_GFX_WIDTH-LCD_CHAR_MARGIN_RIGHT-4*LCD_CHAR_SPACING
                               , 20
                               , 4*LCD_CHAR_SPACING
@@ -1637,7 +1637,7 @@ static void drawCurrentSubmenu(uint8_t nr, uint8_t &flags)
             flags |= MENU_STATUSLINE;
         }
         lcd_lib_draw_stringP(LCD_GFX_WIDTH-LCD_CHAR_MARGIN_RIGHT-6*LCD_CHAR_SPACING, 20, PSTR("E"));
-        int_to_string(motor_current_setting[2], buffer, NULL);
+        int_to_string(stepper.motor_current_setting[2], buffer, NULL);
         LCDMenu::drawMenuString(LCD_GFX_WIDTH-LCD_CHAR_MARGIN_RIGHT-4*LCD_CHAR_SPACING
                               , 20
                               , 4*LCD_CHAR_SPACING
@@ -2605,9 +2605,9 @@ static bool autotune_callback(uint8_t state, uint8_t cycle, float kp, float ki, 
             // PID tuning successful
             if (lcd_cache[1] == 1)
             {
-                Kp = kp;
-                Ki = scalePID_i(ki);
-                Kd = scalePID_d(kd);
+                _PID_Kp[0] = kp;
+                _PID_Ki[0] = scalePID_i(ki);
+                _PID_Kd(0) = scalePID_d(kd);
             }
 #if (EXTRUDERS > 1)
             else if (lcd_cache[1] == 2)
@@ -2822,7 +2822,7 @@ static void drawTempExtr1Submenu(uint8_t nr, uint8_t &flags)
             flags |= MENU_STATUSLINE;
         }
         lcd_lib_draw_stringP(LCD_GFX_WIDTH/2, 20, PSTR("Kp"));
-        float_to_string2(Kp, buffer, NULL);
+        float_to_string2(, buffer, NULL);
 
         LCDMenu::drawMenuString(LCD_GFX_WIDTH - LCD_CHAR_MARGIN_RIGHT - 6*LCD_CHAR_SPACING
                                 , 20

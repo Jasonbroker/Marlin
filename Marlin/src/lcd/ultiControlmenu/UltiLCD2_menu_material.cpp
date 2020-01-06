@@ -36,9 +36,9 @@ static void cancelMaterialInsert()
     quickStop();
     //Set E motor power to default.
 #if EXTRUDERS > 1 && defined(MOTOR_CURRENT_PWM_E_PIN) && MOTOR_CURRENT_PWM_E_PIN > -1
-    digipot_current(2, active_extruder ? motor_current_e2 : motor_current_setting[2]);
+    digipot_current(2, active_extruder ? motor_current_e2 : stepper.motor_current_setting[2]);
 #else
-    digipot_current(2, motor_current_setting[2]);
+    digipot_current(2, stepper.motor_current_setting[2]);
 #endif
     set_extrude_min_temp(EXTRUDE_MINTEMP);
     menu.return_to_previous(false);
@@ -359,7 +359,7 @@ static void lcd_menu_change_material_insert_forward()
 #if EXTRUDERS > 1 && defined(MOTOR_CURRENT_PWM_E_PIN) && MOTOR_CURRENT_PWM_E_PIN > -1
         digipot_current(2, active_extruder ? (motor_current_e2*2/3) : (motor_current_setting[2]*2/3));
 #else
-        digipot_current(2, motor_current_setting[2]*2/3);
+        digipot_current(2, stepper.motor_current_setting[2]*2/3);
 #endif
         menu.replace_menu(menu_t(lcd_menu_change_material_insert, MAIN_MENU_ITEM_POS(0)));
         return;
@@ -389,9 +389,9 @@ static void materialInsertReady()
     //Set E motor power to default.
     quickStop();
 #if EXTRUDERS > 1 && defined(MOTOR_CURRENT_PWM_E_PIN) && MOTOR_CURRENT_PWM_E_PIN > -1
-    digipot_current(2, active_extruder ? motor_current_e2 : motor_current_setting[2]);
+    digipot_current(2, active_extruder ? motor_current_e2 : stepper.motor_current_setting[2]);
 #else
-    digipot_current(2, motor_current_setting[2]);
+    digipot_current(2, stepper.motor_current_setting[2]);
 #endif
     lcd_remove_menu();
 
