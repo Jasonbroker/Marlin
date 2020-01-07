@@ -195,7 +195,7 @@ static void lcd_main_print()
 {
     lcd_clear_cache();
     card.release();
-    card.setroot();
+    card.cdroot();
     menu.add_menu(menu_t(lcd_menu_print_select, SCROLL_MENU_ITEM_POS(0)));
 }
 

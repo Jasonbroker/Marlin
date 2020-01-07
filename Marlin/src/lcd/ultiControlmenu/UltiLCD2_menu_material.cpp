@@ -533,7 +533,7 @@ static void lcd_menu_material_export()
         return;
     }
 
-    card.setroot();
+    card.cdroot();
     card.openFile("MATERIAL.TXT", false);
     uint8_t count = eeprom_read_byte(EEPROM_MATERIAL_COUNT_OFFSET());
     for(uint8_t n=0; n<count; ++n)
@@ -631,7 +631,7 @@ static void lcd_menu_material_import()
         return;
     }
 
-    card.setroot();
+    card.cdroot();
     card.openFile("MATERIAL.TXT", true);
     if (!card.isFileOpen())
     {
