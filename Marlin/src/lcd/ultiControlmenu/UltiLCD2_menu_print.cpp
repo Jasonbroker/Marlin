@@ -52,7 +52,7 @@ void abortPrint(bool bQuickstop)
     {
         recover_height = current_position[Z_AXIS];
     }
-    card.stopPrinting();
+    card.stopSDPrint();
 
     if (bQuickstop)
     {
@@ -105,7 +105,7 @@ void abortPrint(bool bQuickstop)
 
     stoptime=millis();
     //If we where paused, make sure we abort that pause. Else strange things happen: https://github.com/Ultimaker/Ultimaker2Marlin/issues/32
-    card.stopPrinting();
+    card.stopSDPrint();
     printing_state = PRINT_STATE_NORMAL;
     if (led_mode == LED_MODE_WHILE_PRINTING)
         analogWrite(LED_PIN, 0);
@@ -135,7 +135,7 @@ static void checkPrintFinished()
         menu.replace_menu(menu_t(lcd_menu_print_error_position, MAIN_MENU_ITEM_POS(0)));
         abortPrint(true);
     }
-    else if (card.errorCode())
+    else if (card.sd2card.errorCode())
     {
         sleep_state &= ~SLEEP_LED_OFF;
         menu.replace_menu(menu_t(lcd_menu_print_error_sd, MAIN_MENU_ITEM_POS(0)));
@@ -279,7 +279,7 @@ static void lcd_sd_menu_filename_callback(uint8_t nr, uint8_t offsetY, uint8_t f
             if (strlen(buffer) < LCD_CACHE_TEXT_SIZE_SHORT)
                 LCD_CACHE_FILENAME(idx)[LCD_CACHE_TEXT_SIZE_SHORT-1] = '\0';
             LCD_CACHE_TYPE(idx) = card.filenameIsDir() ? 1 : 0;
-            if (card.errorCode() && card.isMounted())
+            if (card.sd2card.sd2card.errorCode() && card.isMounted())
             {
                 // On a read error reset the file position and try to keep going. (not pretty, but these read errors are annoying as hell)
                 card.clearError();
@@ -387,7 +387,7 @@ void lcd_sd_menu_details_callback(uint8_t nr)
 #endif
                         }
                     }
-                    if (card.errorCode())
+                    if (card.sd2card.errorCode())
                     {
                         //On a read error reset the file position and try to keep going. (not pretty, but these read errors are annoying as hell)
                         card.clearError();
@@ -482,7 +482,7 @@ void lcd_menu_print_select()
 
     if (LCD_CACHE_NR_OF_FILES() == 0xFF)
         LCD_CACHE_NR_OF_FILES() = card.getnrfilenames();
-    if (card.errorCode())
+    if (card.sd2card.errorCode())
     {
         LCD_CACHE_NR_OF_FILES() = 0xFF;
         return;

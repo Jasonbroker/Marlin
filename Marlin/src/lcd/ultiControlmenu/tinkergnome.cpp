@@ -1890,7 +1890,7 @@ static void lcd_recover_zvalue()
 void reset_printing_state()
 {
     printing_state = PRINT_STATE_NORMAL;
-    card.stopPrinting();
+    card.stopSDPrint();
 }
 
 static const menu_t & get_recover_menuoption(uint8_t nr, menu_t &opt)
@@ -3105,7 +3105,7 @@ void lcd_menu_expert_extrude()
 void recover_start_print(const char *cmd)
 {
     // recover print from current position
-    card.stopPrinting();
+    card.stopSDPrint();
     quickStop();
     queue.clear();
     // keep last command in mind
