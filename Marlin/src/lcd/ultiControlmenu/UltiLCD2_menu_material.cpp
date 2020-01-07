@@ -248,7 +248,7 @@ void lcd_menu_insert_material_preheat()
     int16_t temp = degHotend(active_extruder) - 20;
     int16_t target = degTargetHotend(active_extruder) - 20 - 10;
     if (temp < 0) temp = 0;
-    if (temp > target && temp < target + 20 && (card.pause() || !commands_queued()))
+    if (temp > target && temp < target + 20 && (card.isPaused() || !commands_queued()))
     {
         set_extrude_min_temp(0);
         menu.replace_menu(menu_t(lcd_menu_change_material_insert_wait_user, MAIN_MENU_ITEM_POS(0)));

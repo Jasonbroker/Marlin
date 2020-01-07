@@ -48,7 +48,7 @@ void abortPrint(bool bQuickstop)
     postMenuCheck = 0;
 
     // we're not printing any more
-    if (card.flag.sdprinting && !card.pause())
+    if (card.flag.sdprinting && !card.isPaused())
     {
         recover_height = current_position[Z_AXIS];
     }
@@ -739,7 +739,7 @@ void lcd_change_to_menu_change_material_return()
 
 static void lcd_menu_print_printing()
 {
-    if (card.pause())
+    if (card.isPaused())
     {
         menu.add_menu(menu_t(lcd_select_first_submenu, lcd_menu_print_resume, NULL, MAIN_MENU_ITEM_POS(0)), true);
         if (!checkFilamentSensor())
@@ -895,7 +895,7 @@ static void set_abort_state()
     postMenuCheck = NULL;
     sleep_state &= ~SLEEP_LED_OFF;
     // force end of print retraction
-    if (IS_SD_PRINTING() && !card.pause())
+    if (IS_SD_PRINTING() && !card.isPaused())
     {
         primed = true;
     }
@@ -1033,7 +1033,7 @@ static void tune_item_callback(uint8_t nr, uint8_t offsetY, uint8_t flags)
         strcpy_P(buffer, PSTR("Retraction"));
     else if (index++ == nr)
         strcpy_P(buffer, PSTR("LED Brightness"));
-    else if ((ui_mode & UI_MODE_EXPERT) && card.flag.sdprinting && card.pause() && (index++ == nr))
+    else if ((ui_mode & UI_MODE_EXPERT) && card.flag.sdprinting && card.isPaused() && (index++ == nr))
         strcpy_P(buffer, PSTR("Move material"));
     else if ((ui_mode & UI_MODE_EXPERT) && (index++ == nr))
         strcpy_P(buffer, PSTR("Sleep timer"));
@@ -1138,7 +1138,7 @@ void lcd_menu_print_tune()
     if (ui_mode & UI_MODE_EXPERT)
     {
         ++len; // sleep timer
-        if (card.flag.sdprinting && card.pause())
+        if (card.flag.sdprinting && card.isPaused())
         {
             ++len; // move material
         }
@@ -1177,7 +1177,7 @@ void lcd_menu_print_tune()
             menu.add_menu(menu_t(lcd_menu_print_tune_retraction, 0));
         else if (IS_SELECTED_SCROLL(index++))
             LCD_EDIT_SETTING(led_brightness_level, "Brightness", "%", 0, 100);
-        else if ((ui_mode & UI_MODE_EXPERT) && card.flag.sdprinting && card.pause() && IS_SELECTED_SCROLL(index++))
+        else if ((ui_mode & UI_MODE_EXPERT) && card.flag.sdprinting && card.isPaused() && IS_SELECTED_SCROLL(index++))
             menu.add_menu(menu_t(lcd_init_extrude, lcd_menu_expert_extrude, NULL)); // Move material
         else if ((ui_mode & UI_MODE_EXPERT) && IS_SELECTED_SCROLL(index++))
             menu.add_menu(menu_t(lcd_menu_sleeptimer));
@@ -1247,7 +1247,7 @@ static void lcd_menu_print_tune_retraction()
 
 void lcd_print_pause()
 {
-    if (!card.pause())
+    if (!card.isPaused()
     {
         card.pauseSDPrint();
         primed = false;

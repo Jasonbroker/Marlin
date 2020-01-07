@@ -1405,7 +1405,7 @@ static unsigned long predictTimeLeft()
 
 void lcd_menu_printing_tg()
 {
-    if (card.pause())
+    if (card.isPaused())
     {
         menu.add_menu(menu_t(lcd_select_first_submenu, lcd_menu_print_resume, NULL, MAIN_MENU_ITEM_POS(0)), true);
         if (!checkFilamentSensor())
@@ -1461,7 +1461,7 @@ void lcd_menu_printing_tg()
             {
             default:
 
-                if (card.pause())
+                if (card.isPaused())
                 {
                     lcd_lib_draw_gfx(54, 15, hourglassGfx);
                     lcd_lib_draw_stringP(64, 15, (movesplanned() < 1) ? PSTR("Paused...") : PSTR("Pausing..."));
