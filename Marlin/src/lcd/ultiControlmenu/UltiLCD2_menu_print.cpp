@@ -897,7 +897,7 @@ static void set_abort_state()
     postMenuCheck = NULL;
     sleep_state &= ~SLEEP_LED_OFF;
     // force end of print retraction
-    if (IS_SD_PRINTING && !card.pause())
+    if (IS_SD_PRINTING() && !card.pause())
     {
         primed = true;
     }
@@ -1326,7 +1326,7 @@ static const menu_t & get_pause_menuoption(uint8_t nr, menu_t &opt)
     {
         opt.setData(MENU_NORMAL, lcd_show_pause_menu);
     }
-    else if (IS_SD_PRINTING && (nr == menu_index++))
+    else if (IS_SD_PRINTING() && (nr == menu_index++))
     {
         opt.setData(MENU_NORMAL, lcd_print_abort);
     }
@@ -1362,7 +1362,7 @@ static void drawPauseSubmenu(uint8_t nr, uint8_t &flags)
             lcd_lib_draw_gfx(LCD_CHAR_MARGIN_LEFT+26, LCD_LINE_HEIGHT*3+2, pauseGfx);
         }
     }
-    else if (IS_SD_PRINTING && (nr == index++))
+    else if (IS_SD_PRINTING() && (nr == index++))
     {
         LCDMenu::drawMenuString_P(LCD_GFX_WIDTH/2 + LCD_CHAR_MARGIN_LEFT+3
                                 , LCD_LINE_HEIGHT
@@ -1424,7 +1424,7 @@ void lcd_menu_print_pause()
     lcd_lib_draw_vline(64, 5, 46);
     lcd_lib_draw_hline(3, 124, 50);
 
-    uint8_t len = IS_SD_PRINTING ? 4 : 3;
+    uint8_t len = IS_SD_PRINTING() ? 4 : 3;
     menu.process_submenu(get_pause_menuoption, len);
 
     for (uint8_t index=0; index<len; ++index)
@@ -1441,7 +1441,7 @@ static const menu_t & get_resume_menuoption(uint8_t nr, menu_t &opt)
     {
         opt.setData(MENU_NORMAL, lcd_print_resume);
     }
-    else if (IS_SD_PRINTING && (nr == menu_index++))
+    else if (IS_SD_PRINTING() && (nr == menu_index++))
     {
         opt.setData(MENU_NORMAL, lcd_print_change_material);
     }
@@ -1449,7 +1449,7 @@ static const menu_t & get_resume_menuoption(uint8_t nr, menu_t &opt)
     {
         opt.setData(MENU_NORMAL, lcd_print_tune);
     }
-    else if (IS_SD_PRINTING && (nr == menu_index++))
+    else if (IS_SD_PRINTING() && (nr == menu_index++))
     {
         opt.setData(MENU_NORMAL, lcd_print_abort);
     }
@@ -1477,7 +1477,7 @@ static void drawResumeSubmenu(uint8_t nr, uint8_t &flags)
             lcd_lib_draw_gfx(LCD_CHAR_MARGIN_LEFT+26, LCD_LINE_HEIGHT*3+2, startGfx);
         }
     }
-    else if (IS_SD_PRINTING && (nr == index++))
+    else if (IS_SD_PRINTING() && (nr == index++))
     {
         LCDMenu::drawMenuBox(LCD_GFX_WIDTH/2 + LCD_CHAR_MARGIN_LEFT+3
                            , LCD_LINE_HEIGHT
@@ -1515,7 +1515,7 @@ static void drawResumeSubmenu(uint8_t nr, uint8_t &flags)
             lcd_lib_draw_gfx(2*LCD_CHAR_SPACING, BOTTOM_MENU_YPOS, menuGfx);
         }
     }
-    else if (IS_SD_PRINTING && (nr == index++))
+    else if (IS_SD_PRINTING() && (nr == index++))
     {
         LCDMenu::drawMenuBox(LCD_GFX_WIDTH/2 + LCD_CHAR_MARGIN_LEFT*2
                                 , BOTTOM_MENU_YPOS
@@ -1541,7 +1541,7 @@ void lcd_menu_print_resume()
     lcd_lib_draw_vline(64, 5, 46);
     lcd_lib_draw_hline(3, 124, 50);
 
-    uint8_t len = IS_SD_PRINTING ? 4 : 2;
+    uint8_t len = IS_SD_PRINTING() ? 4 : 2;
 
     menu.process_submenu(get_resume_menuoption, len);
 

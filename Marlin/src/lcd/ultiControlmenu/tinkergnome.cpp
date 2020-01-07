@@ -300,7 +300,7 @@ static const menu_t & get_print_menuoption(uint8_t nr, menu_t &opt)
         else if (nr == menu_index++)
         {
 //            opt.setData(MENU_NORMAL, lcd_print_ask_pause);
-            if (IS_SD_PRINTING)
+            if (IS_SD_PRINTING())
             {
                 opt.setData(MENU_NORMAL, lcd_print_ask_pause);
             }
@@ -346,7 +346,7 @@ static const menu_t & get_print_menuoption(uint8_t nr, menu_t &opt)
         else if (nr == menu_index++)
         {
 //            opt.setData(MENU_NORMAL, lcd_print_ask_pause);
-            if (IS_SD_PRINTING)
+            if (IS_SD_PRINTING())
             {
                 opt.setData(MENU_NORMAL, lcd_print_ask_pause);
             }
@@ -1351,7 +1351,7 @@ void lcd_menu_print_heatup_tg()
 
 static unsigned long predictTimeLeft()
 {
-    if ((printing_state == PRINT_STATE_HEATING) || (printing_state == PRINT_STATE_HEATING_BED) || (!card.getFilePos()) || (!card.getFileSize()))
+    if ((wait_for_heatup) || (!card.getFilePos()) || (!card.getFileSize()))
     {
         return 0;
     }
@@ -1443,7 +1443,7 @@ void lcd_menu_printing_tg()
         {
 #ifdef __AVR__
             uint8_t progress(0);
-            if IS_SD_PRINTING
+            if IS_SD_PRINTING()
             {
                 uint32_t divisor = (card.getFileSize() + 123) / 124;
                 if (divisor)
@@ -1466,7 +1466,7 @@ void lcd_menu_printing_tg()
                     lcd_lib_draw_gfx(54, 15, hourglassGfx);
                     lcd_lib_draw_stringP(64, 15, (movesplanned() < 1) ? PSTR("Paused...") : PSTR("Pausing..."));
                 }
-                else if (IS_SD_PRINTING)
+                else if (IS_SD_PRINTING())
                 {
                     if (progress)
                     {
