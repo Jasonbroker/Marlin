@@ -1817,8 +1817,7 @@ static void recover_abort()
     quickStop();
     clear_command_queue();
 
-    for(uint8_t n=0; n<EXTRUDERS; ++n)
-        cooldownHotend(n);
+    HOTEND_LOOP() setTargetHotend(0, e);
     fanSpeed = 0;
     reset_printing_state();
     doCooldown();

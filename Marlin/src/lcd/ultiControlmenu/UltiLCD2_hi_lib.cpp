@@ -377,8 +377,8 @@ bool check_heater_timeout()
                 if (thermalManager.temp_hotend[e].target > (EXTRUDE_MINTEMP - 40))
                 {
                     // switch off nozzle heater
+                    thermalManager.setTargetHotend(0, e);
                     backup_temperature[e] = thermalManager.temp_hotend[e].target;
-                    cooldownHotend(e);
                 }
             }
             return false;

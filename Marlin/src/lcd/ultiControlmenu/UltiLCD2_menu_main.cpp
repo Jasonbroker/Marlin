@@ -110,11 +110,11 @@ static void lcd_cooldown()
     for(uint8_t n=0; n<EXTRUDERS; ++n)
     {
         PREHEAT_FLAG(n) = 0;
-        cooldownHotend(n);
     }
+    thermalManager.disable_all_heaters();
 
 #if TEMP_SENSOR_BED != 0
-    setTargetBed(0);
+    thermalManager.setTargetBed(0);
     PREHEAT_FLAG(EXTRUDERS) = 0;
 #endif
     printing_state = PRINT_STATE_NORMAL;
@@ -206,7 +206,7 @@ static void lcd_toggle_preheat_nozzle(uint8_t e)
     PREHEAT_FLAG(e) = !PREHEAT_FLAG(e);
     if (!PREHEAT_FLAG(e))
     {
-        cooldownHotend(e);
+        thermalManager.setTargetHotend(0, e);
     }
 }
 
@@ -247,7 +247,7 @@ static void lcd_toggle_preheat_bed()
   #if EXTRUDERS == 2
         setTargetBed(material[swapExtruders() ? 1 : 0].bed_temperature);
   #else
-        setTargetBed(material[0].bed_temperature);
+        thermalManager.setTargetBed(material[0].bed_temperature);
   #endif
     }
     else
@@ -281,14 +281,11 @@ static void add_preheat_menu()
   #if EXTRUDERS == 2
     setTargetBed(material[swapExtruders() ? 1 : 0].bed_temperature);
   #else
-    setTargetBed(material[0].bed_temperature);
+    thermalManager.setTargetBed(material[0].bed_temperature);
   #endif
 #endif
 
-    for(uint8_t e=0; e<EXTRUDERS; ++e)
-    {
-        cooldownHotend(e);
-    }
+    thermalManager.disable_all_heaters();
     printing_state = PRINT_STATE_HEATING;
     menu.add_menu(menu_t(init_preheat, lcd_main_preheat, NULL, MAIN_MENU_ITEM_POS(0)));
 }
