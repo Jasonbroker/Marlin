@@ -736,7 +736,7 @@ void lcd_menu_print_heatup()
 void lcd_change_to_menu_change_material_return()
 {
     // plan_set_e_position(current_position[E_AXIS]);
-    setTargetHotend(material[active_extruder].temperature[nozzleSizeToTemperatureIndex(LCD_DETAIL_CACHE_NOZZLE_DIAMETER(active_extruder))], active_extruder);
+    thermalManager.setTargetHotend(material[active_extruder].temperature[nozzleSizeToTemperatureIndex(LCD_DETAIL_CACHE_NOZZLE_DIAMETER(active_extruder))], active_extruder);
     menu.return_to_previous(false);
 }
 

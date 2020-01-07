@@ -257,17 +257,17 @@ static void lcd_preferences_details(uint8_t nr)
 
 void homeHead()
 {
-    enquecommand_P(PSTR("G28 X0 Y0"));
+    queue.enqueue_now_P((PSTR("G28 X0 Y0"));
 }
 
 void homeBed()
 {
-    enquecommand_P(PSTR("G28 Z0"));
+    queue.enqueue_now_P((PSTR("G28 Z0"));
 }
 
 void homeAll()
 {
-    enquecommand_P(PSTR("G28"));
+    queue.enqueue_now_P((PSTR("G28"));
 }
 
 static void start_nozzle_heatup()
@@ -377,7 +377,7 @@ void lcd_menu_maintenance_advanced()
         {
             lcd_lib_keyclick();
             homeBed();
-            enquecommand_P(PSTR("G1 Z40"));
+            queue.enqueue_now_P((PSTR("G1 Z40"));
         }
         else if (IS_SELECTED_SCROLL(index++))
         {

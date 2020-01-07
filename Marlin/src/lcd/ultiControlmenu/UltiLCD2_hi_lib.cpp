@@ -395,7 +395,7 @@ bool check_preheat()
     {
         for (uint8_t n=0; n<EXTRUDERS; ++n)
         {
-            setTargetHotend(backup_temperature[n], n);
+            thermalManager.setTargetHotend(backup_temperature[n], n);
         }
         minProgress = 0;
         menu.add_menu(menu_t(lcd_menu_material_reheat));

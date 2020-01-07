@@ -1633,7 +1633,7 @@ void lcd_simple_buildplate_quit()
     homeBed();
     // home head
     homeHead();
-    enquecommand_P(PSTR("M84 X0 Y0"));
+    queue.enqueue_now_P(PSTR("M84 X0 Y0"));
 }
 
 // create menu options for "move axes"
@@ -1722,11 +1722,11 @@ void lcd_prepare_buildplate_adjust()
 {
     Config_RetrieveSettings();
     add_homeing[Z_AXIS] = 0;
-    enquecommand_P(PSTR("G28 Z0 X0 Y0"));
+    queue.enqueue_now_P(PSTR("G28 Z0 X0 Y0"));
     char buffer[32] = {0};
     sprintf_P(buffer, PSTR("G1 F%i Z%i X%i Y%i"), int(homing_feedrate[0]), 35, AXIS_CENTER_POS(X_AXIS), AXIS_CENTER_POS(Y_AXIS));
-    enquecommand(buffer);
-    enquecommand_P(PSTR("M84 X0 Y0"));
+    queue.enqueue_now(buffer);
+    queue.enqueue_now_P(PSTR("M84 X0 Y0"));
 }
 
 void lcd_simple_buildplate_init()
@@ -2023,7 +2023,7 @@ void lcd_menu_maintenance_expert()
         else if (IS_SELECTED_SCROLL(4))
         {
             // disable steppers
-            enquecommand_P(PSTR("M84"));
+            queue.enqueue_now_P(PSTR("M84"));
             lcd_lib_keyclick();
         }
         else
@@ -2205,8 +2205,8 @@ static void lcd_position_z_axis()
     plan_move(Z_AXIS);
 }
 
-FORCE_INLINE void lcd_home_x_axis() { enquecommand_P(PSTR("G28 X0")); }
-FORCE_INLINE void lcd_home_y_axis() { enquecommand_P(PSTR("G28 Y0")); }
+FORCE_INLINE void lcd_home_x_axis() { queue.enqueue_now_P(PSTR("G28 X0")); }
+FORCE_INLINE void lcd_home_y_axis() { queue.enqueue_now_P(PSTR("G28 Y0")); }
 
 static void drawMoveDetails()
 {
@@ -2609,7 +2609,7 @@ static void lcd_extrude_homehead()
 {
     lcd_lib_keyclick();
     homeHead();
-    enquecommand_P(PSTR("M84 X0 Y0"));
+    queue.enqueue_now_P(PSTR("M84 X0 Y0"));
 }
 
 static void lcd_extrude_headtofront()
@@ -2620,8 +2620,8 @@ static void lcd_extrude_headtofront()
     sprintf_P(buffer, PSTR("G1 F12000 X%i Y%i"), int(AXIS_CENTER_POS(X_AXIS)), int(min_pos[Y_AXIS])+5);
 
     homeHead();
-    enquecommand(buffer);
-    enquecommand_P(PSTR("M84 X0 Y0"));
+    queue.enqueue_now(buffer);
+    queue.enqueue_now_P(PSTR("M84 X0 Y0"));
 }
 
 static void lcd_extrude_disablexy()

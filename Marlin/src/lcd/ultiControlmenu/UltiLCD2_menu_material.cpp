@@ -64,7 +64,7 @@ void lcd_menu_material_main_return()
 {
     doCooldown();
     homeHead();
-    enquecommand_P(PSTR("M84 X Y E"));
+    queue.enqueue_now_P((PSTR("M84 X Y E"));
     menu.return_to_previous(false);
 }
 
