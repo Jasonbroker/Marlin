@@ -183,7 +183,7 @@ void lcd_update()
     // refresh the displayed temperatures
     for(uint8_t e=0; e<EXTRUDERS; ++e)
     {
-        dsp_temperature[e] = (K2 * current_temperature[e]) + (K1 * dsp_temperature[e]);
+        dsp_temperature[e] = (K2 * thermalManager.temp_hotend[e].celsius) + (K1 * dsp_temperature[e]);
     }
 #if TEMP_SENSOR_BED != 0
     dsp_temperature_bed = (K2 * thermalManager.temp_bed.celsius) + (K1 * dsp_temperature_bed);

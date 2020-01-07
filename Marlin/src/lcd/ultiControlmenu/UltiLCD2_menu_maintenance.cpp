@@ -112,9 +112,9 @@ static void lcd_advanced_details(uint8_t nr)
 #endif
     {
 #if EXTRUDERS > 1
-        int_to_string(int(target_temperature[1]), int_to_string(int(dsp_temperature[1]), int_to_string(int(target_temperature[0]), int_to_string(int(dsp_temperature[0]), buffer, PSTR("C/")), PSTR("C ")), PSTR("C/")), PSTR("C"));
+        int_to_string(int(thermalManager.temp_hotend[1].target), int_to_string(int(dsp_temperature[1]), int_to_string(int(thermalManager.temp_hotend[0].target), int_to_string(int(dsp_temperature[0]), buffer, PSTR("C/")), PSTR("C ")), PSTR("C/")), PSTR("C"));
 #else
-        int_to_string(int(target_temperature[0]), int_to_string(int(dsp_temperature[0]), buffer, PSTR("C/")), PSTR("C"));
+        int_to_string(int(thermalManager.temp_hotend[0].target), int_to_string(int(dsp_temperature[0]), buffer, PSTR("C/")), PSTR("C"));
 #endif // EXTRUDERS
     }
 #if TEMP_SENSOR_BED != 0
@@ -299,7 +299,7 @@ void start_move_material()
     current_position[E_AXIS] = 0;
     plan_set_e_position(current_position[E_AXIS], active_extruder, true);
     // heatup nozzle
-    target_temperature[active_extruder] = material[active_extruder].temperature[0];
+    thermalManager.temp_hotend[active_extruder].target = material[active_extruder].temperature[0];
 
     if (ui_mode & UI_MODE_EXPERT)
     {
@@ -416,7 +416,7 @@ static void lcd_menu_maintenance_advanced_heatup()
 {
     if (lcd_lib_encoder_pos / ENCODER_TICKS_PER_SCROLL_MENU_ITEM != 0)
     {
-        target_temperature[active_extruder] = constrain(int(target_temperature[active_extruder]) + (lcd_lib_encoder_pos / ENCODER_TICKS_PER_SCROLL_MENU_ITEM)
+        thermalManager.temp_hotend[active_extruder].target = constrain(int(thermalManager.temp_hotend[active_extruder].target) + (lcd_lib_encoder_pos / ENCODER_TICKS_PER_SCROLL_MENU_ITEM)
                                                       , 0, get_maxtemp(active_extruder) - 15);
         lcd_lib_encoder_pos = 0;
     }
@@ -428,7 +428,7 @@ static void lcd_menu_maintenance_advanced_heatup()
     lcd_lib_draw_string_centerP(BOTTOM_MENU_YPOS, PSTR("Click to return"));
     char buffer[16] = {0};
     int_to_string(int(dsp_temperature[active_extruder]), buffer, PSTR("C/"));
-    int_to_string(int(target_temperature[active_extruder]), buffer+strlen(buffer), PSTR("C"));
+    int_to_string(int(thermalManager.temp_hotend[active_extruder].target), buffer+strlen(buffer), PSTR("C"));
     lcd_lib_draw_string_center(30, buffer);
     lcd_lib_draw_heater(LCD_GFX_WIDTH/2-2, 40, getHeaterPower(active_extruder));
     lcd_lib_update_screen();
@@ -450,10 +450,10 @@ static void lcd_menu_maintenance_extrude()
     {
         last_user_interaction = millis();
     }
-    if (lcd_lib_button_pressed || !target_temperature[active_extruder])
+    if (lcd_lib_button_pressed || !thermalManager.temp_hotend[active_extruder].target)
     {
         set_extrude_min_temp(EXTRUDE_MINTEMP);
-        target_temperature[active_extruder] = 0;
+        thermalManager.temp_hotend[active_extruder].target = 0;
         menu.return_to_previous();
     }
     // reset heater timeout until target temperature is reached
@@ -469,7 +469,7 @@ static void lcd_menu_maintenance_extrude()
 
     char buffer[32] = {0};
     ;
-    int_to_string(int(target_temperature[active_extruder]), int_to_string(int(dsp_temperature[active_extruder]), buffer, PSTR("C/")), PSTR("C"));
+    int_to_string(int(thermalManager.temp_hotend[active_extruder].target), int_to_string(int(dsp_temperature[active_extruder]), buffer, PSTR("C/")), PSTR("C"));
     lcd_lib_draw_string_center(20, buffer);
     lcd_lib_draw_heater(LCD_GFX_WIDTH/2-2, 30, getHeaterPower(active_extruder));
     lcd_lib_update_screen();

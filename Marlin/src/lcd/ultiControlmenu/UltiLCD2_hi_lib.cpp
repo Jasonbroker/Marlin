@@ -374,10 +374,10 @@ bool check_heater_timeout()
         {
             for(uint8_t e=0; e<EXTRUDERS; ++e)
             {
-                if (target_temperature[e] > (EXTRUDE_MINTEMP - 40))
+                if (thermalManager.temp_hotend[e].target > (EXTRUDE_MINTEMP - 40))
                 {
                     // switch off nozzle heater
-                    backup_temperature[e] = target_temperature[e];
+                    backup_temperature[e] = thermalManager.temp_hotend[e].target;
                     cooldownHotend(e);
                 }
             }

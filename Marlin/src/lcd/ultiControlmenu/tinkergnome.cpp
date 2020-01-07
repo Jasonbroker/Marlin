@@ -423,7 +423,7 @@ static void lcd_print_tune_fan()
 
 static void lcd_print_flow_nozzle0()
 {
-    if (target_temperature[0]>0) {
+    if (thermalManager.temp_hotend[0].target>0) {
         lcd_tune_value(extrudemultiply[0], 0, 999);
     }
 }
@@ -431,7 +431,7 @@ static void lcd_print_flow_nozzle0()
 #if EXTRUDERS > 1
 static void lcd_print_flow_nozzle1()
 {
-    if (target_temperature[1]>0)
+    if (thermalManager.temp_hotend[1].target>0)
     {
         lcd_tune_value(extrudemultiply[1], 0, 999);
     }
@@ -733,15 +733,15 @@ static void drawHeatupSubmenu (uint8_t nr, uint8_t &flags)
         {
 #if EXTRUDERS < 2
             strcpy_P(buffer, PSTR("Nozzle "));
-            int_to_string(target_temperature[0], int_to_string(dsp_temperature[0], buffer+7, PSTR(DEGREE_SLASH)), PSTR(DEGREE_SYMBOL));
+            int_to_string(thermalManager.temp_hotend[0].target, int_to_string(dsp_temperature[0], buffer+7, PSTR(DEGREE_SLASH)), PSTR(DEGREE_SYMBOL));
 #else
             strcpy_P(buffer, PSTR("Nozzle(1) "));
-            int_to_string(target_temperature[0], int_to_string(dsp_temperature[0], buffer+10, PSTR(DEGREE_SLASH)), PSTR(DEGREE_SYMBOL));
+            int_to_string(thermalManager.temp_hotend[0].target, int_to_string(dsp_temperature[0], buffer+10, PSTR(DEGREE_SLASH)), PSTR(DEGREE_SYMBOL));
 #endif
             lcd_lib_draw_string_left(5, buffer);
             flags |= MENU_STATUSLINE;
         }
-        int_to_string(target_temperature[0], buffer, PSTR(DEGREE_SYMBOL));
+        int_to_string(thermalManager.temp_hotend[0].target, buffer, PSTR(DEGREE_SYMBOL));
         LCDMenu::drawMenuString(LCD_GFX_WIDTH-LCD_CHAR_MARGIN_RIGHT-4*LCD_CHAR_SPACING
                           , 51-(EXTRUDERS*LCD_LINE_HEIGHT)-(BED_MENU_OFFSET*LCD_LINE_HEIGHT)
                           , 24
@@ -757,11 +757,11 @@ static void drawHeatupSubmenu (uint8_t nr, uint8_t &flags)
         if (flags & (MENU_SELECTED | MENU_ACTIVE))
         {
             strcpy_P(buffer, PSTR("Nozzle(2) "));
-            int_to_string(target_temperature[1], int_to_string(dsp_temperature[1], buffer+10, PSTR(DEGREE_SLASH)), PSTR(DEGREE_SYMBOL));
+            int_to_string(thermalManager.temp_hotend[1].target, int_to_string(dsp_temperature[1], buffer+10, PSTR(DEGREE_SLASH)), PSTR(DEGREE_SYMBOL));
             lcd_lib_draw_string_left(5, buffer);
             flags |= MENU_STATUSLINE;
         }
-        int_to_string(target_temperature[1], buffer, PSTR(DEGREE_SYMBOL));
+        int_to_string(thermalManager.temp_hotend[1].target, buffer, PSTR(DEGREE_SYMBOL));
         LCDMenu::drawMenuString(LCD_GFX_WIDTH-LCD_CHAR_MARGIN_RIGHT-4*LCD_CHAR_SPACING
                               , 42-(BED_MENU_OFFSET*LCD_LINE_HEIGHT)
                               , 24
@@ -1122,16 +1122,16 @@ static void drawPrintSubmenu (uint8_t nr, uint8_t &flags)
             {
     #if EXTRUDERS < 2
                 strcpy_P(buffer, PSTR("Nozzle "));
-                int_to_string(target_temperature[0], int_to_string(dsp_temperature[0], buffer+7, PSTR(DEGREE_SLASH)), PSTR(DEGREE_SYMBOL));
+                int_to_string(thermalManager.temp_hotend[0].target, int_to_string(dsp_temperature[0], buffer+7, PSTR(DEGREE_SLASH)), PSTR(DEGREE_SYMBOL));
     #else
                 strcpy_P(buffer, PSTR("Nozzle(1) "));
-                int_to_string(target_temperature[0], int_to_string(dsp_temperature[0], buffer+10, PSTR(DEGREE_SLASH)), PSTR(DEGREE_SYMBOL));
+                int_to_string(thermalManager.temp_hotend[0].target, int_to_string(dsp_temperature[0], buffer+10, PSTR(DEGREE_SLASH)), PSTR(DEGREE_SYMBOL));
     #endif
                 lcd_lib_draw_string_left(5, buffer);
                 flags |= MENU_STATUSLINE;
             }
             lcd_lib_draw_gfx(LCD_CHAR_MARGIN_LEFT, 42, thermometerGfx);
-            int_to_string((flags & MENU_ACTIVE) ? target_temperature[0] : dsp_temperature[0], buffer, PSTR(DEGREE_SYMBOL));
+            int_to_string((flags & MENU_ACTIVE) ? thermalManager.temp_hotend[0].target : dsp_temperature[0], buffer, PSTR(DEGREE_SYMBOL));
             LCDMenu::drawMenuString(LCD_CHAR_MARGIN_LEFT+12
                                   , 42
                                   , 24
@@ -1147,11 +1147,11 @@ static void drawPrintSubmenu (uint8_t nr, uint8_t &flags)
             if (flags & (MENU_SELECTED | MENU_ACTIVE))
             {
                 strcpy_P(buffer, PSTR("Nozzle(2) "));
-                int_to_string(target_temperature[1], int_to_string(dsp_temperature[1], buffer+10, PSTR(DEGREE_SLASH)), PSTR(DEGREE_SYMBOL));
+                int_to_string(thermalManager.temp_hotend[1].target, int_to_string(dsp_temperature[1], buffer+10, PSTR(DEGREE_SLASH)), PSTR(DEGREE_SYMBOL));
                 lcd_lib_draw_string_left(5, buffer);
                 flags |= MENU_STATUSLINE;
             }
-            int_to_string((flags & MENU_ACTIVE) ? target_temperature[1] : dsp_temperature[1], buffer, PSTR(DEGREE_SYMBOL));
+            int_to_string((flags & MENU_ACTIVE) ? thermalManager.temp_hotend[1].target : dsp_temperature[1], buffer, PSTR(DEGREE_SYMBOL));
             LCDMenu::drawMenuString(LCD_CHAR_MARGIN_LEFT+42
                                   , 42
                                   , 24
@@ -1244,13 +1244,13 @@ void lcd_menu_print_heatup_tg()
         {
 #if EXTRUDERS == 2
             uint8_t index = (swapExtruders() ? e^0x01 : e);
-            if (LCD_DETAIL_CACHE_MATERIAL(index) < 1 || target_temperature[e] > 0)
+            if (LCD_DETAIL_CACHE_MATERIAL(index) < 1 || thermalManager.temp_hotend[e].target > 0)
                 continue;
 #else
-            if (LCD_DETAIL_CACHE_MATERIAL(e) < 1 || target_temperature[e] > 0)
+            if (LCD_DETAIL_CACHE_MATERIAL(e) < 1 || thermalManager.temp_hotend[e].target > 0)
                 continue;
 #endif
-            target_temperature[e] = material[e].temperature[nozzleSizeToTemperatureIndex(LCD_DETAIL_CACHE_NOZZLE_DIAMETER(e))];
+            thermalManager.temp_hotend[e].target = material[e].temperature[nozzleSizeToTemperatureIndex(LCD_DETAIL_CACHE_NOZZLE_DIAMETER(e))];
         }
 
 #if TEMP_SENSOR_BED != 0
@@ -1262,7 +1262,7 @@ void lcd_menu_print_heatup_tg()
             bool ready = true;
             for(uint8_t e=0; (e<EXTRUDERS) && ready; ++e)
             {
-                if (current_temperature[e] < target_temperature[e] - TEMP_WINDOW)
+                if (thermalManager.temp_hotend[e].celsius < thermalManager.temp_hotend[e].target - TEMP_WINDOW)
                 {
                     ready = false;
                 }
@@ -1283,10 +1283,10 @@ void lcd_menu_print_heatup_tg()
     uint8_t progress = 125;
     for(uint8_t e=0; e<EXTRUDERS; e++)
     {
-        if (target_temperature[e] < 1)
+        if (thermalManager.temp_hotend[e].target < 1)
             continue;
-        if (current_temperature[e] > 20)
-            progress = min(progress, (current_temperature[e] - 20) * 125 / (target_temperature[e] - 20 - TEMP_WINDOW));
+        if (thermalManager.temp_hotend[e].celsius > 20)
+            progress = min(progress, (thermalManager.temp_hotend[e].celsius - 20) * 125 / (thermalManager.temp_hotend[e].target - 20 - TEMP_WINDOW));
         else
             progress = 0;
     }
@@ -2012,7 +2012,7 @@ void lcd_menu_maintenance_expert()
         {
             for (uint8_t i=0; i<EXTRUDERS; ++i)
             {
-                recover_temperature[i] = target_temperature[i];
+                recover_temperature[i] = thermalManager.temp_hotend[i].target];
             }
             printing_state = PRINT_STATE_RECOVER;
             // select file
@@ -2753,7 +2753,7 @@ static void lcd_extrude_return()
     menu.return_to_previous();
     if (!card.flag.sdprinting)
     {
-        target_temperature[active_extruder] = 0;
+        thermalManager.temp_hotend[active_extruder].target = 0;
     }
 }
 
@@ -2762,23 +2762,23 @@ static void lcd_extrude_toggle_heater()
     // second target temperature
     uint16_t temp2(material[active_extruder].temperature[0]*9/20);
     temp2 -= temp2 % 10;
-    if (!target_temperature[active_extruder])
+    if (!thermalManager.temp_hotend[active_extruder].target)
     {
-        target_temperature[active_extruder] = temp2;
+        thermalManager.temp_hotend[active_extruder].target = temp2;
     }
-    else if (target_temperature[active_extruder] > temp2)
+    else if (thermalManager.temp_hotend[active_extruder].target > temp2)
     {
-        target_temperature[active_extruder] = 0;
+        thermalManager.temp_hotend[active_extruder].target = 0;
     }
     else
     {
-        target_temperature[active_extruder] = material[active_extruder].temperature[0];
+        thermalManager.temp_hotend[active_extruder].target = material[active_extruder].temperature[0];
     }
 }
 
 static void lcd_extrude_temperature()
 {
-    lcd_tune_value(target_temperature[active_extruder], 0, get_maxtemp(active_extruder) - 15);
+    lcd_tune_value(thermalManager.temp_hotend[active_extruder].target, 0, get_maxtemp(active_extruder) - 15);
 }
 
 static void lcd_extrude_reset_pos()
@@ -2985,14 +2985,14 @@ static void drawExtrudeSubmenu (uint8_t nr, uint8_t &flags)
             strcpy_P(c, PSTR("("));
             c=int_to_string(active_extruder+1, c+1, PSTR(") "));
 #endif
-            int_to_string(target_temperature[active_extruder], int_to_string(dsp_temperature[active_extruder], c, PSTR(DEGREE_SLASH)), PSTR(DEGREE_SYMBOL));
+            int_to_string(thermalManager.temp_hotend[active_extruder].target, int_to_string(dsp_temperature[active_extruder], c, PSTR(DEGREE_SLASH)), PSTR(DEGREE_SYMBOL));
             lcd_lib_draw_string_left(5, buffer);
             flags |= MENU_STATUSLINE;
         }
 
         int_to_string(dsp_temperature[active_extruder], buffer, PSTR(DEGREE_SLASH));
         lcd_lib_draw_string_right(LCD_GFX_WIDTH-2*LCD_CHAR_MARGIN_RIGHT-4*LCD_CHAR_SPACING, 20, buffer);
-        int_to_string(target_temperature[active_extruder], buffer, PSTR(DEGREE_SYMBOL));
+        int_to_string(thermalManager.temp_hotend[active_extruder].target, buffer, PSTR(DEGREE_SYMBOL));
         LCDMenu::drawMenuString(LCD_GFX_WIDTH-LCD_CHAR_MARGIN_RIGHT-4*LCD_CHAR_SPACING
                           , 20
                           , 24
@@ -3072,7 +3072,8 @@ void lcd_init_extrude()
 void lcd_menu_expert_extrude()
 {
     // reset heater timeout until target temperature is reached
-    if ((target_temperature[active_extruder]) && ((current_temperature[active_extruder] < 100) || (current_temperature[active_extruder] < (target_temperature[active_extruder] - 20))))
+    if ((thermalManager.temp_hotend[active_extruder].target) && ((thermalManager.temp_hotend[active_extruder].celsius < 100) 
+    || (thermalManager.temp_hotend[active_extruder].celsius < (thermalManager.temp_hotend[active_extruder].target - 20))))
     {
         last_user_interaction = millis();
     }

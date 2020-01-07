@@ -584,7 +584,7 @@ void lcd_menu_print_select()
                                 continue;
 #endif
 
-                            target_temperature[e] = 0;//material[e].temperature;
+                            thermalManager.temp_hotend[e].target = 0;//material[e].temperature;
 #if TEMP_SENSOR_BED != 0
                             thermalManager.temp_bed.target = max(thermalManager.temp_bed.target, material[e].bed_temperature);
 #endif
@@ -659,13 +659,13 @@ void lcd_menu_print_heatup()
         {
 #if EXTRUDERS == 2
             uint8_t index = (swapExtruders() ? e ^ 0x01 : e);
-            if (LCD_DETAIL_CACHE_MATERIAL(index) < 1 || target_temperature[e] > 0)
+            if (LCD_DETAIL_CACHE_MATERIAL(index) < 1 || thermalManager.temp_hotend[e].target > 0)
                 continue;
 #else
-            if (LCD_DETAIL_CACHE_MATERIAL(e) < 1 || target_temperature[e] > 0)
+            if (LCD_DETAIL_CACHE_MATERIAL(e) < 1 || thermalManager.temp_hotend[e].target > 0)
                 continue;
 #endif
-            target_temperature[e] = material[e].temperature[nozzleSizeToTemperatureIndex(LCD_DETAIL_CACHE_NOZZLE_DIAMETER(e))];
+            thermalManager.temp_hotend[e].target = material[e].temperature[nozzleSizeToTemperatureIndex(LCD_DETAIL_CACHE_NOZZLE_DIAMETER(e))];
             // printing_state = PRINT_STATE_START;
         }
 
@@ -677,7 +677,7 @@ void lcd_menu_print_heatup()
         {
             bool ready = true;
             for(uint8_t e=0; e<EXTRUDERS; e++)
-                if (current_temperature[e] < target_temperature[e] - TEMP_WINDOW)
+                if (thermalManager.temp_hotend[e].celsius < thermalManager.temp_hotend[e].target - TEMP_WINDOW)
                     ready = false;
 
             if (ready)
@@ -700,14 +700,14 @@ void lcd_menu_print_heatup()
     {
 #if EXTRUDERS == 2
         uint8_t index = (swapExtruders() ? e ^ 0x01 : e);
-        if (((printing_state != PRINT_STATE_RECOVER) && (LCD_DETAIL_CACHE_MATERIAL(index) < 1)) || (target_temperature[e] < 1))
+        if (((printing_state != PRINT_STATE_RECOVER) && (LCD_DETAIL_CACHE_MATERIAL(index) < 1)) || (thermalManager.temp_hotend[e].target < 1))
             continue;
 #else
-        if (((printing_state != PRINT_STATE_RECOVER) && (LCD_DETAIL_CACHE_MATERIAL(e) < 1)) || (target_temperature[e] < 1))
+        if (((printing_state != PRINT_STATE_RECOVER) && (LCD_DETAIL_CACHE_MATERIAL(e) < 1)) || (thermalManager.temp_hotend[e].target < 1))
             continue;
 #endif
-        if (current_temperature[e] > 20)
-            progress = min(progress, (current_temperature[e] - 20) * 125 / (target_temperature[e] - 20 - TEMP_WINDOW));
+        if (thermalManager.temp_hotend[e].target > 20)
+            progress = min(progress, (thermalManager.temp_hotend[e].celsius - 20) * 125 / (thermalManager.temp_hotend[e].target - 20 - TEMP_WINDOW));
         else
             progress = 0;
     }
@@ -762,7 +762,7 @@ static void lcd_menu_print_printing()
             break;
         case PRINT_STATE_HEATING:
             lcd_lib_draw_string_centerP(20, PSTR("Heating"));
-            int_to_string(target_temperature[0], int_to_string(dsp_temperature[0], buffer, PSTR("C/")), PSTR("C"));
+            int_to_string(thermalManager.temp_hotend[0].target, int_to_string(dsp_temperature[0], buffer, PSTR("C/")), PSTR("C"));
             lcd_lib_draw_string_center(30, buffer);
             break;
 #if TEMP_SENSOR_BED != 0
@@ -960,14 +960,14 @@ void lcd_menu_print_ready()
     if (sleep_state & SLEEP_COOLING)
     {
 #if TEMP_SENSOR_BED != 0
-        if ((current_temperature[0] > 60) || (thermalManager.temp_bed.celsius > 40))
+        if ((thermalManager.temp_hotend[0].celsius > 60) || (thermalManager.temp_bed.celsius > 40))
 #else
-        if (current_temperature[0] > 60)
+        if (thermalManager.temp_hotend[0].celsius > 60)
 #endif // TEMP_SENSOR_BED
         {
             lcd_lib_draw_string_centerP(16, PSTR("Printer cooling down"));
 
-            int16_t progress = 124 - (current_temperature[0] - 60);
+            int16_t progress = 124 - (thermalManager.temp_hotend[0].celsius - 60);
             if (progress < 0) progress = 0;
             if (progress > 124) progress = 124;
 
@@ -1052,12 +1052,12 @@ static void tune_item_details_callback(uint8_t nr)
         int_to_string(feedmultiply, buffer, PSTR("%"));
     else if (nr == 2)
     {
-        int_to_string(target_temperature[0], int_to_string(dsp_temperature[0], buffer, PSTR("C/")), PSTR("C"));
+        int_to_string(thermalManager.temp_hotend[0].target, int_to_string(dsp_temperature[0], buffer, PSTR("C/")), PSTR("C"));
     }
 #if EXTRUDERS > 1
     else if (nr == 3)
     {
-        int_to_string(target_temperature[1], int_to_string(dsp_temperature[1], buffer, PSTR("C/")), PSTR("C"));
+        int_to_string(thermalManager.temp_hotend[1].target, int_to_string(dsp_temperature[1], buffer, PSTR("C/")), PSTR("C"));
     }
 #endif
 #if TEMP_SENSOR_BED != 0
@@ -1089,7 +1089,7 @@ void lcd_menu_print_tune_heatup_nozzle0()
 {
     if (lcd_lib_encoder_pos / ENCODER_TICKS_PER_SCROLL_MENU_ITEM != 0)
     {
-        target_temperature[0] = constrain(int(target_temperature[0]) + (lcd_lib_encoder_pos / ENCODER_TICKS_PER_SCROLL_MENU_ITEM)
+        thermalManager.temp_hotend[0].target = constrain(int(thermalManager.temp_hotend[0].target) + (lcd_lib_encoder_pos / ENCODER_TICKS_PER_SCROLL_MENU_ITEM)
                                          , 0, get_maxtemp(0) - 15);
         lcd_lib_encoder_pos = 0;
     }
@@ -1105,7 +1105,7 @@ void lcd_menu_print_tune_heatup_nozzle0()
     lcd_lib_draw_string_centerP(BOTTOM_MENU_YPOS, PSTR("Click to return"));
     char buffer[16] = {0};
     int_to_string(int(dsp_temperature[0]), buffer, PSTR("C/"));
-    int_to_string(int(target_temperature[0]), buffer+strlen(buffer), PSTR("C"));
+    int_to_string(int(thermalManager.temp_hotend[0].target), buffer+strlen(buffer), PSTR("C"));
     lcd_lib_draw_string_center(30, buffer);
     lcd_lib_draw_heater(LCD_GFX_WIDTH/2-2, 40, getHeaterPower(0));
     lcd_lib_update_screen();
@@ -1115,7 +1115,7 @@ void lcd_menu_print_tune_heatup_nozzle1()
 {
     if (lcd_lib_encoder_pos / ENCODER_TICKS_PER_SCROLL_MENU_ITEM != 0)
     {
-        target_temperature[1] = constrain(int(target_temperature[1]) + (lcd_lib_encoder_pos / ENCODER_TICKS_PER_SCROLL_MENU_ITEM)
+        thermalManager.temp_hotend[1].target = constrain(int(thermalManager.temp_hotend[1].target) + (lcd_lib_encoder_pos / ENCODER_TICKS_PER_SCROLL_MENU_ITEM)
                                          , 0, get_maxtemp(1) - 15);
         lcd_lib_encoder_pos = 0;
     }
@@ -1127,7 +1127,7 @@ void lcd_menu_print_tune_heatup_nozzle1()
     lcd_lib_draw_string_centerP(BOTTOM_MENU_YPOS, PSTR("Click to return"));
     char buffer[16] = {0};
     int_to_string(int(dsp_temperature[1]), buffer, PSTR("C/"));
-    int_to_string(int(target_temperature[1]), buffer+strlen(buffer), PSTR("C"));
+    int_to_string(int(thermalManager.temp_hotend[1].target), buffer+strlen(buffer), PSTR("C"));
     lcd_lib_draw_string_center(30, buffer);
     lcd_lib_draw_heater(LCD_GFX_WIDTH/2-2, 40, getHeaterPower(1));
     lcd_lib_update_screen();

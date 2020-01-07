@@ -290,7 +290,7 @@ static void lcd_menu_change_material_insert_wait_user()
 {
     LED_GLOW
 
-    if (target_temperature[active_extruder] && (printing_state == PRINT_STATE_NORMAL) && (movesplanned() < 2))
+    if (thermalManager.temp_hotend[active_extruder].target && (printing_state == PRINT_STATE_NORMAL) && (movesplanned() < 2))
     {
         current_position[E_AXIS] += 0.5 / volume_to_filament_length[active_extruder];
         plan_buffer_line(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS], current_position[E_AXIS], FILAMENT_INSERT_SPEED, active_extruder);
@@ -421,7 +421,7 @@ static void materialInsertReady()
 
 static void lcd_menu_change_material_insert()
 {
-    if (target_temperature[active_extruder])
+    if (thermalManager.temp_hotend[active_extruder].target)
     {
         LED_GLOW
 
