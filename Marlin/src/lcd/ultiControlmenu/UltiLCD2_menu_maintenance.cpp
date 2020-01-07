@@ -125,7 +125,7 @@ static void lcd_advanced_details(uint8_t nr)
 #endif
     else if (nr == EXTRUDERS + BED_MENU_OFFSET + 7)
     {
-        int_to_string(int(fanSpeed) * 100 / 255, buffer, PSTR("%"));
+        int_to_string(int(thermalManager.fan_speed) * 100 / 255, buffer, PSTR("%"));
     }
     else
     {
@@ -400,7 +400,7 @@ void lcd_menu_maintenance_advanced()
         }
         else if (IS_SELECTED_SCROLL(index++))
         {
-            LCD_EDIT_SETTING_BYTE_PERCENT(fanSpeed, "Fan speed", "%", 0, 100);
+            LCD_EDIT_SETTING_BYTE_PERCENT(thermalManager.fan_speed, "Fan speed", "%", 0, 100);
         }
         else if ((ui_mode & UI_MODE_EXPERT) && (IS_SELECTED_SCROLL(index++)))
         {

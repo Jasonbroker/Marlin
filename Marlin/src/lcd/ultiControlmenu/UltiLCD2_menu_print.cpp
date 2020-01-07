@@ -588,7 +588,7 @@ void lcd_menu_print_select()
 #if TEMP_SENSOR_BED != 0
                             thermalManager.temp_bed.target = max(thermalManager.temp_bed.target, material[e].bed_temperature);
 #endif
-                            fanSpeedPercent = max(fanSpeedPercent, material[e].fan_speed);
+                            thermalManager.fanPercent = max(thermalManager.fanPercent, material[e].fan_speed);
                             volume_to_filament_length[e] = 1.0 / (M_PI * (material[e].diameter / 2.0) * (material[e].diameter / 2.0));
                             extrudemultiply[e] = material[e].flow;
                         }
@@ -1067,7 +1067,7 @@ static void tune_item_details_callback(uint8_t nr)
     }
 #endif
     else if (nr == 2 + BED_MENU_OFFSET + EXTRUDERS)
-        int_to_string(int(fanSpeed) * 100 / 255, buffer, PSTR("%"));
+        int_to_string(int(thermalManager.fan_speed) * 100 / 255, buffer, PSTR("%"));
     else if (nr == 3 + BED_MENU_OFFSET + EXTRUDERS)
         int_to_string(extrudemultiply[0], buffer, PSTR("%"));
 #if EXTRUDERS > 1
@@ -1165,7 +1165,7 @@ void lcd_menu_print_tune()
             menu.add_menu(menu_t(lcd_menu_maintenance_advanced_bed_heatup, 0));//Use the maintainace heatup menu, which shows the current temperature.
 #endif
         else if (IS_SELECTED_SCROLL(index++))
-            LCD_EDIT_SETTING_BYTE_PERCENT(fanSpeed, "Fan speed", "%", 0, 100);
+            LCD_EDIT_SETTING_BYTE_PERCENT(thermalManager.fan_speed, "Fan speed", "%", 0, 100);
 #if EXTRUDERS > 1
         else if (IS_SELECTED_SCROLL(index++))
             LCD_EDIT_SETTING(extrudemultiply[0], "Material flow 1", "%", 10, 1000);

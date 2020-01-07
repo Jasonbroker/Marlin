@@ -418,7 +418,7 @@ static void lcd_print_tune_speed()
 
 static void lcd_print_tune_fan()
 {
-    lcd_tune_byte(fanSpeed, 0, 100);
+    lcd_tune_byte(thermalManager.fan_speed, 0, 100);
 }
 
 static void lcd_print_flow_nozzle0()
@@ -1167,10 +1167,10 @@ static void drawPrintSubmenu (uint8_t nr, uint8_t &flags)
             if (flags & (MENU_SELECTED | MENU_ACTIVE))
             {
                 lcd_lib_draw_string_leftP(5, PSTR("Fan"));
-                lcd_lib_draw_bargraph(LCD_CHAR_MARGIN_LEFT+5*LCD_CHAR_SPACING, 5, LCD_GFX_WIDTH-LCD_CHAR_MARGIN_RIGHT, 11, float(fanSpeed)/255);
+                lcd_lib_draw_bargraph(LCD_CHAR_MARGIN_LEFT+5*LCD_CHAR_SPACING, 5, LCD_GFX_WIDTH-LCD_CHAR_MARGIN_RIGHT, 11, float(thermalManager.fan_speed)/255);
                 flags |= MENU_STATUSLINE;
             }
-            int_to_string(float(fanSpeed)*100/255 + 0.5f, buffer, PSTR("%"));
+            int_to_string(float(thermalManager.fan_speed)*100/255 + 0.5f, buffer, PSTR("%"));
             LCDMenu::drawMenuString(LCD_GFX_WIDTH-LCD_CHAR_MARGIN_RIGHT-4*LCD_CHAR_SPACING
     #if TEMP_SENSOR_BED != 0
                                   , 33
@@ -1188,9 +1188,9 @@ static void drawPrintSubmenu (uint8_t nr, uint8_t &flags)
             static uint8_t prevFanSpeed = 0;
 
             // start animation
-            if (!fanAnimate && fanSpeed!=prevFanSpeed)
+            if (!fanAnimate && thermalManager.fan_speed!=prevFanSpeed)
                 fanAnimate = 32;
-            if ((fanSpeed == 0) || (!fanAnimate) || (fanAnimate%4))
+            if ((thermalManager.fan_speed == 0) || (!fanAnimate) || (fanAnimate%4))
             {
     #if TEMP_SENSOR_BED != 0
                 lcd_lib_draw_gfx(LCD_GFX_WIDTH-LCD_CHAR_MARGIN_RIGHT-4*LCD_CHAR_SPACING-11, 33, fan1Gfx);
@@ -1202,7 +1202,7 @@ static void drawPrintSubmenu (uint8_t nr, uint8_t &flags)
             {
                 --fanAnimate;
             }
-            prevFanSpeed = fanSpeed;
+            prevFanSpeed = thermalManager.fan_speed;
 
         }
     #if TEMP_SENSOR_BED != 0
@@ -1818,7 +1818,7 @@ static void recover_abort()
     clear_command_queue();
 
     HOTEND_LOOP() setTargetHotend(0, e);
-    fanSpeed = 0;
+    thermalManager.fan_speed = 0;
     reset_printing_state();
     doCooldown();
 
