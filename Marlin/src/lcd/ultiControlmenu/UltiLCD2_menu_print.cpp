@@ -1089,7 +1089,7 @@ void lcd_menu_print_tune_heatup_nozzle0()
     if (lcd_lib_encoder_pos / ENCODER_TICKS_PER_SCROLL_MENU_ITEM != 0)
     {
         thermalManager.temp_hotend[0].target = constrain(int(thermalManager.temp_hotend[0].target) + (lcd_lib_encoder_pos / ENCODER_TICKS_PER_SCROLL_MENU_ITEM)
-                                         , 0, get_maxtemp(0) - 15);
+                                         , 0, thermalManager.temp_range[0].maxtemp - 15);
         lcd_lib_encoder_pos = 0;
     }
     if (lcd_lib_button_pressed)
@@ -1115,7 +1115,7 @@ void lcd_menu_print_tune_heatup_nozzle1()
     if (lcd_lib_encoder_pos / ENCODER_TICKS_PER_SCROLL_MENU_ITEM != 0)
     {
         thermalManager.temp_hotend[1].target = constrain(int(thermalManager.temp_hotend[1].target) + (lcd_lib_encoder_pos / ENCODER_TICKS_PER_SCROLL_MENU_ITEM)
-                                         , 0, get_maxtemp(1) - 15);
+                                         , 0, thermalManager.temp_range[1].maxtemp - 15);
         lcd_lib_encoder_pos = 0;
     }
     if (lcd_lib_button_pressed)

@@ -417,7 +417,7 @@ static void lcd_menu_maintenance_advanced_heatup()
     if (lcd_lib_encoder_pos / ENCODER_TICKS_PER_SCROLL_MENU_ITEM != 0)
     {
         thermalManager.temp_hotend[active_extruder].target = constrain(int(thermalManager.temp_hotend[active_extruder].target) + (lcd_lib_encoder_pos / ENCODER_TICKS_PER_SCROLL_MENU_ITEM)
-                                                      , 0, get_maxtemp(active_extruder) - 15);
+                                                      , 0, thermalManager.temp_range[active_extruder].maxtemp - 15);
         lcd_lib_encoder_pos = 0;
     }
     if (lcd_lib_button_pressed)

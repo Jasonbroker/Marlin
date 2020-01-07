@@ -918,7 +918,7 @@ static void lcd_menu_material_settings()
             LCD_EDIT_SETTING(material[active_extruder].flow, "Material flow", "%", 1, 1000);
 #ifdef USE_CHANGE_TEMPERATURE
         else if (IS_SELECTED_SCROLL(5 + BED_MENU_OFFSET))
-            LCD_EDIT_SETTING(material[active_extruder].change_temperature, "Change temperature", "C", 0, get_maxtemp(active_extruder));
+            LCD_EDIT_SETTING(material[active_extruder].change_temperature, "Change temperature", "C", 0, thermalManager.temp_range[active_extruder].maxtemp);
         else if (IS_SELECTED_SCROLL(6 + BED_MENU_OFFSET))
             LCD_EDIT_SETTING(material[active_extruder].change_preheat_wait_time, "Change wait time", "sec", 0, 180);
         else if (IS_SELECTED_SCROLL(7 + BED_MENU_OFFSET))
@@ -1108,9 +1108,9 @@ void lcd_material_set_material(uint8_t nr, uint8_t e)
     for(uint8_t n=0; n<MAX_MATERIAL_TEMPERATURES; ++n)
     {
         material[e].temperature[n] = eeprom_read_word(EEPROM_MATERIAL_EXTRA_TEMPERATURE_OFFSET(nr, n));
-//        set_maxtemp(e, constrain(material[e].temperature[n] + 15, HEATER_0_MAXTEMP, min(max(get_maxtemp(e), HEATER_0_MAXTEMP + 15), material[e].temperature[n] + 15)));
-        if (material[e].temperature[n] > get_maxtemp(e) - 15)
-            material[e].temperature[n] = get_maxtemp(e) - 15;
+//        set_maxtemp(e, constrain(material[e].temperature[n] + 15, HEATER_0_MAXTEMP, min(max(thermalManager.temp_range[e].maxtemp, HEATER_0_MAXTEMP + 15), material[e].temperature[n] + 15)));
+        if (material[e].temperature[n] > thermalManager.temp_range[e].maxtemp - 15)
+            material[e].temperature[n] = thermalManager.temp_range[e].maxtemp - 15;
     }
 
 #if TEMP_SENSOR_BED != 0
@@ -1119,7 +1119,7 @@ void lcd_material_set_material(uint8_t nr, uint8_t e)
 #endif
     material[e].change_temperature = eeprom_read_word(EEPROM_MATERIAL_CHANGE_TEMPERATURE(nr));
     material[e].change_preheat_wait_time = eeprom_read_byte(EEPROM_MATERIAL_CHANGE_WAIT_TIME(nr));
-    if ((material[e].change_temperature < 10) || (material[e].change_temperature > (get_maxtemp(e) - 15)))
+    if ((material[e].change_temperature < 10) || (material[e].change_temperature > (thermalManager.temp_range[e].maxtemp - 15)))
         material[e].change_temperature = material[e].temperature[0];
 
     lcd_material_store_current_material();
@@ -1166,7 +1166,7 @@ void lcd_material_read_current_material()
 
         material[e].change_temperature = eeprom_read_word(EEPROM_MATERIAL_CHANGE_TEMPERATURE(EEPROM_MATERIAL_SETTINGS_MAX_COUNT+e));
         material[e].change_preheat_wait_time = eeprom_read_byte(EEPROM_MATERIAL_CHANGE_WAIT_TIME(EEPROM_MATERIAL_SETTINGS_MAX_COUNT+e));
-        if ((material[e].change_temperature < 10) || (material[e].change_temperature > (get_maxtemp(e) - 15)))
+        if ((material[e].change_temperature < 10) || (material[e].change_temperature > (thermalManager.temp_range[e].maxtemp - 15)))
             material[e].change_temperature = material[e].temperature[0];
     }
 }
@@ -1187,7 +1187,7 @@ void lcd_material_store_current_material()
         for(uint8_t n=0; n<MAX_MATERIAL_TEMPERATURES; ++n)
         {
             eeprom_write_word(EEPROM_MATERIAL_EXTRA_TEMPERATURE_OFFSET(EEPROM_MATERIAL_SETTINGS_MAX_COUNT+e, n), material[e].temperature[n]);
-            // set_maxtemp(e, constrain(material[e].temperature[n] + 15, HEATER_0_MAXTEMP, min(max(get_maxtemp(e), HEATER_0_MAXTEMP + 15), material[e].temperature[n] + 15)));
+            // set_maxtemp(e, constrain(material[e].temperature[n] + 15, HEATER_0_MAXTEMP, min(max(thermalManager.temp_range[e].maxtemp, HEATER_0_MAXTEMP + 15), material[e].temperature[n] + 15)));
         }
 
         eeprom_write_block(material[e].name, EEPROM_MATERIAL_NAME_OFFSET(EEPROM_MATERIAL_SETTINGS_MAX_COUNT+e), MATERIAL_NAME_SIZE);

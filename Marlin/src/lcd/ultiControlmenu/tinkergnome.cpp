@@ -2776,7 +2776,7 @@ static void lcd_extrude_toggle_heater()
 
 static void lcd_extrude_temperature()
 {
-    lcd_tune_value(thermalManager.temp_hotend[active_extruder].target, 0, get_maxtemp(active_extruder) - 15);
+    lcd_tune_value(thermalManager.temp_hotend[active_extruder].target, 0, thermalManager.temp_range[active_extruder].maxtemp - 15);
 }
 
 static void lcd_extrude_reset_pos()

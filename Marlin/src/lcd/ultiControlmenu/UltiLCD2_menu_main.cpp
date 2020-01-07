@@ -210,7 +210,7 @@ static void lcd_toggle_preheat_nozzle(uint8_t e)
 
 static void lcd_preheat_tune_nozzle(uint8_t e)
 {
-    lcd_tune_value(thermalManager.temp_hotend[e].target, 0, get_maxtemp(e) - 15);
+    lcd_tune_value(thermalManager.temp_hotend[e].target, 0, thermalManager.temp_range[e].maxtemp - 15);
     PREHEAT_FLAG(e) = (thermalManager.temp_hotend[e].target>0);
 }
 

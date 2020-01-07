@@ -2645,7 +2645,7 @@ static void autotune_params_e1()
     lcd_cache[3] = 0; // current cycle
     WORD_SETTING(2) = 150; // tuning temperature
     WORD_SETTING(3) = 40; // min temperature
-    WORD_SETTING(4) = get_maxtemp(0)-15; // max temperature
+    WORD_SETTING(4) = thermalManager.temp_range[0].maxtemp - 15; // max temperature
     menu.add_menu(menu_t(init_autotune_params, lcd_menu_autotune_params, NULL));
 }
 
@@ -2674,7 +2674,7 @@ static void autotune_params_e2()
     lcd_cache[3] = 0; // current cycle
     WORD_SETTING(2) = 150; // tuning temperature
     WORD_SETTING(3) = 40; // min temperature
-    WORD_SETTING(4) = get_maxtemp(1)-15; // max temperature
+    WORD_SETTING(4) = thermalManager.temp_range[1].maxtemp-15; // max temperature
     menu.add_menu(menu_t(init_autotune_params, lcd_menu_autotune_params, NULL));
 }
 #endif
