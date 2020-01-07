@@ -15,6 +15,7 @@
 #include "UltiLCD2_menu_print.h"
 #include "UltiLCD2_menu_utils.h"
 #include "../../module/stepper.h"
+#include "tinkergnome.h"
 
 static void lcd_menu_first_run_init_2();
 static void lcd_menu_first_run_init_3();

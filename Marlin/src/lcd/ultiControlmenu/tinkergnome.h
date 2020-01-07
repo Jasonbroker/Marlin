@@ -50,4 +50,14 @@ FORCE_INLINE void lcd_print_tune_nozzle1() { lcd_tune_value((uint16_t &)thermalM
 #if TEMP_SENSOR_BED != 0
 FORCE_INLINE void lcd_print_tune_bed() { lcd_tune_value((uint16_t &)thermalManager.temp_bed.target, 0, BED_MAXTEMP - 15); }
 #endif
+
+#ifdef UM2PLUS
+#define DEFAULT_AXIS_DIR 0xFD
+#else
+#define DEFAULT_AXIS_DIR 0x15
+#endif
+
+#define MAX_HEATING_TEMPERATURE_INCREASE 10
+#define MAX_HEATING_CHECK_MILLIS (30 * 1000)
+
 #endif //TINKERGNOME_H
