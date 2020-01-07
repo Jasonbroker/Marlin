@@ -17,6 +17,7 @@
 #include "tinkergnome.h"
 #include "powerbudget.h"
 #include "../../module/motion.h"
+#include "../../gcode/gcode.h"
 
 static void lcd_menu_maintenance_advanced_heatup();
 //static void lcd_menu_maintenance_led();
