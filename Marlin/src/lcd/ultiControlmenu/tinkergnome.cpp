@@ -778,11 +778,11 @@ static void drawHeatupSubmenu (uint8_t nr, uint8_t &flags)
         if (flags & (MENU_SELECTED | MENU_ACTIVE))
         {
             strcpy_P(buffer, PSTR("Buildplate "));
-            int_to_string(target_temperature_bed, int_to_string(dsp_temperature_bed, buffer+11, PSTR(DEGREE_SLASH)), PSTR(DEGREE_SYMBOL));
+            int_to_string(thermalManager.temp_bed.target, int_to_string(dsp_temperature_bed, buffer+11, PSTR(DEGREE_SLASH)), PSTR(DEGREE_SYMBOL));
             lcd_lib_draw_string_left(5, buffer);
             flags |= MENU_STATUSLINE;
         }
-        int_to_string(target_temperature_bed, buffer, PSTR(DEGREE_SYMBOL));
+        int_to_string(thermalManager.temp_bed.target, buffer, PSTR(DEGREE_SYMBOL));
         LCDMenu::drawMenuString(LCD_GFX_WIDTH-LCD_CHAR_MARGIN_RIGHT-4*LCD_CHAR_SPACING
                               , 42
                               , 24
@@ -1212,12 +1212,12 @@ static void drawPrintSubmenu (uint8_t nr, uint8_t &flags)
             if (flags & (MENU_SELECTED | MENU_ACTIVE))
             {
                 strcpy_P(buffer, PSTR("Buildplate "));
-                int_to_string(target_temperature_bed, int_to_string(dsp_temperature_bed, buffer+11, PSTR(DEGREE_SLASH)), PSTR(DEGREE_SYMBOL));
+                int_to_string(thermalManager.temp_bed.target, int_to_string(dsp_temperature_bed, buffer+11, PSTR(DEGREE_SLASH)), PSTR(DEGREE_SYMBOL));
                 lcd_lib_draw_string_left(5, buffer);
                 flags |= MENU_STATUSLINE;
             }
             lcd_lib_draw_gfx(LCD_GFX_WIDTH-LCD_CHAR_MARGIN_RIGHT-4*LCD_CHAR_SPACING-12, 42, bedTempGfx);
-            int_to_string((flags & MENU_ACTIVE) ? target_temperature_bed : dsp_temperature_bed, buffer, PSTR(DEGREE_SYMBOL));
+            int_to_string((flags & MENU_ACTIVE) ? thermalManager.temp_bed.target : dsp_temperature_bed, buffer, PSTR(DEGREE_SYMBOL));
             LCDMenu::drawMenuString(LCD_GFX_WIDTH-LCD_CHAR_MARGIN_RIGHT-4*LCD_CHAR_SPACING
                                   , 42
                                   , 24
@@ -1237,7 +1237,7 @@ void lcd_menu_print_heatup_tg()
 
     char buffer[32] = {0};
 #if TEMP_SENSOR_BED != 0
-    if (current_temperature_bed >= target_temperature_bed - TEMP_WINDOW * 2)
+    if (thermalManager.temp_bed.celsius >= thermalManager.temp_bed.target - TEMP_WINDOW * 2)
     {
 #endif
         for(uint8_t e=0; e<EXTRUDERS; ++e)
@@ -1254,7 +1254,7 @@ void lcd_menu_print_heatup_tg()
         }
 
 #if TEMP_SENSOR_BED != 0
-        if (current_temperature_bed >= target_temperature_bed - TEMP_WINDOW * 2 && !commands_queued() && !blocks_queued())
+        if (thermalManager.temp_bed.celsius >= thermalManager.temp_bed.target - TEMP_WINDOW * 2 && !commands_queued() && !blocks_queued())
 #else
         if (!commands_queued() && !blocks_queued())
 #endif // TEMP_SENSOR_BED
@@ -1291,9 +1291,9 @@ void lcd_menu_print_heatup_tg()
             progress = 0;
     }
 #if TEMP_SENSOR_BED != 0
-    if ((current_temperature_bed > 20) && (target_temperature_bed > 20+TEMP_WINDOW))
-        progress = min(progress, (current_temperature_bed - 20) * 125 / (target_temperature_bed - 20 - TEMP_WINDOW));
-    else if (target_temperature_bed > current_temperature_bed - 20)
+    if ((thermalManager.temp_bed.celsius > 20) && (thermalManager.temp_bed.target > 20+TEMP_WINDOW))
+        progress = min(progress, (thermalManager.temp_bed.celsius - 20) * 125 / (thermalManager.temp_bed.target - 20 - TEMP_WINDOW));
+    else if (thermalManager.temp_bed.target > thermalManager.temp_bed.celsius - 20)
         progress = 0;
 #endif
 

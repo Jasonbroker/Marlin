@@ -29,7 +29,7 @@
 
 // coefficient for the exponential moving average
 // K1 defined in Configuration.h in the PID settings
-#define K2 (1.0-K1)
+#define K2 (1.0-PID_K1)
 
 #define LCD_CHARS_PER_LINE 20
 
@@ -186,7 +186,7 @@ void lcd_update()
         dsp_temperature[e] = (K2 * current_temperature[e]) + (K1 * dsp_temperature[e]);
     }
 #if TEMP_SENSOR_BED != 0
-    dsp_temperature_bed = (K2 * current_temperature_bed) + (K1 * dsp_temperature_bed);
+    dsp_temperature_bed = (K2 * thermalManager.temp_bed.celsius) + (K1 * dsp_temperature_bed);
 #endif
 }
 

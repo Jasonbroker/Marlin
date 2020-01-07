@@ -252,21 +252,21 @@ static void lcd_toggle_preheat_bed()
     }
     else
     {
-        target_temperature_bed = 0;
+        thermalManager.temp_bed.target = 0;
     }
 }
 
 static void lcd_preheat_tune_bed()
 {
-    lcd_tune_value(target_temperature_bed, 0, BED_MAXTEMP - 15);
-    PREHEAT_FLAG(EXTRUDERS) = (target_temperature_bed>0);
+    lcd_tune_value(thermalManager.temp_bed.target, 0, BED_MAXTEMP - 15);
+    PREHEAT_FLAG(EXTRUDERS) = (thermalManager.temp_bed.target>0);
 }
 #endif
 
 static void init_preheat()
 {
 #if TEMP_SENSOR_BED != 0
-    PREHEAT_FLAG(EXTRUDERS) = (target_temperature_bed>0);
+    PREHEAT_FLAG(EXTRUDERS) = (thermalManager.temp_bed.target>0);
 #endif
     for(uint8_t e=0; e<EXTRUDERS; ++e)
     {
@@ -561,11 +561,11 @@ static void drawPreheatSubmenu (uint8_t nr, uint8_t &flags)
         if (flags & (MENU_SELECTED | MENU_ACTIVE))
         {
             strcpy_P(buffer, PSTR("Buildplate "));
-            int_to_string(target_temperature_bed, int_to_string(dsp_temperature_bed, buffer+strlen(buffer), PSTR(DEGREE_SLASH)), PSTR(DEGREE_SYMBOL));
+            int_to_string(thermalManager.temp_bed.target, int_to_string(dsp_temperature_bed, buffer+strlen(buffer), PSTR(DEGREE_SLASH)), PSTR(DEGREE_SYMBOL));
             lcd_lib_draw_string_left(5, buffer);
             flags |= MENU_STATUSLINE;
         }
-        int_to_string(target_temperature_bed, buffer, PSTR(DEGREE_SYMBOL));
+        int_to_string(thermalManager.temp_bed.target, buffer, PSTR(DEGREE_SYMBOL));
         LCDMenu::drawMenuString(LCD_GFX_WIDTH-LCD_CHAR_MARGIN_RIGHT-4*LCD_CHAR_SPACING
                               , 40
                               , 24
@@ -585,7 +585,7 @@ static void lcd_main_preheat()
     char buffer[32] = {0};
 
 #if TEMP_SENSOR_BED != 0
-    if ((!PREHEAT_FLAG(EXTRUDERS)) | (current_temperature_bed > target_temperature_bed - 10))
+    if ((!PREHEAT_FLAG(EXTRUDERS)) | (thermalManager.temp_bed.celsius > thermalManager.temp_bed.target - 10))
     {
 #endif
         // set preheat nozzle temperature

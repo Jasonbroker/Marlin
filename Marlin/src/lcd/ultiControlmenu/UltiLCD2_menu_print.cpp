@@ -565,7 +565,7 @@ void lcd_menu_print_select()
                         //New style GCode flavor without start/end code.
                         // Temperature settings, filament settings, fan settings, start and end-code are machine controlled.
 #if TEMP_SENSOR_BED != 0
-                        target_temperature_bed = 0;
+                        thermalManager.temp_bed.target = 0;
 #endif
                         fanSpeedPercent = 0;
                         for(uint8_t e=0; e<EXTRUDERS; ++e)
@@ -586,7 +586,7 @@ void lcd_menu_print_select()
 
                             target_temperature[e] = 0;//material[e].temperature;
 #if TEMP_SENSOR_BED != 0
-                            target_temperature_bed = max(target_temperature_bed, material[e].bed_temperature);
+                            thermalManager.temp_bed.target = max(thermalManager.temp_bed.target, material[e].bed_temperature);
 #endif
                             fanSpeedPercent = max(fanSpeedPercent, material[e].fan_speed);
                             volume_to_filament_length[e] = 1.0 / (M_PI * (material[e].diameter / 2.0) * (material[e].diameter / 2.0));
@@ -652,7 +652,7 @@ void lcd_menu_print_heatup()
     lcd_question_screen(lcd_menu_print_tune, NULL, PSTR("TUNE"), lcd_menu_print_abort, NULL, PSTR("ABORT"));
 
 #if TEMP_SENSOR_BED != 0
-    if (current_temperature_bed > target_temperature_bed - TEMP_WINDOW*2)
+    if (thermalManager.temp_bed.celsius > thermalManager.temp_bed.target - TEMP_WINDOW*2)
     {
 #endif
         for(uint8_t e=0; e<EXTRUDERS; ++e)
@@ -670,7 +670,7 @@ void lcd_menu_print_heatup()
         }
 
 #if TEMP_SENSOR_BED != 0
-        if (current_temperature_bed >= target_temperature_bed - TEMP_WINDOW * 2 && !commands_queued() && !blocks_queued())
+        if (thermalManager.temp_bed.celsius >= thermalManager.temp_bed.target - TEMP_WINDOW * 2 && !commands_queued() && !blocks_queued())
 #else
         if (!commands_queued() && !blocks_queued())
 #endif // TEMP_SENSOR_BED
@@ -712,9 +712,9 @@ void lcd_menu_print_heatup()
             progress = 0;
     }
 #if TEMP_SENSOR_BED != 0
-    if (current_temperature_bed > 20)
-        progress = min(progress, (current_temperature_bed - 20) * 125 / (target_temperature_bed - 20 - TEMP_WINDOW));
-    else if (target_temperature_bed > current_temperature_bed - 20)
+    if (thermalManager.temp_bed.celsius > 20)
+        progress = min(progress, (thermalManager.temp_bed.celsius - 20) * 125 / (thermalManager.temp_bed.target - 20 - TEMP_WINDOW));
+    else if (thermalManager.temp_bed.target > thermalManager.temp_bed.celsius - 20)
         progress = 0;
 #endif
 
@@ -768,7 +768,7 @@ static void lcd_menu_print_printing()
 #if TEMP_SENSOR_BED != 0
         case PRINT_STATE_HEATING_BED:
             lcd_lib_draw_string_centerP(20, PSTR("Heating buildplate"));
-            int_to_string(target_temperature_bed, int_to_string(dsp_temperature_bed, buffer, PSTR("C/")), PSTR("C"));
+            int_to_string(thermalManager.temp_bed.target, int_to_string(dsp_temperature_bed, buffer, PSTR("C/")), PSTR("C"));
             lcd_lib_draw_string_center(30, buffer);
             break;
 #endif
@@ -960,7 +960,7 @@ void lcd_menu_print_ready()
     if (sleep_state & SLEEP_COOLING)
     {
 #if TEMP_SENSOR_BED != 0
-        if ((current_temperature[0] > 60) || (current_temperature_bed > 40))
+        if ((current_temperature[0] > 60) || (thermalManager.temp_bed.celsius > 40))
 #else
         if (current_temperature[0] > 60)
 #endif // TEMP_SENSOR_BED
@@ -1063,7 +1063,7 @@ static void tune_item_details_callback(uint8_t nr)
 #if TEMP_SENSOR_BED != 0
     else if (nr == 2 + EXTRUDERS)
     {
-        int_to_string(target_temperature_bed, int_to_string(dsp_temperature_bed, buffer, PSTR("C/")), PSTR("C"));
+        int_to_string(thermalManager.temp_bed.target, int_to_string(dsp_temperature_bed, buffer, PSTR("C/")), PSTR("C"));
     }
 #endif
     else if (nr == 2 + BED_MENU_OFFSET + EXTRUDERS)

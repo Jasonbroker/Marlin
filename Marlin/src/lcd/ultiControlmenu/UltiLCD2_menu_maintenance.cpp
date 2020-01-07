@@ -120,7 +120,7 @@ static void lcd_advanced_details(uint8_t nr)
 #if TEMP_SENSOR_BED != 0
     else if (nr == EXTRUDERS + 2)
     {
-        int_to_string(int(target_temperature_bed), int_to_string(int(dsp_temperature_bed), buffer, PSTR("C/")), PSTR("C"));
+        int_to_string(int(thermalManager.temp_bed.target), int_to_string(int(dsp_temperature_bed), buffer, PSTR("C/")), PSTR("C"));
     }
 #endif
     else if (nr == EXTRUDERS + BED_MENU_OFFSET + 7)
@@ -480,7 +480,7 @@ void lcd_menu_maintenance_advanced_bed_heatup()
 {
     if (lcd_lib_encoder_pos / ENCODER_TICKS_PER_SCROLL_MENU_ITEM != 0)
     {
-        target_temperature_bed = constrain(int(target_temperature_bed) + (lcd_lib_encoder_pos / ENCODER_TICKS_PER_SCROLL_MENU_ITEM)
+        thermalManager.temp_bed.target = constrain(int(thermalManager.temp_bed.target) + (lcd_lib_encoder_pos / ENCODER_TICKS_PER_SCROLL_MENU_ITEM)
                                           , 0, BED_MAXTEMP - 15);
         lcd_lib_encoder_pos = 0;
     }
@@ -492,7 +492,7 @@ void lcd_menu_maintenance_advanced_bed_heatup()
     lcd_lib_draw_string_centerP(BOTTOM_MENU_YPOS, PSTR("Click to return"));
     char buffer[16] = {0};
     int_to_string(int(dsp_temperature_bed), buffer, PSTR("C/"));
-    int_to_string(int(target_temperature_bed), buffer+strlen(buffer), PSTR("C"));
+    int_to_string(int(thermalManager.temp_bed.target), buffer+strlen(buffer), PSTR("C"));
     lcd_lib_draw_string_center(30, buffer);
     lcd_lib_draw_heater(LCD_GFX_WIDTH/2-2, 40, getHeaterPower(-1));
     lcd_lib_update_screen();
