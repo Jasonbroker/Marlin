@@ -14,6 +14,7 @@
 #include "UltiLCD2_menu_utils.h"
 #include "preferences.h"
 #include "../../module/stepper.h"
+#include "tinkergnome.h"
 
 struct materialSettings material[EXTRUDERS];
 static unsigned long preheat_end_time;
@@ -34,7 +35,7 @@ static void lcd_menu_material_settings_store();
 
 static void cancelMaterialInsert()
 {
-    quickStop();
+    planner.quick_stop();
     //Set E motor power to default.
 #if EXTRUDERS > 1 && defined(MOTOR_CURRENT_PWM_E_PIN) && MOTOR_CURRENT_PWM_E_PIN > -1
     digipot_current(2, active_extruder ? motor_current_e2 : stepper.motor_current_setting[2]);
@@ -131,7 +132,7 @@ void lcd_menu_change_material_preheat()
     {
         if (preheat_end_time < last_user_interaction)
         {
-            quickStop();
+            planner.quick_stop();
             set_extrude_min_temp(0);
             current_position[E_AXIS] = 0.0f;
             plan_set_e_position(current_position[E_AXIS], active_extruder, true);
@@ -333,7 +334,7 @@ static void lcd_menu_change_material_insert_wait_user_ready()
     retract_acceleration = float(FILAMENT_LONG_ACCELERATION_STEPS) / e_steps_per_unit(active_extruder);
     max_e_jerk = FILAMENT_LONG_MOVE_JERK;
 
-    quickStop();
+    planner.quick_stop();
     current_position[E_AXIS] = 0.0f;
     plan_set_e_position(current_position[E_AXIS], active_extruder, true);
 
@@ -388,7 +389,7 @@ static void lcd_menu_change_material_insert_forward()
 static void materialInsertReady()
 {
     //Set E motor power to default.
-    quickStop();
+    planner.quick_stop();
 #if EXTRUDERS > 1 && defined(MOTOR_CURRENT_PWM_E_PIN) && MOTOR_CURRENT_PWM_E_PIN > -1
     digipot_current(2, active_extruder ? motor_current_e2 : stepper.motor_current_setting[2]);
 #else

@@ -1814,7 +1814,7 @@ static void drawRecoverFileSubmenu (uint8_t nr, uint8_t &flags)
 
 static void recover_abort()
 {
-    quickStop();
+    planner.quick_stop();
     queue.clear();
 
     HOTEND_LOOP() setTargetHotend(0, e);
@@ -2101,7 +2101,7 @@ static void plan_move(AxisEnum axis)
 static void stopMove()
 {
     // stop moving
-    quickStop();
+    planner.quick_stop();
     lcd_lib_encoder_pos = 0;
     movingSpeed = 0;
     delayMove = true;
@@ -2858,7 +2858,7 @@ static void lcd_extrude_pull()
             plan_buffer_line(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS], TARGET_POS(E_AXIS), planner.settings.max_feedrate_mm_s[E_AXIS]*0.7f, active_extruder);
         }
     } else {
-        quickStop();
+        planner.quick_stop();
         menu.reset_submenu();
     }
 }
@@ -3106,7 +3106,7 @@ void recover_start_print(const char *cmd)
 {
     // recover print from current position
     card.stopSDPrint();
-    quickStop();
+    planner.quick_stop();
     queue.clear();
     // keep last command in mind
     strcpy(LCD_CACHE_FILENAME(0), cmd);

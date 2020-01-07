@@ -6,8 +6,8 @@
 #include "UltiLCD2_hi_lib.h"
 #include "UltiLCD2.h"
 #include "../../gcode/queue.h"
-
-#define LCD_TIMEOUT_TO_STATUS (MILLISECONDS_PER_SECOND*30UL)		// 30 Sec.
+#include "../../inc/Conditionals_post.h"
+#include "tinkergnome.h"
 
 // colors for the encoder led ring
 #define LED_INPUT lcd_lib_led_color(192, 8, 0); led_update();

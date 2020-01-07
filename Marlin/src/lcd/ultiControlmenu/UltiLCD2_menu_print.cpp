@@ -33,6 +33,13 @@ static void lcd_menu_print_tune_retraction();
 
 static bool primed = false;
 
+// zzc added
+void clearLongFileName()
+{
+    card.longest_filename = '\0';
+}
+// zzc added end
+
 void lcd_clear_cache()
 {
     for(uint8_t n=0; n<LCD_CACHE_COUNT; ++n)
@@ -57,7 +64,7 @@ void abortPrint(bool bQuickstop)
 
     if (bQuickstop)
     {
-        quickStop();
+        stepper.quick_stop();
     }
     else
     {
@@ -280,12 +287,12 @@ static void lcd_sd_menu_filename_callback(uint8_t nr, uint8_t offsetY, uint8_t f
             if (strlen(buffer) < LCD_CACHE_TEXT_SIZE_SHORT)
                 LCD_CACHE_FILENAME(idx)[LCD_CACHE_TEXT_SIZE_SHORT-1] = '\0';
             LCD_CACHE_TYPE(idx) = card.filenameIsDir() ? 1 : 0;
-            if (card.sd2card.sd2card.errorCode() && card.isMounted())
+            if (card.sd2card.errorCode() && card.isMounted())
             {
                 // On a read error reset the file position and try to keep going. (not pretty, but these read errors are annoying as hell)
-                card.clearError();
+                card.sd2card.error(0);
                 LCD_CACHE_ID(idx) = 0xFF;
-                card.clearLongFilename();
+                clearLongFilename();
             }
         }
         if (flags & MENU_SELECTED)
@@ -304,11 +311,11 @@ static void lcd_sd_menu_filename_callback(uint8_t nr, uint8_t offsetY, uint8_t f
             }
             // nothing in cache - load from card
             card.getFilenameFromNr(buffer, nr - 1);
-            if (card.errorCode() && card.isMounted())
+            if (card.sd2card.errorCode() && card.isMounted())
             {
                 // On a read error try to keep going with short file name. (not pretty, but these read errors are annoying as hell)
-                card.clearError();
-                card.clearLongFilename();
+                card.sd2card.error(0);
+                clearLongFilename();
                 goto far_break;
             }
             idx = nr % LCD_CACHE_REMAIN_COUNT;
@@ -339,9 +346,9 @@ void lcd_sd_menu_details_callback(uint8_t nr)
                 if (LCD_DETAIL_CACHE_ID() != nr)
                 {
                     card.getfilename(nr - 1);
-                    if (card.errorCode())
+                    if (card.sd2card.errorCode())
                     {
-                        card.clearError();
+                        card.sd2card.error(0);
                         return;
                     }
                     LCD_DETAIL_CACHE_ID() = nr;
@@ -391,7 +398,7 @@ void lcd_sd_menu_details_callback(uint8_t nr)
                     if (card.sd2card.errorCode())
                     {
                         //On a read error reset the file position and try to keep going. (not pretty, but these read errors are annoying as hell)
-                        card.clearError();
+                        card.sd2card.error(0);
                         LCD_DETAIL_CACHE_ID() = 0xFF;
                     }
                 }
@@ -822,7 +829,7 @@ static void lcd_menu_print_error_sd()
     /*
     char buffer[12];
     strcpy_P(buffer, PSTR("Code:"));
-    int_to_string(card.errorCode(), buffer+5);
+    int_to_string(card.sd2card.errorCode(), buffer+5);
     lcd_lib_draw_string_center(40, buffer);
     */
 

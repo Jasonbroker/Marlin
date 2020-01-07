@@ -456,7 +456,7 @@ static void runMaterialForward()
     retract_acceleration = float(FILAMENT_LONG_ACCELERATION_STEPS) / e_steps_per_unit(active_extruder);
     max_e_jerk = FILAMENT_LONG_MOVE_JERK;
 
-    quickStop();
+    planner.quick_stop();
     current_position[E_AXIS] = 0;
     plan_set_e_position(current_position[E_AXIS], active_extruder, true);
     current_position[E_AXIS] = FILAMENT_FORWARD_LENGTH;
