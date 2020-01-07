@@ -54,9 +54,9 @@ bool MachineSettings::store(uint8_t index)
         settings[index]->max_feedrate[i] = max_feedrate[i];
     }
     settings[index]->acceleration = acceleration;
-    settings[index]->minimumfeedrate = minimumfeedrate;
-    settings[index]->mintravelfeedrate = mintravelfeedrate;
-    settings[index]->minsegmenttime = minsegmenttime;
+    settings[index]->minimumfeedrate = planner.settings.min_feedrate_mm_s;
+    settings[index]->mintravelfeedrate = planner.settings.min_travel_feedrate_mm_s;
+    settings[index]->minsegmenttime = planner.settings.min_segment_time_us;
     settings[index]->max_xy_jerk = max_xy_jerk;
     settings[index]->max_z_jerk = max_z_jerk;
     settings[index]->max_e_jerk = max_e_jerk;
@@ -92,9 +92,9 @@ bool MachineSettings::recall(uint8_t index)
       max_feedrate[i] = settings[index]->max_feedrate[i];
     }
     acceleration = settings[index]->acceleration;
-    minimumfeedrate = settings[index]->minimumfeedrate;
-    mintravelfeedrate = settings[index]->mintravelfeedrate;
-    minsegmenttime = settings[index]->minsegmenttime;
+    planner.settings.min_feedrate_mm_s = settings[index]->minimumfeedrate;
+    planner.settings.min_travel_feedrate_mm_s = settings[index]->mintravelfeedrate;
+    planner.settings.min_segment_time_us = settings[index]->minsegmenttime;
     max_xy_jerk = settings[index]->max_xy_jerk;
     max_z_jerk = settings[index]->max_z_jerk;
     max_e_jerk = settings[index]->max_e_jerk;

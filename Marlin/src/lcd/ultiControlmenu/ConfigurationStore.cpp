@@ -146,9 +146,9 @@ void Config_PrintSettings()
     SERIAL_ECHO_START;
     SERIAL_ECHOLNPGM("Advanced variables: S=Min feedrate (mm/s), T=Min travel feedrate (mm/s), B=minimum segment time (ms), X=maximum XY jerk (mm/s),  Z=maximum Z jerk (mm/s),  E=maximum E jerk (mm/s)");
     SERIAL_ECHO_START;
-    SERIAL_ECHOPAIR("  M205 S",minimumfeedrate );
-    SERIAL_ECHOPAIR(" T" ,mintravelfeedrate );
-    SERIAL_ECHOPAIR(" B" ,minsegmenttime );
+    SERIAL_ECHOPAIR("  M205 S",planner.settings.min_feedrate_mm_s );
+    SERIAL_ECHOPAIR(" T" ,planner.settings.min_travel_feedrate_mm_s );
+    SERIAL_ECHOPAIR(" B" ,planner.settings.min_segment_time_us );
     SERIAL_ECHOPAIR(" X" ,planner.max_jerk.x);
     SERIAL_ECHOPAIR(" Z" ,planner.max_jerk.z);
     SERIAL_ECHOPAIR(" E" ,planner.max_jerk.e);
@@ -194,9 +194,9 @@ void Config_RetrieveSettings()
 
         EEPROM_READ_VAR(i,acceleration);
         EEPROM_READ_VAR(i,retract_acceleration);
-        EEPROM_READ_VAR(i,minimumfeedrate);
-        EEPROM_READ_VAR(i,mintravelfeedrate);
-        EEPROM_READ_VAR(i,minsegmenttime);
+        EEPROM_READ_VAR(i,planner.settings.min_feedrate_mm_s);
+        EEPROM_READ_VAR(i,planner.settings.min_travel_feedrate_mm_s);
+        EEPROM_READ_VAR(i,planner.settings.min_segment_time_us);
         EEPROM_READ_VAR(i,planner.max_jerk.x);
         EEPROM_READ_VAR(i,planner.max_jerk.z));
         EEPROM_READ_VAR(i,planner.max_jerk.e);
@@ -265,9 +265,9 @@ void Config_ResetDefault()
 
     acceleration=DEFAULT_ACCELERATION;
     retract_acceleration=DEFAULT_RETRACT_ACCELERATION;
-    minimumfeedrate=DEFAULT_MINIMUMFEEDRATE;
-    minsegmenttime=DEFAULT_MINSEGMENTTIME;
-    mintravelfeedrate=DEFAULT_MINTRAVELFEEDRATE;
+    planner.settings.min_feedrate_mm_s=DEFAULT_MINIMUMFEEDRATE;
+    planner.settings.min_segment_time_us=DEFAULT_MINSEGMENTTIME;
+    planner.settings.min_travel_feedrate_mm_s=DEFAULT_MINTRAVELFEEDRATE;
     max_xy_jerk=DEFAULT_XYJERK;
     max_z_jerk=DEFAULT_ZJERK;
     max_e_jerk=DEFAULT_EJERK;
