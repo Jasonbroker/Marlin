@@ -1815,7 +1815,7 @@ static void drawRecoverFileSubmenu (uint8_t nr, uint8_t &flags)
 static void recover_abort()
 {
     quickStop();
-    clear_command_queue();
+    queue.clear();
 
     HOTEND_LOOP() setTargetHotend(0, e);
     thermalManager.set_fan_speed(0, 0);
@@ -3107,7 +3107,7 @@ void recover_start_print(const char *cmd)
     // recover print from current position
     card.stopPrinting();
     quickStop();
-    clear_command_queue();
+    queue.clear();
     // keep last command in mind
     strcpy(LCD_CACHE_FILENAME(0), cmd);
     printing_state = PRINT_STATE_START;

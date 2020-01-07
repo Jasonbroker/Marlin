@@ -44,7 +44,7 @@ void lcd_clear_cache()
 
 void abortPrint(bool bQuickstop)
 {
-    clear_command_queue();
+    queue.clear();
     postMenuCheck = 0;
 
     // we're not printing any more
