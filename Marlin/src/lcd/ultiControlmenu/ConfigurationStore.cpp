@@ -101,7 +101,7 @@ void Config_StoreSettings()
   char ver2[4]=EEPROM_VERSION;
   i=EEPROM_OFFSET;
   EEPROM_WRITE_VAR(i,ver2); // validate data
-  SERIAL_ECHO_START;
+  SERIAL_ECHO_START();
   SERIAL_ECHOLNPGM("Settings Stored");
 }
 #endif //EEPROM_SETTINGS
@@ -110,42 +110,42 @@ void Config_StoreSettings()
 #ifdef EEPROM_CHITCHAT
 void Config_PrintSettings()
 {  // Always have this function, even with EEPROM_SETTINGS disabled, the current values will be shown
-    SERIAL_ECHO_START;
+    SERIAL_ECHO_START();
     SERIAL_ECHOLNPGM("Steps per unit:");
-    SERIAL_ECHO_START;
+    SERIAL_ECHO_START();
     SERIAL_ECHOPAIR("  M92 X",planner.settings.axis_steps_per_mm[X_AXIS]);
     SERIAL_ECHOPAIR(" Y",planner.settings.axis_steps_per_mm[Y_AXIS]);
     SERIAL_ECHOPAIR(" Z",planner.settings.axis_steps_per_mm[Z_AXIS]);
     SERIAL_ECHOPAIR(" E",planner.settings.axis_steps_per_mm[E_AXIS]);
     SERIAL_EOL;
 
-    SERIAL_ECHO_START;
+    SERIAL_ECHO_START();
     SERIAL_ECHOLNPGM("Maximum feedrates (mm/s):");
-    SERIAL_ECHO_START;
+    SERIAL_ECHO_START();
     SERIAL_ECHOPAIR("  M203 X",planner.settings.max_feedrate_mm_s[X_AXIS]);
     SERIAL_ECHOPAIR(" Y",planner.settings.max_feedrate_mm_s[Y_AXIS] );
     SERIAL_ECHOPAIR(" Z", planner.settings.max_feedrate_mm_s[Z_AXIS] );
     SERIAL_ECHOPAIR(" E", planner.settings.max_feedrate_mm_s[E_AXIS]);
     SERIAL_EOL;
 
-    SERIAL_ECHO_START;
+    SERIAL_ECHO_START();
     SERIAL_ECHOLNPGM("Maximum Acceleration (mm/s2):");
-    SERIAL_ECHO_START;
+    SERIAL_ECHO_START();
     SERIAL_ECHOPAIR("  M201 X" ,max_acceleration_units_per_sq_second[X_AXIS] );
     SERIAL_ECHOPAIR(" Y" , max_acceleration_units_per_sq_second[Y_AXIS] );
     SERIAL_ECHOPAIR(" Z" ,max_acceleration_units_per_sq_second[Z_AXIS] );
     SERIAL_ECHOPAIR(" E" ,max_acceleration_units_per_sq_second[E_AXIS]);
     SERIAL_EOL;
-    SERIAL_ECHO_START;
+    SERIAL_ECHO_START();
     SERIAL_ECHOLNPGM("Acceleration: S=acceleration, T=retract acceleration");
-    SERIAL_ECHO_START;
+    SERIAL_ECHO_START();
     SERIAL_ECHOPAIR("  M204 S",acceleration );
     SERIAL_ECHOPAIR(" T" ,retract_acceleration);
     SERIAL_EOL;
 
-    SERIAL_ECHO_START;
+    SERIAL_ECHO_START();
     SERIAL_ECHOLNPGM("Advanced variables: S=Min feedrate (mm/s), T=Min travel feedrate (mm/s), B=minimum segment time (ms), X=maximum XY jerk (mm/s),  Z=maximum Z jerk (mm/s),  E=maximum E jerk (mm/s)");
-    SERIAL_ECHO_START;
+    SERIAL_ECHO_START();
     SERIAL_ECHOPAIR("  M205 S",planner.settings.min_feedrate_mm_s );
     SERIAL_ECHOPAIR(" T" ,planner.settings.min_travel_feedrate_mm_s );
     SERIAL_ECHOPAIR(" B" ,planner.settings.min_segment_time_us );
@@ -154,17 +154,17 @@ void Config_PrintSettings()
     SERIAL_ECHOPAIR(" E" ,planner.max_jerk.e);
     SERIAL_EOL;
 
-    SERIAL_ECHO_START;
+    SERIAL_ECHO_START();
     SERIAL_ECHOLNPGM("Home offset (mm):");
-    SERIAL_ECHO_START;
+    SERIAL_ECHO_START();
     SERIAL_ECHOPAIR("  M206 X",add_homeing[X_AXIS] );
     SERIAL_ECHOPAIR(" Y" ,add_homeing[Y_AXIS] );
     SERIAL_ECHOPAIR(" Z" ,add_homeing[Z_AXIS] );
     SERIAL_EOL;
 #ifdef PIDTEMP
-    SERIAL_ECHO_START;
+    SERIAL_ECHO_START();
     SERIAL_ECHOLNPGM("PID settings:");
-    SERIAL_ECHO_START;
+    SERIAL_ECHO_START();
     SERIAL_ECHOPAIR("   M301 P",_PID_Kp(0));
     SERIAL_ECHOPAIR(" I" ,unscalePID_i(_PID_Ki(0)));
     SERIAL_ECHOPAIR(" D" ,unscalePID_d(_PID_Kd(0)));
@@ -232,7 +232,7 @@ void Config_RetrieveSettings()
 
 		// Call updatePID (similar to when we have processed M301)
 		updatePID();
-        SERIAL_ECHO_START;
+        SERIAL_ECHO_START();
         SERIAL_ECHOLNPGM("Stored settings retrieved");
     }
     else
@@ -304,7 +304,7 @@ void Config_ResetDefault()
     retract_length = 4.5;
     retract_feedrate = 25 * 60;
 
-SERIAL_ECHO_START;
+SERIAL_ECHO_START();
 SERIAL_ECHOLNPGM("Hardcoded Default Settings Loaded");
 
 }

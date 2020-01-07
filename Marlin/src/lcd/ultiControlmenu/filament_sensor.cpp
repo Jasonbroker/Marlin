@@ -35,7 +35,7 @@ bool checkFilamentSensor()
             SERIAL_ERROR_START;
             SERIAL_ERRORLNPGM("Material transport issue detected.");
 
-            SERIAL_ECHO_START
+            SERIAL_ECHO_START()
             SERIAL_ECHOLNPGM("Print paused. Check feeder.");
 
             lcd_lib_beep();
