@@ -337,7 +337,7 @@ void lcd_menu_edit_setting()
 static void lcd_menu_material_reheat()
 {
     last_user_interaction = millis();
-    int16_t temp = degHotend(active_extruder);
+    int16_t temp = thermalManager.degHotend(active_extruder);
     int16_t target = degTargetHotend(active_extruder) - 10;
     if (temp < 0) temp = 0;
     if (temp > target)

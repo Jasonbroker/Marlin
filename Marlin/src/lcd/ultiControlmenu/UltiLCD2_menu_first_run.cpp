@@ -417,7 +417,7 @@ static void lcd_menu_first_run_material_select_2()
 static void lcd_menu_first_run_material_load_heatup()
 {
     thermalManager.setTargetHotend(material[0].temperature[0], 0);
-    int16_t temp = degHotend(0) - 20;
+    int16_t temp = thermalManager.degHotend(0) - 20;
     int16_t target = degTargetHotend(0) - 10 - 20;
     if (temp < 0) temp = 0;
     if (temp > target)
