@@ -64,7 +64,7 @@ static void homeAndParkHeadForCenterAdjustment2()
     queue.enqueue_now_P(PSTR("G28 Z0 X0 Y0"));
     char buffer[32] = {0};
     sprintf_P(buffer, PSTR("G1 F%i Z%i X%i Y%i"), int(homing_feedrate[0]), 35, int(AXIS_CENTER_POS(X_AXIS)), int(max_pos[Y_AXIS])-10);
-    queue.enqueue_now(buffer);
+    queue.enqueue_one_now(buffer);
     menu.return_to_previous(false);
 }
 //Started bed leveling from the calibration menu
@@ -552,7 +552,7 @@ static void lcd_menu_first_run_print_card_detect()
         return;
     }
 
-    if (!card.isOk())
+    if (!(card.sd2card.errorCode == 0))
     {
         lcd_info_screen(NULL, lcd_return_to_main_menu);
         DRAW_PROGRESS_NR(21);

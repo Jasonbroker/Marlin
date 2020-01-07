@@ -1725,7 +1725,7 @@ void lcd_prepare_buildplate_adjust()
     queue.enqueue_now_P(PSTR("G28 Z0 X0 Y0"));
     char buffer[32] = {0};
     sprintf_P(buffer, PSTR("G1 F%i Z%i X%i Y%i"), int(homing_feedrate[0]), 35, AXIS_CENTER_POS(X_AXIS), AXIS_CENTER_POS(Y_AXIS));
-    queue.enqueue_now(buffer);
+    queue.enqueue_one_now(buffer);
     queue.enqueue_now_P(PSTR("M84 X0 Y0"));
 }
 
@@ -2619,7 +2619,7 @@ static void lcd_extrude_headtofront()
     sprintf_P(buffer, PSTR("G1 F12000 X%i Y%i"), int(AXIS_CENTER_POS(X_AXIS)), int(min_pos[Y_AXIS])+5);
 
     homeHead();
-    queue.enqueue_now(buffer);
+    queue.enqueue_one_now(buffer);
     queue.enqueue_now_P(PSTR("M84 X0 Y0"));
 }
 

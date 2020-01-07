@@ -524,7 +524,7 @@ static void lcd_menu_material_export()
         card.release();
         return;
     }
-    if (!(card.sd2card.errorCode == 0))
+    if (!(card.sd2card.errorCode == 0)))
     {
         lcd_info_screen(NULL, lcd_change_to_previous_menu);
         lcd_lib_draw_string_centerP(16, PSTR("Reading card..."));
@@ -622,7 +622,7 @@ static void lcd_menu_material_import()
         card.release();
         return;
     }
-    if (!card.isOk())
+    if (!(card.sd2card.errorCode == 0))
     {
         lcd_info_screen(NULL, lcd_change_to_previous_menu);
         lcd_lib_draw_string_centerP(16, PSTR("Reading card..."));

@@ -1436,7 +1436,7 @@ static void lcd_store_motorcurrent()
 
 static void lcd_preset_current_xy()
 {
-    if (lcd_tune_value(&stepper.motor_current_setting[0], 0, 1500))
+    if (lcd_tune_value(stepper.motor_current_setting[0], 0, 1500))
     {
         digipot_current(0, stepper.motor_current_setting[0]);
     }
@@ -1444,7 +1444,7 @@ static void lcd_preset_current_xy()
 
 static void lcd_preset_current_z()
 {
-    if (lcd_tune_value(&stepper.motor_current_setting[1], 0, 1500))
+    if (lcd_tune_value(stepper.motor_current_setting[1], 0, 1500))
     {
         digipot_current(1, stepper.motor_current_setting[1]);
     }
@@ -1452,7 +1452,7 @@ static void lcd_preset_current_z()
 
 static void lcd_preset_current_e()
 {
-    if (lcd_tune_value(&stepper.motor_current_setting[2], 0, 1500))
+    if (lcd_tune_value(stepper.motor_current_setting[2], 0, 1500))
     {
         if (!active_extruder)
         {
