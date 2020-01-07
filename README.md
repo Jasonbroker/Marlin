@@ -1,4 +1,5 @@
-﻿# Marlin 3D Printer Firmware
+﻿# Marlin 3D Printer Firmware FOR Ultimaker 2 (e, go, e+)
+ The main purpose of these project is to transfer old fasion um2 which based on Marlin 1.0 to Marlin2.0 and keep it update.
 
 ![GitHub](https://img.shields.io/github/license/marlinfirmware/marlin.svg)
 ![GitHub contributors](https://img.shields.io/github/contributors/marlinfirmware/marlin.svg)
