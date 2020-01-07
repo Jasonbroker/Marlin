@@ -352,7 +352,6 @@ void lcd_menu_maintenance_advanced()
         {
             // heatup nozzle
         #if EXTRUDERS < 2
-            active_extruder = 0;
             start_nozzle_heatup();
         #else
             menu.add_menu(menu_t(lcd_dual_nozzle_heatup, MAIN_MENU_ITEM_POS(active_extruder ? 1 : 0)));
@@ -384,7 +383,6 @@ void lcd_menu_maintenance_advanced()
         {
         // insert material
         #if EXTRUDERS < 2
-            active_extruder = 0;
             start_insert_material();
         #else
             menu.add_menu(menu_t(lcd_dual_insert_material, MAIN_MENU_ITEM_POS(active_extruder ? 1 : 0)));
@@ -394,7 +392,6 @@ void lcd_menu_maintenance_advanced()
         {
             // move material
         #if EXTRUDERS < 2
-            active_extruder = 0;
             start_move_material();
         #else
             menu.add_menu(menu_t(lcd_dual_move_material, MAIN_MENU_ITEM_POS(active_extruder ? 1 : 0)));

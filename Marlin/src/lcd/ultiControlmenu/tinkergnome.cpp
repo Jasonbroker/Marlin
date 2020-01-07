@@ -1875,7 +1875,6 @@ static void lcd_recover_start()
     #if EXTRUDERS > 1
     active_extruder = (swapExtruders() ? 1 : 0);
     #else
-    active_extruder = 0;
     #endif // EXTRUDERS
     current_position[E_AXIS] = 0.0f;
     plan_set_e_position(current_position[E_AXIS], active_extruder, true);

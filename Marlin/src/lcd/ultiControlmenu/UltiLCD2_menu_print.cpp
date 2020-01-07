@@ -237,7 +237,6 @@ static void userStartPrint()
 #if EXTRUDERS > 1
         active_extruder = (swapExtruders() ? 1 : 0);
 #else
-        active_extruder = 0;
 #endif // EXTRUDERS
         menu.add_menu(menu_t((ui_mode & UI_MODE_EXPERT) ? lcd_menu_printing_tg : lcd_menu_print_printing, MAIN_MENU_ITEM_POS(1)));
         doStartPrint();
@@ -524,7 +523,6 @@ void lcd_menu_print_select()
             #if EXTRUDERS > 1
                 active_extruder = (swapExtruders() ? 1 : 0);
             #else
-                active_extruder = 0;
             #endif // EXTRUDERS
                 card.openFile(card.currentFileName(), true);
                 if (card.isFileOpen() && !commands_queued())
@@ -604,7 +602,6 @@ void lcd_menu_print_select()
                         #if EXTRUDERS > 1
                             active_extruder = (swapExtruders() ? 1 : 0);
                         #else
-                            active_extruder = 0;
                         #endif // EXTRUDERS
                             // move to heatup position
                             char buffer[32] = {0};
