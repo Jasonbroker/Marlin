@@ -16,6 +16,17 @@
 #include "preferences.h"
 #include "tinkergnome.h"
 
+// actually no one will use the macro in original marlin 2.0
+#define STOP_REASON_MAXTEMP              1
+#define STOP_REASON_MINTEMP              2
+#define STOP_REASON_MAXTEMP_BED          3
+#define STOP_REASON_HEATER_ERROR         4
+#define STOP_REASON_Z_ENDSTOP_BROKEN_ERROR 5
+#define STOP_REASON_Z_ENDSTOP_STUCK_ERROR  6
+#define STOP_REASON_XY_ENDSTOP_BROKEN_ERROR 7
+#define STOP_REASON_XY_ENDSTOP_STUCK_ERROR  8
+#define STOP_REASON_SAFETY_TRIGGER       10
+
 // coefficient for the exponential moving average
 // K1 defined in Configuration.h in the PID settings
 #define K2 (1.0-K1)
@@ -95,6 +106,8 @@ void lcd_update()
 		strcpy_P(buffer, PSTR("ultimaker.com/"));
         lcd_lib_clear();
         lcd_lib_draw_string_centerP(10, PSTR("ERROR - STOPPED"));
+        // comment the stop reason
+        /*
         switch(StoppedReason())
         {
         case STOP_REASON_MAXTEMP:
@@ -133,6 +146,7 @@ void lcd_update()
 		default:
 			strcat_P(buffer, PSTR("support"));
         }
+        */
         lcd_lib_draw_string_centerP(40, PSTR("Go to:"));
         lcd_lib_draw_string_center(50, buffer);
         LED_GLOW_ERROR
@@ -140,7 +154,7 @@ void lcd_update()
     }
     else
     {
-        if (!card.sdprinting())
+        if (!card.flag.sdprinting)
         {
             if (HAS_SERIAL_CMD)
             {
@@ -176,6 +190,7 @@ void lcd_update()
 #endif
 }
 
+// screen first init
 void lcd_menu_startup()
 {
     lcd_lib_encoder_pos = ENCODER_NO_SELECTION;

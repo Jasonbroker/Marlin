@@ -14,6 +14,7 @@
 #include "UltiLCD2_menu_first_run.h"
 #include "UltiLCD2_menu_print.h"
 #include "UltiLCD2_menu_utils.h"
+#include "../../module/stepper.h"
 
 static void lcd_menu_first_run_init_2();
 static void lcd_menu_first_run_init_3();

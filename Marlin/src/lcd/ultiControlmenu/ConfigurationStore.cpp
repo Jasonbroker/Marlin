@@ -4,6 +4,7 @@
 #include "../ultralcd.h"
 #include "UltiLCD2.h"
 #include "ConfigurationStore.h"
+#include "../../module/stepper.h"
 
 void _EEPROM_writeData(int &pos, uint8_t* value, uint8_t size)
 {
@@ -64,7 +65,7 @@ void Config_StoreSettings()
   EEPROM_WRITE_VAR(i,planner.max_jerk.z);
   EEPROM_WRITE_VAR(i,planner.max_jerk.e);
   EEPROM_WRITE_VAR(i,add_homeing);
-  
+
   #ifndef ULTIPANEL
   int plaPreheatHotendTemp = PREHEAT_1_TEMP_HOTEND, plaPreheatHPBTemp = PREHEAT_1_TEMP_BED, plaPreheatFanSpeed = PREHEAT_1_FAN_SPEED;
   int absPreheatHotendTemp = PREHEAT_2_TEMP_HOTEND, absPreheatHPBTemp = PREHEAT_2_TEMP_BED, absPreheatFanSpeed = PREHEAT_2_FAN_SPEED;

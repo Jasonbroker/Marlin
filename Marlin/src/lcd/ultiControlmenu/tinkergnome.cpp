@@ -146,7 +146,7 @@ void tinkergnome_init()
         eeprom_write_block(pid2, (uint8_t*)EEPROM_PID_2, sizeof(pid2));
 
 #if EXTRUDERS > 1 && defined(MOTOR_CURRENT_PWM_E_PIN) && MOTOR_CURRENT_PWM_E_PIN > -1
-        motor_current_e2 = motor_current_setting[2];
+        motor_current_e2 = stepper.motor_current_setting[2];
         SET_MOTOR_CURRENT_E2(motor_current_e2);
 #else
         SET_MOTOR_CURRENT_E2(stepper.motor_current_setting[2]);
@@ -2751,7 +2751,7 @@ static void lcd_extrude_return()
 {
     set_extrude_min_temp(EXTRUDE_MINTEMP);
     menu.return_to_previous();
-    if (!card.sdprinting())
+    if (!card.flag.sdprinting)
     {
         target_temperature[active_extruder] = 0;
     }
@@ -2873,7 +2873,7 @@ static void lcd_extrude_tune()
 static const menu_t & get_extrude_menuoption(uint8_t nr, menu_t &opt)
 {
     uint8_t menu_index = 0;
-    if (card.sdprinting()) ++nr;
+    if (card.flag.sdprinting) ++nr;
 
     if (nr == menu_index++)
     {
@@ -2910,7 +2910,7 @@ static void drawExtrudeSubmenu (uint8_t nr, uint8_t &flags)
 {
     uint8_t index(0);
     char buffer[32] = {0};
-    if (card.sdprinting()) ++nr;
+    if (card.flag.sdprinting) ++nr;
 
     if (nr == index++)
     {
@@ -3080,7 +3080,7 @@ void lcd_menu_expert_extrude()
     lcd_basic_screen();
     lcd_lib_draw_hline(3, 124, 13);
 
-    uint8_t len = card.sdprinting() ? 6 : 7;
+    uint8_t len = card.flag.sdprinting ? 6 : 7;
 
     menu.process_submenu(get_extrude_menuoption, len);
 

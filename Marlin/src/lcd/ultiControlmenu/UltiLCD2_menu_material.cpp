@@ -13,6 +13,7 @@
 #include "UltiLCD2_menu_maintenance.h"
 #include "UltiLCD2_menu_utils.h"
 #include "preferences.h"
+#include "../../module/stepper.h"
 
 struct materialSettings material[EXTRUDERS];
 static unsigned long preheat_end_time;
@@ -408,7 +409,7 @@ static void materialInsertReady()
     }
     plan_buffer_line(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS], current_position[E_AXIS], retract_feedrate/60, active_extruder);
 
-    if (!card.sdprinting())
+    if (!card.flag.sdprinting)
     {
         // cool down nozzle
         for(uint8_t n=0; n<EXTRUDERS; n++)
