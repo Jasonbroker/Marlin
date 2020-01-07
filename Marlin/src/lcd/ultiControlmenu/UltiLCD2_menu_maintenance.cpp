@@ -445,7 +445,7 @@ static void lcd_menu_maintenance_extrude()
         }
     }
     // reset heater timeout until target temperature is reached
-    if ((thermalManager.degHotend(active_extruder) < 100) || (thermalManager.degHotend(active_extruder) < (degTargetHotend(active_extruder) - 20)))
+    if ((thermalManager.degHotend(active_extruder) < 100) || (thermalManager.degHotend(active_extruder) < (thermalManager.degTargetHotend(active_extruder) - 20)))
     {
         last_user_interaction = millis();
     }
@@ -456,7 +456,7 @@ static void lcd_menu_maintenance_extrude()
         menu.return_to_previous();
     }
     // reset heater timeout until target temperature is reached
-    if ((degTargetHotend(active_extruder) < 120) || (thermalManager.degHotend(active_extruder) < (degTargetHotend(active_extruder) - 20)))
+    if ((thermalManager.degTargetHotend(active_extruder) < 120) || (thermalManager.degHotend(active_extruder) < (thermalManager.degTargetHotend(active_extruder) - 20)))
     {
         last_user_interaction = millis();
     }

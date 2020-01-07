@@ -338,7 +338,7 @@ static void lcd_menu_material_reheat()
 {
     last_user_interaction = millis();
     int16_t temp = thermalManager.degHotend(active_extruder);
-    int16_t target = degTargetHotend(active_extruder) - 10;
+    int16_t target = thermalManager.degTargetHotend(active_extruder) - 10;
     if (temp < 0) temp = 0;
     if (temp > target)
     {
@@ -390,7 +390,7 @@ bool check_heater_timeout()
 
 bool check_preheat()
 {
-    int16_t target = degTargetHotend(active_extruder);
+    int16_t target = thermalManager.degTargetHotend(active_extruder);
     if (!target)
     {
         for (uint8_t n=0; n<EXTRUDERS; ++n)

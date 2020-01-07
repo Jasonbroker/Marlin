@@ -97,7 +97,7 @@ void lcd_menu_change_material_preheat()
     setTargetHotend(material[active_extruder].temperature[0], active_extruder);
 #endif
     int16_t temp = thermalManager.degHotend(active_extruder) - 20;
-    int16_t target = degTargetHotend(active_extruder) - 20;
+    int16_t target = thermalManager.degTargetHotend(active_extruder) - 20;
     if (temp < 0) temp = 0;
 
     // draw menu
@@ -246,7 +246,7 @@ void lcd_menu_insert_material_preheat()
     last_user_interaction = millis();
     setTargetHotend(material[active_extruder].temperature[0], active_extruder);
     int16_t temp = thermalManager.degHotend(active_extruder) - 20;
-    int16_t target = degTargetHotend(active_extruder) - 20 - 10;
+    int16_t target = thermalManager.degTargetHotend(active_extruder) - 20 - 10;
     if (temp < 0) temp = 0;
     if (temp > target && temp < target + 20 && (card.isPaused() || !commands_queued()))
     {
