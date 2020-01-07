@@ -31,6 +31,7 @@ GcodeSuite gcode;
 #include "parser.h"
 #include "queue.h"
 #include "../module/motion.h"
+#include "../lcd/ultiControlmenu/tinkergnome.h"
 
 #if ENABLED(PRINTCOUNTER)
   #include "../module/printcounter.h"
@@ -217,6 +218,8 @@ void GcodeSuite::dwell(millis_t time) {
  */
 void GcodeSuite::process_parsed_command(const bool no_ok/*=false*/) {
   KEEPALIVE_STATE(IN_HANDLER);
+  if ((printing_state != PRINT_STATE_RECOVER) && (printing_state != PRINT_STATE_START) && (printing_state != PRINT_STATE_ABORT))
+    printing_state = PRINT_STATE_NORMAL;
 
   // Handle a known G, M, or T
   switch (parser.command_letter) {
@@ -233,7 +236,7 @@ void GcodeSuite::process_parsed_command(const bool no_ok/*=false*/) {
         case 2: case 3: G2_G3(parser.codenum == 2); break;        // G2: CW ARC, G3: CCW ARC
       #endif
 
-      case 4: G4(); break;                                        // G4: Dwell
+      case 4:  printing_state = PRINT_STATE_DWELL; G4(); break;                                        // G4: Dwell
 
       #if ENABLED(BEZIER_CURVE_SUPPORT)
         case 5: G5(); break;                                      // G5: Cubic B_spline
@@ -269,7 +272,16 @@ void GcodeSuite::process_parsed_command(const bool no_ok/*=false*/) {
         case 27: G27(); break;                                    // G27: Nozzle Park
       #endif
 
-      case 28: G28(false); break;                                 // G28: Home all axes, one at a time
+      case 28: 
+      if ((printing_state == PRINT_STATE_RECOVER) || (printing_state == PRINT_STATE_HOMING))
+      {
+          break;
+      }
+      if ((printing_state != PRINT_STATE_START) && (printing_state != PRINT_STATE_ABORT))
+      {
+        printing_state = PRINT_STATE_HOMING;
+      }
+      G28(false); break;                                 // G28: Home all axes, one at a time
 
       #if HAS_LEVELING
         case 29:                                                  // G29: Bed leveling calibration
@@ -465,7 +477,11 @@ void GcodeSuite::process_parsed_command(const bool no_ok/*=false*/) {
 
       #if HAS_HEATED_BED
         case 140: M140(); break;                                  // M140: Set bed temperature
-        case 190: M190(); break;                                  // M190: Wait for bed temperature to reach target
+        case 190: 
+        if ((printing_state == PRINT_STATE_RECOVER) || (printing_state == PRINT_STATE_ABORT))
+          break;
+        printing_state = PRINT_STATE_HEATING_BED;
+        M190(); break;                                  // M190: Wait for bed temperature to reach target
       #endif
 
       #if HAS_HEATED_CHAMBER
@@ -843,6 +859,9 @@ void GcodeSuite::process_parsed_command(const bool no_ok/*=false*/) {
 
     default: parser.unknown_command_error();
   }
+
+  if ((printing_state != PRINT_STATE_RECOVER) && (printing_state != PRINT_STATE_START) && (printing_state != PRINT_STATE_ABORT))
+    printing_state = PRINT_STATE_NORMAL;
 
   if (!no_ok) queue.ok_to_send();
 }

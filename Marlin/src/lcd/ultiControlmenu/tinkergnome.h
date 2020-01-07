@@ -31,6 +31,18 @@ void lcd_menu_expert_recover();
 void reset_printing_state();
 void endofprint_retract_store();
 
+// for adaptive of marlin 2.0
+extern uint8_t printing_state;
+#define PRINT_STATE_NORMAL      0
+#define PRINT_STATE_DWELL       1
+#define PRINT_STATE_WAIT_USER   2
+#define PRINT_STATE_HEATING     3
+#define PRINT_STATE_HEATING_BED 4
+#define PRINT_STATE_HOMING      5
+#define PRINT_STATE_RECOVER     6
+#define PRINT_STATE_START       7
+#define PRINT_STATE_ABORT       255
+
 FORCE_INLINE void lcd_print_tune_nozzle0() { lcd_tune_value((uint16_t &)thermalManager.temp_hotend[0].target, 0, thermalManager.temp_range[0].maxtemp - 15); }
 #if EXTRUDERS > 1
 FORCE_INLINE void lcd_print_tune_nozzle1() { lcd_tune_value(target_temperature[1], 0, get_maxtemp(1) - 15); }

@@ -1351,7 +1351,7 @@ void lcd_menu_print_heatup_tg()
 
 static unsigned long predictTimeLeft()
 {
-    if ((wait_for_heatup) || (!card.getFilePos()) || (!card.getFileSize()))
+    if ((printing_state == PRINT_STATE_HEATING) || (printing_state == PRINT_STATE_HEATING_BED) || (!card.getFilePos()) || (!card.getFileSize()))
     {
         return 0;
     }
