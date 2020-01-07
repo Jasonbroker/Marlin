@@ -1254,9 +1254,9 @@ void lcd_menu_print_heatup_tg()
         }
 
 #if TEMP_SENSOR_BED != 0
-        if (thermalManager.temp_bed.celsius >= thermalManager.temp_bed.target - TEMP_WINDOW * 2 && !commands_queued() && !blocks_queued())
+        if (thermalManager.temp_bed.celsius >= thermalManager.temp_bed.target - TEMP_WINDOW * 2 && !queue.has_commands_queued() && !blocks_queued())
 #else
-        if (!commands_queued() && !blocks_queued())
+        if (!queue.has_commands_queued() && !blocks_queued())
 #endif // TEMP_SENSOR_BED
         {
             bool ready = true;
@@ -1739,7 +1739,7 @@ void lcd_menu_simple_buildplate_init()
     lcd_lib_clear();
 
     float zPos = st_get_position(Z_AXIS) / planner.settings.axis_steps_per_mm[Z_AXIS];
-    if ((commands_queued() < 1) && (zPos < 35.01f))
+    if ((queue.has_commands_queued() < 1) && (zPos < 35.01f))
     {
         menu.replace_menu(menu_t(lcd_simple_buildplate_init, lcd_menu_simple_buildplate, lcd_simple_buildplate_quit, 0), false);
     }
@@ -2087,7 +2087,7 @@ static bool endstop_reached(AxisEnum axis, int8_t direction)
 
 static void plan_move(AxisEnum axis)
 {
-    if (!commands_queued() && !blocks_queued())
+    if (!queue.has_commands_queued() && !blocks_queued())
     {
         // enque next move
         if ((abs(TARGET_POS(axis) - current_position[axis])>0.005) && !endstop_reached(axis, (TARGET_POS(axis)>current_position[axis]) ? 1 : -1))

@@ -368,7 +368,7 @@ static void lcd_menu_material_reheat()
 
 bool check_heater_timeout()
 {
-    if (heater_timeout && !commands_queued() && !HAS_SERIAL_CMD)
+    if (heater_timeout && !queue.has_commands_queued() && !HAS_SERIAL_CMD)
     {
         const unsigned long timeout = last_user_interaction + (heater_timeout*MILLISECONDS_PER_MINUTE);
         if (timeout < millis())

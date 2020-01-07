@@ -30,7 +30,7 @@ bool checkFilamentSensor()
         //    - printer is printing
         //    - printing is not already paused
 
-        if (!card.isPaused() && (card.flag.sdprinting || commands_queued()))
+        if (!card.isPaused() && (card.flag.sdprinting || queue.has_commands_queued()))
         {
             SERIAL_ERROR_START;
             SERIAL_ERRORLNPGM("Material transport issue detected.");

@@ -24,7 +24,7 @@ void LCDMenu::processEvents()
     // check printing state
     if ((printing_state != PRINT_STATE_HEATING) &&
         (printing_state != PRINT_STATE_START) &&
-        ((!card.flag.sdprinting && !HAS_SERIAL_CMD && !commands_queued()) || card.isPaused()))
+        ((!card.flag.sdprinting && !HAS_SERIAL_CMD && !queue.has_commands_queued()) || card.isPaused()))
     {
         // cool down nozzle after timeout
         check_heater_timeout();

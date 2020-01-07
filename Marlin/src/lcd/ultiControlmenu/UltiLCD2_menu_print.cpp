@@ -121,7 +121,7 @@ void abortPrint(bool bQuickstop)
 
 static void checkPrintFinished()
 {
-    if ((printing_state != PRINT_STATE_RECOVER) && (printing_state != PRINT_STATE_START) && (printing_state != PRINT_STATE_ABORT) && !card.flag.sdprinting && !commands_queued() && !blocks_queued())
+    if ((printing_state != PRINT_STATE_RECOVER) && (printing_state != PRINT_STATE_START) && (printing_state != PRINT_STATE_ABORT) && !card.flag.sdprinting && !queue.has_commands_queued() && !blocks_queued())
     {
         // normal end of gcode file
         recover_height = 0.0f;
@@ -526,7 +526,7 @@ void lcd_menu_print_select()
             #else
             #endif // EXTRUDERS
                 card.openFile(card.currentFileName(), true);
-                if (card.isFileOpen() && !commands_queued())
+                if (card.isFileOpen() && !queue.has_commands_queued())
                 {
                     if (led_mode == LED_MODE_WHILE_PRINTING || led_mode == LED_MODE_BLINK_ON_DONE)
                         analogWrite(LED_PIN, 255 * int(led_brightness_level) / 100);
@@ -669,7 +669,7 @@ void lcd_menu_print_heatup()
         }
 
 #if TEMP_SENSOR_BED != 0
-        if (thermalManager.temp_bed.celsius >= thermalManager.temp_bed.target - TEMP_WINDOW * 2 && !commands_queued() && !blocks_queued())
+        if (thermalManager.temp_bed.celsius >= thermalManager.temp_bed.target - TEMP_WINDOW * 2 && !queue.has_commands_queued() && !blocks_queued())
 #else
         if (!commands_queued() && !blocks_queued())
 #endif // TEMP_SENSOR_BED
