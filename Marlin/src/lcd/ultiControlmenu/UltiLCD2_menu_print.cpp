@@ -16,6 +16,7 @@
 #include "UltiLCD2_menu_prefs.h"
 #include "preferences.h"
 #include "tinkergnome.h"
+#include "../../module/motion.h"
 
 uint8_t lcd_cache[LCD_CACHE_SIZE];
 

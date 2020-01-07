@@ -268,7 +268,7 @@ static void lcd_menu_special_startup()
 void doCooldown()
 {
     thermalManager.disable_all_heaters();
-    thermalManager.fan_speed = 0;
+    thermalManager.set_fan_speed(0, 0);
 }
 
 /* Warning: This function is called from interrupt context */

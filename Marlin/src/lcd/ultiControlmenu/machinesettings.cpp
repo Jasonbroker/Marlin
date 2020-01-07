@@ -80,7 +80,7 @@ bool MachineSettings::recall(uint8_t index)
 #if TEMP_SENSOR_BED != 0
     thermalManager.temp_bed.target = settings[index]->BedTemperature;
 #endif // TEMP_SENSOR_BED
-    thermalManager.fan_speed = settings[index]->fanSpeed;
+    thermalManager.set_fan_speed(0, settings[index]->fanSpeed);
     for (int i=0; i<EXTRUDERS; i++)
     {
       thermalManager.temp_hotend[i].target = settings[index]->HotendTemperature[i];

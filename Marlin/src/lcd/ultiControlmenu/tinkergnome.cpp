@@ -1818,7 +1818,7 @@ static void recover_abort()
     clear_command_queue();
 
     HOTEND_LOOP() setTargetHotend(0, e);
-    thermalManager.fan_speed = 0;
+    thermalManager.set_fan_speed(0, 0);
     reset_printing_state();
     doCooldown();
 

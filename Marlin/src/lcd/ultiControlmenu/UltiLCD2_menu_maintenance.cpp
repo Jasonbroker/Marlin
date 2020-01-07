@@ -16,6 +16,7 @@
 #include "preferences.h"
 #include "tinkergnome.h"
 #include "powerbudget.h"
+#include "../../module/motion.h"
 
 static void lcd_menu_maintenance_advanced_heatup();
 //static void lcd_menu_maintenance_led();

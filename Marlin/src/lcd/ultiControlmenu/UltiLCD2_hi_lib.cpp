@@ -7,6 +7,7 @@
 #include "UltiLCD2_hi_lib.h"
 #include "../../module/temperature.h"
 #include "UltiLCD2_menu_utils.h"
+#include "../../module/motion.h"
 
 menuFunc_t postMenuCheck;
 uint8_t minProgress;

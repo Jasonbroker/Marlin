@@ -13,6 +13,7 @@
 #include "tinkergnome.h"
 #include "machinesettings.h"
 #include "preferences.h"
+#include "../../module/motion.h"
 
 #define PREHEAT_FLAG(n) (lcd_cache[2*LCD_CACHE_COUNT+n])
 
