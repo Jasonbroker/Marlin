@@ -529,7 +529,7 @@ static void lcd_menu_material_export()
         lcd_info_screen(NULL, lcd_change_to_previous_menu);
         lcd_lib_draw_string_centerP(16, PSTR("Reading card..."));
         lcd_lib_update_screen();
-        card.initsd();
+        card.mount();
         return;
     }
 
@@ -627,7 +627,7 @@ static void lcd_menu_material_import()
         lcd_info_screen(NULL, lcd_change_to_previous_menu);
         lcd_lib_draw_string_centerP(16, PSTR("Reading card..."));
         lcd_lib_update_screen();
-        card.initsd();
+        card.mount();
         return;
     }
 

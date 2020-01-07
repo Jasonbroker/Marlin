@@ -8,6 +8,7 @@
 #include "../../module/temperature.h"
 #include "UltiLCD2_menu_utils.h"
 #include "../../module/motion.h"
+#include "../../gcode/queue.h"
 
 menuFunc_t postMenuCheck;
 uint8_t minProgress;

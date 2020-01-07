@@ -477,7 +477,7 @@ void lcd_menu_print_select()
         lcd_lib_draw_string_centerP(16, PSTR("Reading card..."));
         lcd_lib_update_screen();
         lcd_clear_cache();
-        card.initsd();
+        card.mount();
         return;
     }
 

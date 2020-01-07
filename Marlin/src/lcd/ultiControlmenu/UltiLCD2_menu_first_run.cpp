@@ -558,7 +558,7 @@ static void lcd_menu_first_run_print_card_detect()
         DRAW_PROGRESS_NR(21);
         lcd_lib_draw_string_centerP(30, PSTR("Reading card..."));
         lcd_lib_update_screen();
-        card.initsd();
+        card.mount();
         return;
     }
 
