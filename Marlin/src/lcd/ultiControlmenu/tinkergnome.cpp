@@ -1046,7 +1046,7 @@ static void drawPrintSubmenu (uint8_t nr, uint8_t &flags)
             lcd_lib_draw_string_leftP(15, PSTR("Z"));
 
             // calculate current z position
-            float_to_string2(st_get_position(Z_AXIS) / planner.settings.axis_steps_per_mm[Z_AXIS], buffer, 0);
+            float_to_string2(current_position[Z_AXIS] / planner.settings.axis_steps_per_mm[Z_AXIS], buffer, 0);
             LCDMenu::drawMenuString(LCD_CHAR_MARGIN_LEFT+12
                                     , 15
                                     , LCD_CHAR_SPACING*strlen(buffer)
@@ -1520,7 +1520,7 @@ void lcd_menu_printing_tg()
             lcd_lib_draw_string_leftP(15, PSTR("Z"));
 
             // calculate current z position
-            float_to_string2(st_get_position(Z_AXIS) / planner.settings.axis_steps_per_mm[Z_AXIS], buffer, 0);
+            float_to_string2(current_position(Z_AXIS) / planner.settings.axis_steps_per_mm[Z_AXIS], buffer, 0);
             lcd_lib_draw_string(LCD_CHAR_MARGIN_LEFT+12, 15, buffer);
 #endif
         }
@@ -1614,7 +1614,7 @@ static void init_target_positions()
     delayMove = false;
     for (uint8_t i=0; i<NUM_AXIS; ++i)
     {
-        TARGET_POS(i) = current_position[i] = st_get_position(i)/planner.settings.axis_steps_per_mm[i];
+        TARGET_POS(i) = current_position[i] = current_position[i]/planner.settings.axis_steps_per_mm[i];
     }
 }
 
@@ -1695,7 +1695,7 @@ static void drawSimpleBuildplateSubmenu(uint8_t nr, uint8_t &flags)
         // z position
         char buffer[32] = {0};
         lcd_lib_draw_stringP(LCD_CHAR_MARGIN_LEFT+5*LCD_CHAR_SPACING, 40, PSTR("Z"));
-        float_to_string2(st_get_position(Z_AXIS) / planner.settings.axis_steps_per_mm[Z_AXIS], buffer, PSTR("mm"));
+        float_to_string2(current_position[Z_AXIS] / planner.settings.axis_steps_per_mm[Z_AXIS], buffer, PSTR("mm"));
         LCDMenu::drawMenuString(LCD_CHAR_MARGIN_LEFT+7*LCD_CHAR_SPACING
                               , 40
                               , 48
@@ -1745,7 +1745,7 @@ void lcd_menu_simple_buildplate_init()
 {
     lcd_lib_clear();
 
-    float zPos = st_get_position(Z_AXIS) / planner.settings.axis_steps_per_mm[Z_AXIS];
+    float zPos = current_position[Z_AXIS] / planner.settings.axis_steps_per_mm[Z_AXIS];
     if ((queue.has_commands_queued() < 1) && (zPos < 35.01f))
     {
         menu.replace_menu(menu_t(lcd_simple_buildplate_init, lcd_menu_simple_buildplate, lcd_simple_buildplate_quit, 0), false);
@@ -2114,7 +2114,7 @@ static void stopMove()
     delayMove = true;
     for (uint8_t i=0; i<NUM_AXIS; ++i)
     {
-        TARGET_POS(i) = current_position[i] = constrain(st_get_position(i)/planner.settings.axis_steps_per_mm[i], min_pos[i], max_pos[i]);
+        TARGET_POS(i) = current_position[i] = constrain(current_position[i]/planner.settings.axis_steps_per_mm[i], min_pos[i], max_pos[i]);
     }
     planner.set_position_mm(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS], current_position[E_AXIS]);
 }
@@ -2231,7 +2231,7 @@ static void drawMoveDetails()
 
 static void pos2string(uint8_t flags, uint8_t axis, char *buffer)
 {
-    float_to_string2((flags & MENU_ACTIVE) ? TARGET_POS(axis) : st_get_position(axis) / planner.settings.axis_steps_per_mm[axis], buffer, PSTR("mm"));
+    float_to_string2((flags & MENU_ACTIVE) ? TARGET_POS(axis) : current_position[axis] / planner.settings.axis_steps_per_mm[axis], buffer, PSTR("mm"));
 }
 
 // create menu options for "move axes"
@@ -2797,8 +2797,8 @@ static void lcd_extrude_reset_pos()
 static void lcd_extrude_init_move()
 {
     synchronize();
-    planner.set_e_position_mm(st_get_position(E_AXIS) / planner.settings.axis_steps_per_mm[E_AXIS] / volume_to_filament_length[active_extruder]);
-    TARGET_POS(E_AXIS) = st_get_position(E_AXIS) / planner.settings.axis_steps_per_mm[E_AXIS];
+    planner.set_e_position_mm(current_position[E_AXIS] / planner.settings.axis_steps_per_mm[E_AXIS] / volume_to_filament_length[active_extruder]);
+    TARGET_POS(E_AXIS) = current_position[E_AXIS] / planner.settings.axis_steps_per_mm[E_AXIS];
 }
 
 static void lcd_extrude_move()
@@ -2822,8 +2822,8 @@ static void lcd_extrude_quit_move()
 static void lcd_extrude_init_pull()
 {
     synchronize();
-    planner.set_e_position_mm(st_get_position(E_AXIS) / planner.settings.axis_steps_per_mm[E_AXIS] / volume_to_filament_length[active_extruder]);
-    TARGET_POS(E_AXIS) = st_get_position(E_AXIS) / planner.settings.axis_steps_per_mm[E_AXIS];
+    planner.set_e_position_mm(current_position.e / planner.settings.axis_steps_per_mm[E_AXIS] / volume_to_filament_length[active_extruder]);
+    TARGET_POS(E_AXIS) = current_position.e / planner.settings.axis_steps_per_mm[E_AXIS];
     //Set E motor power lower so the motor will skip instead of grind.
 #if EXTRUDERS > 1 && defined(MOTOR_CURRENT_PWM_E_PIN) && MOTOR_CURRENT_PWM_E_PIN > -1
     stepper.digipot_current(2, active_extruder ? (motor_current_e2*2/3) : (motor_current_setting[2]*2/3));
@@ -3058,7 +3058,7 @@ static void drawExtrudeSubmenu (uint8_t nr, uint8_t &flags)
             lcd_lib_draw_string_leftP(5, PSTR("Rotate to extrude"));
             flags |= MENU_STATUSLINE;
         }
-        float_to_string2(flags & MENU_ACTIVE ? TARGET_POS(E_AXIS) : st_get_position(E_AXIS) / planner.settings.axis_steps_per_mm[E_AXIS], buffer, PSTR("mm"));
+        float_to_string2(flags & MENU_ACTIVE ? TARGET_POS(E_AXIS) : current_position[E_AXIS] / planner.settings.axis_steps_per_mm[E_AXIS], buffer, PSTR("mm"));
         LCDMenu::drawMenuString(LCD_GFX_WIDTH-LCD_CHAR_MARGIN_RIGHT-11*LCD_CHAR_SPACING
                           , 35
                           , 11*LCD_CHAR_SPACING

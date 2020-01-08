@@ -207,7 +207,7 @@ static void lcd_menu_change_material_remove()
 #endif
     lcd_lib_draw_stringP(3, 20, PSTR("Reversing material"));
 
-    long pos = -st_get_position(E_AXIS);
+    long pos = -current_position.e;
     long targetPos = lround(FILAMENT_REVERSAL_LENGTH * planner.settings.axis_steps_per_mm[E_AXIS]);
     uint8_t progress = (pos * 125 / targetPos);
     lcd_progressbar(progress);
@@ -378,7 +378,7 @@ static void lcd_menu_change_material_insert_forward()
 #endif
     lcd_lib_draw_stringP(3, 20, PSTR("Forwarding material"));
 
-    long pos = st_get_position(E_AXIS);
+    long pos = current_position.e;
     long targetPos = lround(FILAMENT_FORWARD_LENGTH*planner.settings.axis_steps_per_mm[E_AXIS]);
     uint8_t progress = (pos * 125 / targetPos);
     lcd_progressbar(progress);

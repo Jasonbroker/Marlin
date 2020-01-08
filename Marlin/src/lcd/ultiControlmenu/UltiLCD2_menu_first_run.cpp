@@ -501,7 +501,7 @@ static void lcd_menu_first_run_material_load_forward()
         menu.replace_menu(menu_t(lcd_menu_first_run_material_load_wait, MAIN_MENU_ITEM_POS(0)));
     }
 
-    long pos = st_get_position(E_AXIS);
+    long pos = current_position.e;
     long targetPos = lround(FILAMENT_FORWARD_LENGTH*planner.settings.axis_steps_per_mm[E_AXIS]);
     uint8_t progress = (pos * 125 / targetPos);
     lcd_progressbar(progress);
