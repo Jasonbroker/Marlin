@@ -3120,8 +3120,8 @@ static void lcd_menu_tempcontrol_e2()
 #if defined(PIDTEMPBED) && (TEMP_SENSOR_BED != 0)
 static void init_tempcontrol_bed()
 {
-    FLOAT_SETTING(1) = unscalePID_i(bedKi);
-    FLOAT_SETTING(2) = unscalePID_d(bedKd);
+    FLOAT_SETTING(1) = unscalePID_i(thermalManager.temp_bed.pid.Ki);
+    FLOAT_SETTING(2) = unscalePID_d(thermalManager.temp_bed.pid.Kd);
     menu.set_selection(3);
 }
 
@@ -3155,7 +3155,7 @@ static void lcd_preset_bed_kd()
 {
     if (lcd_tune_value(FLOAT_SETTING(2), 0.0f, 999.99f, 0.01f))
     {
-        bedKd = scalePID_d(FLOAT_SETTING(2));
+        thermalManager.temp_bed.pid.Kd = scalePID_d(FLOAT_SETTING(2));
     }
 }
 
@@ -3163,7 +3163,7 @@ static void lcd_preset_bed_ki()
 {
     if (lcd_tune_value(FLOAT_SETTING(1), 0.0f, 999.99f, 0.01f))
     {
-        bedKi = scalePID_i(FLOAT_SETTING(1));
+        thermalManager.temp_bed.pid.Ki = scalePID_i(FLOAT_SETTING(1));
     }
 }
 
