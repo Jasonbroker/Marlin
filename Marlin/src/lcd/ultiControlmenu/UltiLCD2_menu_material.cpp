@@ -135,7 +135,7 @@ void lcd_menu_change_material_preheat()
             planner.quick_stop();
             thermalManager.extrude_min_temp = 0;
             current_position[E_AXIS] = 0.0f;
-            plan_set_e_position(current_position[E_AXIS], active_extruder, true);
+            planner.set_e_position_mm(current_position[E_AXIS]);
 
             float old_max_feedrate_e = planner.settings.max_feedrate_mm_s[E_AXIS];
             float old_retract_acceleration = planner.settings.retract_acceleration;
@@ -218,7 +218,7 @@ static void lcd_menu_change_material_remove()
 static void lcd_menu_change_material_remove_wait_user_ready()
 {
     st_synchronize();
-    // plan_set_e_position(0.0);
+    // planner.set_e_position_mm(0.0);
     // current_position[E_AXIS] = 0.0;
     menu.replace_menu(menu_t(lcd_menu_change_material_select_material, SCROLL_MENU_ITEM_POS(0)));
     check_preheat();
@@ -336,7 +336,7 @@ static void lcd_menu_change_material_insert_wait_user_ready()
 
     planner.quick_stop();
     current_position[E_AXIS] = 0.0f;
-    plan_set_e_position(current_position[E_AXIS], active_extruder, true);
+    planner.set_e_position_mm(current_position[E_AXIS]);
 
     current_position[E_AXIS] += FILAMENT_FORWARD_LENGTH / volume_to_filament_length[active_extruder];
     planner.buffer_line(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS], current_position[E_AXIS], planner.settings.max_feedrate_mm_s[E_AXIS], active_extruder);
@@ -399,7 +399,7 @@ static void materialInsertReady()
 
     // retract material
     current_position[E_AXIS] = 0.0f;
-    plan_set_e_position(current_position[E_AXIS], active_extruder, true);
+    planner.set_e_position_mm(current_position[E_AXIS]);
     if (retracted)
     {
         current_position[E_AXIS] -= retract_recover_length;

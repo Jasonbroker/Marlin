@@ -1879,7 +1879,7 @@ static void lcd_recover_start()
     #else
     #endif // EXTRUDERS
     current_position[E_AXIS] = 0.0f;
-    plan_set_e_position(current_position[E_AXIS], active_extruder, true);
+    planner.set_e_position_mm(current_position[E_AXIS]);
     menu.replace_menu(menu_t(lcd_menu_recover_file));
     card.startFileprint();
 }
@@ -2785,14 +2785,14 @@ static void lcd_extrude_reset_pos()
 {
     lcd_lib_keyclick();
     current_position[E_AXIS] = 0.0f;
-    plan_set_e_position(current_position[E_AXIS], active_extruder, true);
+    planner.set_e_position_mm(current_position[E_AXIS]);
     TARGET_POS(E_AXIS) = current_position[E_AXIS];
 }
 
 static void lcd_extrude_init_move()
 {
     st_synchronize();
-    plan_set_e_position(st_get_position(E_AXIS) / e_steps_per_unit(active_extruder) / volume_to_filament_length[active_extruder], active_extruder, true);
+    planner.set_e_position_mm(st_get_position(E_AXIS) / e_steps_per_unit(active_extruder) / volume_to_filament_length[active_extruder]);
     TARGET_POS(E_AXIS) = st_get_position(E_AXIS) / e_steps_per_unit(active_extruder);
 }
 
@@ -2817,7 +2817,7 @@ static void lcd_extrude_quit_move()
 static void lcd_extrude_init_pull()
 {
     st_synchronize();
-    plan_set_e_position(st_get_position(E_AXIS) / e_steps_per_unit(active_extruder) / volume_to_filament_length[active_extruder], active_extruder, true);
+    planner.set_e_position_mm(st_get_position(E_AXIS) / e_steps_per_unit(active_extruder) / volume_to_filament_length[active_extruder]);
     TARGET_POS(E_AXIS) = st_get_position(E_AXIS) / e_steps_per_unit(active_extruder);
     //Set E motor power lower so the motor will skip instead of grind.
 #if EXTRUDERS > 1 && defined(MOTOR_CURRENT_PWM_E_PIN) && MOTOR_CURRENT_PWM_E_PIN > -1

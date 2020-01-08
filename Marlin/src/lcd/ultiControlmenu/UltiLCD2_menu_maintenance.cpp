@@ -300,7 +300,7 @@ void start_move_material()
     thermalManager.extrude_min_temp = 0;
     // reset e-position
     current_position[E_AXIS] = 0;
-    plan_set_e_position(current_position[E_AXIS], active_extruder, true);
+    planner.set_e_position_mm(current_position[E_AXIS]);
     // heatup nozzle
     thermalManager.temp_hotend[active_extruder].target = material[active_extruder].temperature[0];
 

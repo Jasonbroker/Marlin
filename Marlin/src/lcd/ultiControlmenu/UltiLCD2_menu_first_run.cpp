@@ -458,7 +458,7 @@ static void runMaterialForward()
 
     planner.quick_stop();
     current_position[E_AXIS] = 0;
-    plan_set_e_position(current_position[E_AXIS], active_extruder, true);
+    planner.set_e_position_mm(current_position[E_AXIS]);
     current_position[E_AXIS] = FILAMENT_FORWARD_LENGTH;
     planner.buffer_line(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS], current_position[E_AXIS], planner.settings.max_feedrate_mm_s[E_AXIS], 0);
 

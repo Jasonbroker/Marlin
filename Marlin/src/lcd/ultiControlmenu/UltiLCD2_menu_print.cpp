@@ -84,7 +84,7 @@ void abortPrint(bool bQuickstop)
     if (primed)
     {
         // perform the end-of-print retraction at the standard retract speed
-        plan_set_e_position((end_of_print_retraction / volume_to_filament_length[active_extruder]) - (retracted ? fwretract.settings.retract_length : 0), active_extruder, true);
+        planner.set_e_position_mm((end_of_print_retraction / volume_to_filament_length[active_extruder]) - (retracted ? fwretract.settings.retract_length : 0));
         current_position[E_AXIS] = 0.0f;
         planner.buffer_line(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS], current_position[E_AXIS], fwretract.settings.retract_feedrate_mm_s /60, active_extruder);
 
@@ -112,7 +112,7 @@ void abortPrint(bool bQuickstop)
     cmd_synchronize();
     finishAndDisableSteppers();
     current_position[E_AXIS] = 0.0f;
-    plan_set_e_position(current_position[E_AXIS], active_extruder, true);
+    planner.set_e_position_mm(current_position[E_AXIS]);
 
     stoptime=millis();
     //If we where paused, make sure we abort that pause. Else strange things happen: https://github.com/Ultimaker/Ultimaker2Marlin/issues/32
@@ -165,7 +165,7 @@ void doStartPrint()
 
     // zero the extruder position
     current_position[E_AXIS] = 0.0;
-    plan_set_e_position(current_position[E_AXIS], active_extruder, true);
+    planner.set_e_position_mm(current_position[E_AXIS]);
 
 	// since we are going to prime the nozzle, forget about any G10/G11 retractions that happened at end of previous print
 	retracted = false;
@@ -196,18 +196,18 @@ void doStartPrint()
             primed = true;
         }
         // undo the end-of-print retraction
-        plan_set_e_position((- end_of_print_retraction) / volume_to_filament_length[e], e, true);
+        planner.set_e_position_mm((- end_of_print_retraction) / volume_to_filament_length[e]);
         planner.buffer_line(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS], current_position[E_AXIS], END_OF_PRINT_RECOVERY_SPEED, e);
 
         // perform additional priming
-        plan_set_e_position(-PRIMING_MM3, e, true);
+        planner.set_e_position_mm(-PRIMING_MM3);
         planner.buffer_line(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS], current_position[E_AXIS], (PRIMING_MM3_PER_SEC * volume_to_filament_length[e]), e);
 
 #if EXTRUDERS > 1
         // for extruders other than the first one, perform end of print retraction
         if (e != active_extruder)
         {
-            plan_set_e_position(extruder_swap_retract_length / volume_to_filament_length[e], e, true);
+            planner.set_e_position_mm(extruder_swap_retract_length / volume_to_filament_length[e]);
             planner.buffer_line(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS], current_position[E_AXIS], fwretract.settings.retract_feedrate_mm_s/60, e);
         }
 #endif
@@ -216,7 +216,7 @@ void doStartPrint()
     if (printing_state == PRINT_STATE_START)
     {
         // move to the recover start position
-        plan_set_e_position(recover_position[E_AXIS], active_extruder, true);
+        planner.set_e_position_mm(recover_position[E_AXIS]);
         planner.buffer_line(recover_position[X_AXIS], recover_position[Y_AXIS], recover_position[Z_AXIS], recover_position[E_AXIS], min(homing_feedrate[X_AXIS], homing_feedrate[Z_AXIS]), active_extruder);
         for(int8_t i=0; i < NUM_AXIS; i++) {
             current_position[i] = recover_position[i];
@@ -743,7 +743,7 @@ void lcd_menu_print_heatup()
 
 void lcd_change_to_menu_change_material_return()
 {
-    // plan_set_e_position(current_position[E_AXIS]);
+    // planner.set_e_position_mm(current_position[E_AXIS]);
     thermalManager.setTargetHotend(material[active_extruder].temperature[nozzleSizeToTemperatureIndex(LCD_DETAIL_CACHE_NOZZLE_DIAMETER(active_extruder))], active_extruder);
     menu.return_to_previous(false);
 }
