@@ -69,7 +69,7 @@ void abortPrint(bool bQuickstop)
     }
     else
     {
-        plan_set_position(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS], current_position[E_AXIS], active_extruder, true);
+        planner.set_position_mm(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS], current_position[E_AXIS]);
     }
 
     // reset defaults
@@ -616,7 +616,7 @@ void lcd_menu_print_select()
                             char buffer[32] = {0};
                             homeAll();
                             sprintf_P(buffer, PSTR("G1 F12000 X%i Y%i"), max(int(min_pos[X_AXIS]), 0)+5, max(int(min_pos[Y_AXIS]), 0)+5);
-                            enquecommand(buffer);
+                            queue.enqueue_one_now(buffer);
                             printing_state = PRINT_STATE_NORMAL;
 
                             if (ui_mode & UI_MODE_EXPERT)

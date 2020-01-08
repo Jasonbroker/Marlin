@@ -132,16 +132,16 @@ void Config_PrintSettings()
     SERIAL_ECHO_START();
     SERIAL_ECHOLNPGM("Maximum Acceleration (mm/s2):");
     SERIAL_ECHO_START();
-    SERIAL_ECHOPAIR("  M201 X" ,max_acceleration_units_per_sq_second[X_AXIS] );
-    SERIAL_ECHOPAIR(" Y" , max_acceleration_units_per_sq_second[Y_AXIS] );
-    SERIAL_ECHOPAIR(" Z" ,max_acceleration_units_per_sq_second[Z_AXIS] );
-    SERIAL_ECHOPAIR(" E" ,max_acceleration_units_per_sq_second[E_AXIS]);
+    SERIAL_ECHOPAIR("  M201 X" ,planner.settings.max_acceleration_mm_per_s2[X_AXIS] );
+    SERIAL_ECHOPAIR(" Y" , planner.settings.max_acceleration_mm_per_s2[Y_AXIS] );
+    SERIAL_ECHOPAIR(" Z" ,planner.settings.max_acceleration_mm_per_s2[Z_AXIS] );
+    SERIAL_ECHOPAIR(" E" ,planner.settings.max_acceleration_mm_per_s2[E_AXIS]);
     SERIAL_EOL();
     SERIAL_ECHO_START();
     SERIAL_ECHOLNPGM("Acceleration: S=acceleration, T=retract acceleration");
     SERIAL_ECHO_START();
-    SERIAL_ECHOPAIR("  M204 S",acceleration );
-    SERIAL_ECHOPAIR(" T" ,retract_acceleration);
+    SERIAL_ECHOPAIR("  M204 S",planner.settings.acceleration );
+    SERIAL_ECHOPAIR(" T" ,planner.settings.retract_acceleration);
     SERIAL_EOL();
 
     SERIAL_ECHO_START();
@@ -188,13 +188,13 @@ void Config_RetrieveSettings()
         // version number match
         EEPROM_READ_VAR(i,planner.settings.axis_steps_per_mm);
         EEPROM_READ_VAR(i,planner.settings.max_feedrate_mm_s);
-        EEPROM_READ_VAR(i,max_acceleration_units_per_sq_second);
+        EEPROM_READ_VAR(i,planner.settings.max_acceleration_mm_per_s2);
 
         // steps per sq second need to be updated to agree with the units per sq second (as they are what is used in the planner)
-		reset_acceleration_rates();
+		planner.reset_acceleration_rates();
 
-        EEPROM_READ_VAR(i,acceleration);
-        EEPROM_READ_VAR(i,retract_acceleration);
+        EEPROM_READ_VAR(i,planner.settings.acceleration);
+        EEPROM_READ_VAR(i,planner.settings.retract_acceleration);
         EEPROM_READ_VAR(i,planner.settings.min_feedrate_mm_s);
         EEPROM_READ_VAR(i,planner.settings.min_travel_feedrate_mm_s);
         EEPROM_READ_VAR(i,planner.settings.min_segment_time_us);
@@ -258,11 +258,11 @@ void Config_ResetDefault()
     {
         axis_steps_per_mm[i]=tmp1[i];
         max_feedrate[i]=tmp2[i];
-        max_acceleration_units_per_sq_second[i]=tmp3[i];
+        planner.settings.max_acceleration_mm_per_s2[i]=tmp3[i];
     }
 
     // steps per sq second need to be updated to agree with the units per sq second
-    reset_acceleration_rates();
+    planner.reset_acceleration_rates();
 
     acceleration=DEFAULT_ACCELERATION;
     retract_acceleration=DEFAULT_RETRACT_ACCELERATION;

@@ -524,7 +524,7 @@ void lcd_menu_axeslimit()
 
 static void lcd_cancel_steps()
 {
-    plan_set_position(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS], current_position[E_AXIS], active_extruder, true);
+    planner.set_position_mm(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS], current_position[E_AXIS]);
     menu.return_to_previous();
 }
 

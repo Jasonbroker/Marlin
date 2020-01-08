@@ -55,7 +55,7 @@ void lcd_material_change_init(bool printing)
         char buffer[32] = {0};
         homeHead();
         sprintf_P(buffer, PSTR("G1 F%i X%i Y%i"), int(homing_feedrate[0]), int(AXIS_CENTER_POS(X_AXIS)), int(min_pos[Y_AXIS])+5);
-        enquecommand(buffer);
+        queue.enqueue_one_now(buffer);
         menu.add_menu(menu_t(lcd_menu_material_main_return));
     }
     preheat_end_time = millis() + (unsigned long)material[active_extruder].change_preheat_wait_time * 1000L;

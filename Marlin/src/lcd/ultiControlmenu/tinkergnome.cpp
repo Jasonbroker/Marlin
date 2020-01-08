@@ -17,6 +17,7 @@
 #include "UltiLCD2_menu_material.h"
 #include "UltiLCD2_menu_maintenance.h"
 #include "../../feature/fwretract.h"
+#include "../../gcode/queue.h"
 
 #include "tinkergnome.h"
 
@@ -1623,7 +1624,7 @@ void lcd_simple_buildplate_store()
 {
     add_homeing[Z_AXIS] -= current_position[Z_AXIS];
     current_position[Z_AXIS] = 0;
-    plan_set_position(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS], current_position[E_AXIS], active_extruder, true);
+    planner.set_position_mm(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS], current_position[E_AXIS]);
     Config_StoreSettings();
     menu.return_to_previous();
 }
@@ -2110,7 +2111,7 @@ static void stopMove()
     {
         TARGET_POS(i) = current_position[i] = constrain(st_get_position(i)/planner.settings.axis_steps_per_mm[i], min_pos[i], max_pos[i]);
     }
-    plan_set_position(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS], current_position[E_AXIS], active_extruder, true);
+    planner.set_position_mm(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS], current_position[E_AXIS]);
 }
 
 static void lcd_move_axis(AxisEnum axis, float diff)
@@ -3117,7 +3118,7 @@ void recover_start_print(const char *cmd)
     homeAll();
     char buffer[32] = {0};
     sprintf_P(buffer, PSTR("G1 F12000 X%i Y%i"), int(min_pos[X_AXIS])+5, int(min_pos[Y_AXIS])+5);
-    enquecommand(buffer);
+    queue.enqueue_one_now(buffer);
 
     menu.return_to_main();
     menu.add_menu(menu_t((ui_mode & UI_MODE_EXPERT) ? lcd_menu_print_heatup_tg : lcd_menu_print_heatup));
