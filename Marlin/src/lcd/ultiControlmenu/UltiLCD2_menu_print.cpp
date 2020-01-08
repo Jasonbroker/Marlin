@@ -95,7 +95,7 @@ void abortPrint(bool bQuickstop)
 
     // switch off all heaters
     doCooldown();
-    st_synchronize();
+    synchronize();
 
     // home all axis
     if (current_position[Z_AXIS] > max_pos[Z_AXIS] - 30)

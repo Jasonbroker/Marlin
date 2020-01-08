@@ -141,8 +141,8 @@ void lcd_menu_change_material_preheat()
             float old_retract_acceleration = planner.settings.retract_acceleration;
             float old_max_e_jerk = planner.max_jerk.e;
 
-            planner.settings.max_feedrate_mm_s[E_AXIS] = float(FILAMENT_FAST_STEPS) / e_steps_per_unit(active_extruder);
-            planner.settings.retract_acceleration = float(FILAMENT_LONG_ACCELERATION_STEPS) / e_steps_per_unit(active_extruder);
+            planner.settings.max_feedrate_mm_s[E_AXIS] = float(FILAMENT_FAST_STEPS) / planner.settings.axis_steps_per_mm[E_AXIS];
+            planner.settings.retract_acceleration = float(FILAMENT_LONG_ACCELERATION_STEPS) / planner.settings.axis_steps_per_mm[E_AXIS];
             planner.max_jerk.e = FILAMENT_LONG_MOVE_JERK;
 
             current_position[E_AXIS] -= 1.0 / volume_to_filament_length[active_extruder];
@@ -208,7 +208,7 @@ static void lcd_menu_change_material_remove()
     lcd_lib_draw_stringP(3, 20, PSTR("Reversing material"));
 
     long pos = -st_get_position(E_AXIS);
-    long targetPos = lround(FILAMENT_REVERSAL_LENGTH * e_steps_per_unit(active_extruder));
+    long targetPos = lround(FILAMENT_REVERSAL_LENGTH * planner.settings.axis_steps_per_mm[E_AXIS]);
     uint8_t progress = (pos * 125 / targetPos);
     lcd_progressbar(progress);
 
@@ -217,7 +217,7 @@ static void lcd_menu_change_material_remove()
 
 static void lcd_menu_change_material_remove_wait_user_ready()
 {
-    st_synchronize();
+    synchronize();
     // planner.set_e_position_mm(0.0);
     // current_position[E_AXIS] = 0.0;
     menu.replace_menu(menu_t(lcd_menu_change_material_select_material, SCROLL_MENU_ITEM_POS(0)));
@@ -330,8 +330,8 @@ static void lcd_menu_change_material_insert_wait_user_ready()
     float old_retract_acceleration = planner.settings.retract_acceleration;
     float old_max_e_jerk = planner.max_jerk.e;
 
-    planner.settings.max_feedrate_mm_s[E_AXIS] = float(FILAMENT_FAST_STEPS) / e_steps_per_unit(active_extruder);
-    planner.settings.retract_acceleration = float(FILAMENT_LONG_ACCELERATION_STEPS) / e_steps_per_unit(active_extruder);
+    planner.settings.max_feedrate_mm_s[E_AXIS] = float(FILAMENT_FAST_STEPS) / planner.settings.axis_steps_per_mm[E_AXIS];
+    planner.settings.retract_acceleration = float(FILAMENT_LONG_ACCELERATION_STEPS) / planner.settings.axis_steps_per_mm[E_AXIS];
     planner.max_jerk.e = FILAMENT_LONG_MOVE_JERK;
 
     planner.quick_stop();
@@ -379,7 +379,7 @@ static void lcd_menu_change_material_insert_forward()
     lcd_lib_draw_stringP(3, 20, PSTR("Forwarding material"));
 
     long pos = st_get_position(E_AXIS);
-    long targetPos = lround(FILAMENT_FORWARD_LENGTH*e_steps_per_unit(active_extruder));
+    long targetPos = lround(FILAMENT_FORWARD_LENGTH*planner.settings.axis_steps_per_mm[E_AXIS]);
     uint8_t progress = (pos * 125 / targetPos);
     lcd_progressbar(progress);
 

@@ -452,8 +452,8 @@ static void runMaterialForward()
     float old_max_feedrate_e = planner.settings.max_feedrate_mm_s[E_AXIS];
     float old_retract_acceleration = planner.settings.retract_acceleration;
     float old_max_e_jerk = planner.max_jerk.e;
-    planner.settings.max_feedrate_mm_s[E_AXIS] = float(FILAMENT_FAST_STEPS) / e_steps_per_unit(active_extruder);
-    planner.settings.retract_acceleration = float(FILAMENT_LONG_ACCELERATION_STEPS) / e_steps_per_unit(active_extruder);
+    planner.settings.max_feedrate_mm_s[E_AXIS] = float(FILAMENT_FAST_STEPS) / planner.settings.axis_steps_per_mm[E_AXIS];
+    planner.settings.retract_acceleration = float(FILAMENT_LONG_ACCELERATION_STEPS) / planner.settings.axis_steps_per_mm[E_AXIS];
     planner.max_jerk.e = FILAMENT_LONG_MOVE_JERK;
 
     planner.quick_stop();
@@ -502,7 +502,7 @@ static void lcd_menu_first_run_material_load_forward()
     }
 
     long pos = st_get_position(E_AXIS);
-    long targetPos = lround(FILAMENT_FORWARD_LENGTH*e_steps_per_unit(active_extruder));
+    long targetPos = lround(FILAMENT_FORWARD_LENGTH*planner.settings.axis_steps_per_mm[E_AXIS]);
     uint8_t progress = (pos * 125 / targetPos);
     lcd_progressbar(progress);
 
