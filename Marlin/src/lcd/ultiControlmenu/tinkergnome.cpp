@@ -1451,7 +1451,7 @@ void lcd_menu_printing_tg()
         {
 #ifdef __AVR__
             uint8_t progress(0);
-            if IS_SD_PRINTING()
+            if (IS_SD_PRINTING())
             {
                 uint32_t divisor = (card.getFileSize() + 123) / 124;
                 if (divisor)
@@ -2046,13 +2046,13 @@ static bool endstop_reached(AxisEnum axis, int8_t direction)
     if (axis == X_AXIS)
     {
         #if defined(X_MIN_PIN) && X_MIN_PIN > -1
-        if ((direction < 0) && (READ(X_MIN_PIN) != X_ENDSTOPS_INVERTING))
+        if ((direction < 0) && (READ(X_MIN_PIN) != X_MIN_ENDSTOP_INVERTING))
         {
             return true;
         }
         #endif
         #if defined(X_MAX_PIN) && X_MAX_PIN > -1
-        if ((direction > 0) && (READ(X_MAX_PIN) != X_ENDSTOPS_INVERTING))
+        if ((direction > 0) && (READ(X_MAX_PIN) != X_MAX_ENDSTOP_INVERTING))
         {
             return true;
         }
@@ -2061,14 +2061,14 @@ static bool endstop_reached(AxisEnum axis, int8_t direction)
     else if (axis == Y_AXIS)
     {
         #if defined(Y_MIN_PIN) && Y_MIN_PIN > -1
-        if ((direction < 0) && (READ(Y_MIN_PIN) != Y_ENDSTOPS_INVERTING))
+        if ((direction < 0) && (READ(Y_MIN_PIN) != Y_MIN_ENDSTOP_INVERTING))
         {
             return true;
         }
         #endif
         // check max endstop
         #if defined(Y_MAX_PIN) && Y_MAX_PIN > -1
-        if ((direction > 0) && (READ(Y_MAX_PIN) != Y_ENDSTOPS_INVERTING))
+        if ((direction > 0) && (READ(Y_MAX_PIN) != Y_MAX_ENDSTOP_INVERTING))
         {
             return true;
         }
@@ -2077,14 +2077,14 @@ static bool endstop_reached(AxisEnum axis, int8_t direction)
     else if (axis == Z_AXIS)
     {
         #if defined(Z_MIN_PIN) && Z_MIN_PIN > -1
-        if ((direction < 0) && (READ(Z_MIN_PIN) != Z_ENDSTOPS_INVERTING))
+        if ((direction < 0) && (READ(Z_MIN_PIN) != Z_MIN_ENDSTOP_INVERTING))
         {
             return true;
         }
         #endif
         // check max endstop
         #if defined(Z_MAX_PIN) && Z_MAX_PIN > -1
-        if ((direction > 0) && (READ(Z_MAX_PIN) != Z_ENDSTOPS_INVERTING))
+        if ((direction > 0) && (READ(Z_MAX_PIN) != Z_MAX_ENDSTOP_INVERTING))
         {
             return true;
         }
@@ -2977,7 +2977,7 @@ static void drawExtrudeSubmenu (uint8_t nr, uint8_t &flags)
         }
         else
         {
-            lcd_lib_draw_heater(LCD_GFX_WIDTH-LCD_CHAR_MARGIN_RIGHT-13*LCD_CHAR_SPACING, 20, thermalManager.getHeaterPower(active_extruder));
+            lcd_lib_draw_heater(LCD_GFX_WIDTH-LCD_CHAR_MARGIN_RIGHT-13*LCD_CHAR_SPACING, 20, thermalManager.getHeaterPower((heater_ind_t)active_extruder));
         }
     }
     else if (nr == index++)
