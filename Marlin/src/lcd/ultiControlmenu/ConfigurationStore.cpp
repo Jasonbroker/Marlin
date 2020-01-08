@@ -118,7 +118,7 @@ void Config_PrintSettings()
     SERIAL_ECHOPAIR(" Y",planner.settings.axis_steps_per_mm[Y_AXIS]);
     SERIAL_ECHOPAIR(" Z",planner.settings.axis_steps_per_mm[Z_AXIS]);
     SERIAL_ECHOPAIR(" E",planner.settings.axis_steps_per_mm[E_AXIS]);
-    SERIAL_EOL;
+    SERIAL_EOL();
 
     SERIAL_ECHO_START();
     SERIAL_ECHOLNPGM("Maximum feedrates (mm/s):");
@@ -127,7 +127,7 @@ void Config_PrintSettings()
     SERIAL_ECHOPAIR(" Y",planner.settings.max_feedrate_mm_s[Y_AXIS] );
     SERIAL_ECHOPAIR(" Z", planner.settings.max_feedrate_mm_s[Z_AXIS] );
     SERIAL_ECHOPAIR(" E", planner.settings.max_feedrate_mm_s[E_AXIS]);
-    SERIAL_EOL;
+    SERIAL_EOL();
 
     SERIAL_ECHO_START();
     SERIAL_ECHOLNPGM("Maximum Acceleration (mm/s2):");
@@ -136,13 +136,13 @@ void Config_PrintSettings()
     SERIAL_ECHOPAIR(" Y" , max_acceleration_units_per_sq_second[Y_AXIS] );
     SERIAL_ECHOPAIR(" Z" ,max_acceleration_units_per_sq_second[Z_AXIS] );
     SERIAL_ECHOPAIR(" E" ,max_acceleration_units_per_sq_second[E_AXIS]);
-    SERIAL_EOL;
+    SERIAL_EOL();
     SERIAL_ECHO_START();
     SERIAL_ECHOLNPGM("Acceleration: S=acceleration, T=retract acceleration");
     SERIAL_ECHO_START();
     SERIAL_ECHOPAIR("  M204 S",acceleration );
     SERIAL_ECHOPAIR(" T" ,retract_acceleration);
-    SERIAL_EOL;
+    SERIAL_EOL();
 
     SERIAL_ECHO_START();
     SERIAL_ECHOLNPGM("Advanced variables: S=Min feedrate (mm/s), T=Min travel feedrate (mm/s), B=minimum segment time (ms), X=maximum XY jerk (mm/s),  Z=maximum Z jerk (mm/s),  E=maximum E jerk (mm/s)");
@@ -153,7 +153,7 @@ void Config_PrintSettings()
     SERIAL_ECHOPAIR(" X" ,planner.max_jerk.x);
     SERIAL_ECHOPAIR(" Z" ,planner.max_jerk.z);
     SERIAL_ECHOPAIR(" E" ,planner.max_jerk.e);
-    SERIAL_EOL;
+    SERIAL_EOL();
 
     SERIAL_ECHO_START();
     SERIAL_ECHOLNPGM("Home offset (mm):");
@@ -161,7 +161,7 @@ void Config_PrintSettings()
     SERIAL_ECHOPAIR("  M206 X",add_homeing[X_AXIS] );
     SERIAL_ECHOPAIR(" Y" ,add_homeing[Y_AXIS] );
     SERIAL_ECHOPAIR(" Z" ,add_homeing[Z_AXIS] );
-    SERIAL_EOL;
+    SERIAL_EOL();
 #ifdef PIDTEMP
     SERIAL_ECHO_START();
     SERIAL_ECHOLNPGM("PID settings:");
@@ -169,7 +169,7 @@ void Config_PrintSettings()
     SERIAL_ECHOPAIR("   M301 P",_PID_Kp(0));
     SERIAL_ECHOPAIR(" I" ,unscalePID_i(_PID_Ki(0)));
     SERIAL_ECHOPAIR(" D" ,unscalePID_d(_PID_Kd(0)));
-    SERIAL_EOL;
+    SERIAL_EOL();
 #endif
 }
 #endif
