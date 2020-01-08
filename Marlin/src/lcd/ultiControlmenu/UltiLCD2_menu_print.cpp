@@ -1255,7 +1255,7 @@ static void lcd_menu_print_tune_retraction()
 
 void lcd_print_pause()
 {
-    if (!card.isPaused()
+    if (!card.isPaused())
     {
         card.pauseSDPrint();
         primed = false;
