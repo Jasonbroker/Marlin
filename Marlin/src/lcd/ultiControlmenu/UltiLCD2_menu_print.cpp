@@ -1304,7 +1304,7 @@ void lcd_print_abort()
 static void lcd_print_resume()
 {
     menu.return_to_previous();
-    card.resumePrinting();
+    card.startFileprint();
     if (LCD_DETAIL_CACHE_MATERIAL(active_extruder))
         primed = true;
 
