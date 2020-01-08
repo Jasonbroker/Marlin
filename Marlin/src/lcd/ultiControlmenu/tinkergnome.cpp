@@ -430,7 +430,7 @@ static void lcd_print_tune_fan()
 static void lcd_print_flow_nozzle0()
 {
     if (thermalManager.temp_hotend[0].target>0) {
-        lcd_tune_value(extrudemultiply[0], 0, 999);
+        lcd_tune_value(planner.flow_percentage[0], 0, 999);
     }
 }
 
@@ -439,7 +439,7 @@ static void lcd_print_flow_nozzle1()
 {
     if (thermalManager.temp_hotend[1].target>0)
     {
-        lcd_tune_value(extrudemultiply[1], 0, 999);
+        lcd_tune_value(planner.flow_percentage[1], 0, 999);
     }
 }
 #endif
@@ -1071,7 +1071,7 @@ static void drawPrintSubmenu (uint8_t nr, uint8_t &flags)
                 flags |= MENU_STATUSLINE;
             }
             lcd_lib_draw_gfx(LCD_CHAR_MARGIN_LEFT-1, 24, flowGfx);
-            int_to_string(extrudemultiply[0], buffer, PSTR("%"));
+            int_to_string(planner.flow_percentage[0], buffer, PSTR("%"));
             LCDMenu::drawMenuString(LCD_CHAR_MARGIN_LEFT+12
                                   , 24
                                   , 24
@@ -1091,7 +1091,7 @@ static void drawPrintSubmenu (uint8_t nr, uint8_t &flags)
                 lcd_lib_draw_string_left(5, buffer);
                 flags |= MENU_STATUSLINE;
             }
-            int_to_string(extrudemultiply[1], buffer, PSTR("%"));
+            int_to_string(planner.flow_percentage[1], buffer, PSTR("%"));
             LCDMenu::drawMenuString(LCD_CHAR_MARGIN_LEFT+42
                                   , 24
                                   , 24

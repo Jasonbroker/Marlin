@@ -46,7 +46,7 @@ bool MachineSettings::store(uint8_t index)
     for (int i=0; i<EXTRUDERS; i++)
     {
         settings[index]->HotendTemperature[i] = thermalManager.temp_hotend[i].target;
-        settings[index]->extrudemultiply[i] = extrudemultiply[i];
+        settings[index]->extrudemultiply[i] = planner.flow_percentage[i];
     }
     for (int i=0; i<NUM_AXIS; i++)
     {
@@ -84,7 +84,7 @@ bool MachineSettings::recall(uint8_t index)
     for (int i=0; i<EXTRUDERS; i++)
     {
       thermalManager.temp_hotend[i].target = settings[index]->HotendTemperature[i];
-      extrudemultiply[i] = settings[index]->extrudemultiply[i];
+      planner.flow_percentage[i] = settings[index]->extrudemultiply[i];
     }
     for (int i=0; i<NUM_AXIS; i++)
     {
