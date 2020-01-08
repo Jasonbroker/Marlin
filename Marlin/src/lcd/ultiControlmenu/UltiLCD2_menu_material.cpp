@@ -217,7 +217,7 @@ static void lcd_menu_change_material_remove()
 
 static void lcd_menu_change_material_remove_wait_user_ready()
 {
-    synchronize();
+    planner.synchronize();
     // planner.set_e_position_mm(0.0);
     // current_position[E_AXIS] = 0.0;
     menu.replace_menu(menu_t(lcd_menu_change_material_select_material, SCROLL_MENU_ITEM_POS(0)));

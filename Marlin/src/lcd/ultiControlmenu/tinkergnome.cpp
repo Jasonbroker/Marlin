@@ -2797,7 +2797,7 @@ static void lcd_extrude_reset_pos()
 
 static void lcd_extrude_init_move()
 {
-    synchronize();
+    planner.synchronize();
     planner.set_e_position_mm(current_position[E_AXIS] / planner.settings.axis_steps_per_mm[E_AXIS] / volume_to_filament_length[active_extruder]);
     TARGET_POS(E_AXIS) = current_position[E_AXIS] / planner.settings.axis_steps_per_mm[E_AXIS];
 }
@@ -2816,13 +2816,13 @@ static void lcd_extrude_move()
 static void lcd_extrude_quit_move()
 {
     // disable E-steppers
-    synchronize();
+    planner.synchronize();
     queue.enqueue_now_P(PSTR("M84 E0"));
 }
 
 static void lcd_extrude_init_pull()
 {
-    synchronize();
+    planner.synchronize();
     planner.set_e_position_mm(current_position.e / planner.settings.axis_steps_per_mm[E_AXIS] / volume_to_filament_length[active_extruder]);
     TARGET_POS(E_AXIS) = current_position.e / planner.settings.axis_steps_per_mm[E_AXIS];
     //Set E motor power lower so the motor will skip instead of grind.
