@@ -400,7 +400,7 @@ static void materialInsertReady()
     // retract material
     current_position[E_AXIS] = 0.0f;
     planner.set_e_position_mm(current_position[E_AXIS]);
-    if (retracted)
+    if (fwretract.retracted[active_extruder])
     {
         current_position[E_AXIS] -= retract_recover_length;
     }

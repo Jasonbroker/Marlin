@@ -100,9 +100,9 @@ void tinkergnome_init()
         // read buildplate pid coefficients
         float pidBed[3];
         eeprom_read_block(pidBed, (uint8_t*)EEPROM_PID_BED, sizeof(pidBed));
-        temp_bed.pid.Kp = pidBed[0];
-        temp_bed.pid.Ki = pidBed[1];
-        temp_bed.pid.Kd = pidBed[2];
+        thermalManager.temp_bed.pid.Kp = pidBed[0];
+        thermalManager.temp_bed.pid.Ki = pidBed[1];
+        thermalManager.temp_bed.pid.Kd = pidBed[2];
 #endif
 #if EXTRUDERS > 1
         e2_steps_per_unit = GET_STEPS_E2();
@@ -113,9 +113,9 @@ void tinkergnome_init()
         // write buildplate pid coefficients
         float pidBed[3];
 #if defined(PIDTEMPBED) && (TEMP_SENSOR_BED != 0)
-        pidBed[0] = temp_bed.pid.Kp;
-        pidBed[1] = temp_bed.pid.Ki;
-        pidBed[2] = temp_bed.pid.Kd;
+        pidBed[0] = thermalManager.temp_bed.pid.Kp;
+        pidBed[1] = thermalManager.temp_bed.pid.Ki;
+        pidBed[2] = thermalManager.temp_bed.pid.Kd;
 #else
         pidBed[0] = DEFAULT_bedKp;
         pidBed[1] = (DEFAULT_bedKi*PID_dT);

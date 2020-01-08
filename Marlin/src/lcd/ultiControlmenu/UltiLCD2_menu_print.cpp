@@ -84,12 +84,12 @@ void abortPrint(bool bQuickstop)
     if (primed)
     {
         // perform the end-of-print retraction at the standard retract speed
-        planner.set_e_position_mm((end_of_print_retraction / volume_to_filament_length[active_extruder]) - (retracted ? fwretract.settings.retract_length : 0));
+        planner.set_e_position_mm((end_of_print_retraction / volume_to_filament_length[active_extruder]) - (fwretract.retracted[active_extruder] ? fwretract.settings.retract_length : 0));
         current_position[E_AXIS] = 0.0f;
         planner.buffer_line(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS], current_position[E_AXIS], fwretract.settings.retract_feedrate_mm_s /60, active_extruder);
 
         // no longer primed
-        retracted = false;
+        fwretract.retracted[active_extruder] = false;
         primed = false;
     }
 
@@ -168,7 +168,7 @@ void doStartPrint()
     planner.set_e_position_mm(current_position[E_AXIS]);
 
 	// since we are going to prime the nozzle, forget about any G10/G11 retractions that happened at end of previous print
-	retracted = false;
+	fwretract.retracted[active_extruder] = false;
 	primed = false;
 	position_error = false;
 

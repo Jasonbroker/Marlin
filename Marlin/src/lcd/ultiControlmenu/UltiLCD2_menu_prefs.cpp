@@ -2627,9 +2627,9 @@ static bool autotune_callback(uint8_t state, uint8_t cycle, float kp, float ki, 
 #if (TEMP_SENSOR_BED != 0)
             else if (lcd_cache[1] == 0)
             {
-                temp_bed.pid.Kp = kp;
-                temp_bed.pid.Ki = scalePID_i(ki);
-                temp_bed.pid.Kd = scalePID_d(kd);
+                thermalManager.temp_bed.pid.Kp = kp;
+                thermalManager.temp_bed.pid.Ki = scalePID_i(ki);
+                thermalManager.temp_bed.pid.Kd = scalePID_d(kd);
             }
 #endif
             menu.set_selection(0);
@@ -3128,9 +3128,9 @@ static void init_tempcontrol_bed()
 static void lcd_store_pidbed()
 {
     float pidBed[3];
-    pidBed[0] = temp_bed.pid.Kp;
-    pidBed[1] = temp_bed.pid.Ki;
-    pidBed[2] = temp_bed.pid.Kd;
+    pidBed[0] = thermalManager.temp_bed.pid.Kp;
+    pidBed[1] = thermalManager.temp_bed.pid.Ki;
+    pidBed[2] = thermalManager.temp_bed.pid.Kd;
     eeprom_write_block(pidBed, (uint8_t*)EEPROM_PID_BED, sizeof(pidBed));
 
     SET_CONTROL_FLAGS(control_flags);
@@ -3169,7 +3169,7 @@ static void lcd_preset_bed_ki()
 
 static void lcd_preset_bed_kp()
 {
-    lcd_tune_value(temp_bed.pid.Kp, 0.0f, 999.99f, 0.01f);
+    lcd_tune_value(thermalManager.temp_bed.pid.Kp, 0.0f, 999.99f, 0.01f);
 }
 
 static const menu_t & get_temp_bed_menuoption(uint8_t nr, menu_t &opt)
@@ -3306,7 +3306,7 @@ static void drawTempBedSubmenu(uint8_t nr, uint8_t &flags)
             flags |= MENU_STATUSLINE;
         }
         lcd_lib_draw_stringP(LCD_GFX_WIDTH/2, 20, PSTR("Kp"));
-        float_to_string2(temp_bed.pid.Kp, buffer, NULL);
+        float_to_string2(thermalManager.temp_bed.pid.Kp, buffer, NULL);
 
         LCDMenu::drawMenuString(LCD_GFX_WIDTH - LCD_CHAR_MARGIN_RIGHT - 6*LCD_CHAR_SPACING
                                 , 20
