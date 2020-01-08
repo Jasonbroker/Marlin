@@ -604,7 +604,7 @@ static void lcd_main_preheat()
     int_to_string(dsp_temperature_bed, buffer, PSTR(DEGREE_SYMBOL));
     lcd_lib_draw_string_right(LCD_GFX_WIDTH-LCD_CHAR_MARGIN_RIGHT-34, ypos, buffer);
     lcd_lib_draw_gfx(LCD_GFX_WIDTH-LCD_CHAR_MARGIN_RIGHT-71, ypos, bedTempGfx);
-    // lcd_lib_draw_heater(LCD_GFX_WIDTH-LCD_CHAR_MARGIN_RIGHT-70, ypos, getHeaterPower(-1));
+    // lcd_lib_draw_heater(LCD_GFX_WIDTH-LCD_CHAR_MARGIN_RIGHT-70, ypos, thermalManager.getHeaterPower(-1));
     ypos -= LCD_LINE_HEIGHT+1;
 #endif // TEMP_SENSOR_BED
     for (int8_t e=EXTRUDERS-1; e >= 0; --e)
@@ -613,7 +613,7 @@ static void lcd_main_preheat()
         lcd_lib_draw_string_rightP(LCD_GFX_WIDTH-LCD_CHAR_MARGIN_RIGHT-26, ypos, PSTR("/"));
         int_to_string(dsp_temperature[e], buffer, PSTR(DEGREE_SYMBOL));
         lcd_lib_draw_string_right(LCD_GFX_WIDTH-LCD_CHAR_MARGIN_RIGHT-34, ypos, buffer);
-        lcd_lib_draw_heater(LCD_GFX_WIDTH-LCD_CHAR_MARGIN_RIGHT-70, ypos, getHeaterPower(e));
+        lcd_lib_draw_heater(LCD_GFX_WIDTH-LCD_CHAR_MARGIN_RIGHT-70, ypos, thermalManager.getHeaterPower(e));
         ypos -= LCD_LINE_HEIGHT+1;
     }
 

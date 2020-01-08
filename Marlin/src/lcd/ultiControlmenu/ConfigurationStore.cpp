@@ -199,7 +199,7 @@ void Config_RetrieveSettings()
         EEPROM_READ_VAR(i,planner.settings.min_travel_feedrate_mm_s);
         EEPROM_READ_VAR(i,planner.settings.min_segment_time_us);
         EEPROM_READ_VAR(i,planner.max_jerk.x);
-        EEPROM_READ_VAR(i,planner.max_jerk.z));
+        EEPROM_READ_VAR(i,planner.max_jerk.z);
         EEPROM_READ_VAR(i,planner.max_jerk.e);
         EEPROM_READ_VAR(i,add_homeing);
         #ifndef ULTIPANEL
@@ -232,7 +232,7 @@ void Config_RetrieveSettings()
         EEPROM_READ_VAR(i,fwretract.settings.retract_feedrate_mm_s);
 
 		// Call updatePID (similar to when we have processed M301)
-		updatePID();
+		thermalManager.updatePID();
         SERIAL_ECHO_START();
         SERIAL_ECHOLNPGM("Stored settings retrieved");
     }
@@ -256,8 +256,8 @@ void Config_ResetDefault()
     long tmp3[]=DEFAULT_MAX_ACCELERATION;
     for (short i=0;i<4;i++)
     {
-        axis_steps_per_mm[i]=tmp1[i];
-        max_feedrate[i]=tmp2[i];
+        planner.settings.axis_steps_per_mm[i]=tmp1[i];
+        planner.settings.max_feedrate_mm_s[i]=tmp2[i];
         planner.settings.max_acceleration_mm_per_s2[i]=tmp3[i];
     }
 
@@ -287,7 +287,7 @@ void Config_ResetDefault()
     _PID_Kd(0) = scalePID_d(DEFAULT_Kd);
 
     // call updatePID (similar to when we have processed M301)
-    updatePID();
+    thermalManager.updatePID();
 
 //#ifdef PID_ADD_EXTRUSION_RATE
 //    Kc = DEFAULT_Kc;

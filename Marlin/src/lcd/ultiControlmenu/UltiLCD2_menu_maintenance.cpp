@@ -259,17 +259,17 @@ static void lcd_preferences_details(uint8_t nr)
 
 void homeHead()
 {
-    queue.enqueue_now_P((PSTR("G28 X0 Y0"));
+    queue.enqueue_now_P(PSTR("G28 X0 Y0"));
 }
 
 void homeBed()
 {
-    queue.enqueue_now_P((PSTR("G28 Z0"));
+    queue.enqueue_now_P(PSTR("G28 Z0"));
 }
 
 void homeAll()
 {
-    queue.enqueue_now_P((PSTR("G28"));
+    queue.enqueue_now_P(PSTR("G28"));
 }
 
 static void start_nozzle_heatup()
@@ -378,7 +378,7 @@ void lcd_menu_maintenance_advanced()
         {
             lcd_lib_keyclick();
             homeBed();
-            queue.enqueue_now_P((PSTR("G1 Z40"));
+            queue.enqueue_now_P(PSTR("G1 Z40"));
         }
         else if (IS_SELECTED_SCROLL(index++))
         {
@@ -430,7 +430,7 @@ static void lcd_menu_maintenance_advanced_heatup()
     int_to_string(int(dsp_temperature[active_extruder]), buffer, PSTR("C/"));
     int_to_string(int(thermalManager.temp_hotend[active_extruder].target), buffer+strlen(buffer), PSTR("C"));
     lcd_lib_draw_string_center(30, buffer);
-    lcd_lib_draw_heater(LCD_GFX_WIDTH/2-2, 40, getHeaterPower(active_extruder));
+    lcd_lib_draw_heater(LCD_GFX_WIDTH/2-2, 40, thermalManager.getHeaterPower(active_extruder));
     lcd_lib_update_screen();
 }
 
@@ -471,7 +471,7 @@ static void lcd_menu_maintenance_extrude()
     ;
     int_to_string(int(thermalManager.temp_hotend[active_extruder].target), int_to_string(int(dsp_temperature[active_extruder]), buffer, PSTR("C/")), PSTR("C"));
     lcd_lib_draw_string_center(20, buffer);
-    lcd_lib_draw_heater(LCD_GFX_WIDTH/2-2, 30, getHeaterPower(active_extruder));
+    lcd_lib_draw_heater(LCD_GFX_WIDTH/2-2, 30, thermalManager.getHeaterPower(active_extruder));
     lcd_lib_update_screen();
 }
 
@@ -494,7 +494,7 @@ void lcd_menu_maintenance_advanced_bed_heatup()
     int_to_string(int(dsp_temperature_bed), buffer, PSTR("C/"));
     int_to_string(int(thermalManager.temp_bed.target), buffer+strlen(buffer), PSTR("C"));
     lcd_lib_draw_string_center(30, buffer);
-    lcd_lib_draw_heater(LCD_GFX_WIDTH/2-2, 40, getHeaterPower(-1));
+    lcd_lib_draw_heater(LCD_GFX_WIDTH/2-2, 40, thermalManager.getHeaterPower(-1));
     lcd_lib_update_screen();
 }
 #endif

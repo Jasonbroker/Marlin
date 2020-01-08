@@ -2384,7 +2384,7 @@ static void lcd_menu_autotune_info()
         // draw current temperature
         if ((lcd_cache[1] > 0) && (lcd_cache[1] <= EXTRUDERS))
         {
-            lcd_lib_draw_heater(LCD_CHAR_MARGIN_LEFT, 29, getHeaterPower(lcd_cache[1]-1));
+            lcd_lib_draw_heater(LCD_CHAR_MARGIN_LEFT, 29, thermalManager.getHeaterPower(lcd_cache[1]-1));
 
             int_to_string(WORD_SETTING(2), int_to_string(dsp_temperature[lcd_cache[1]-1], buffer, PSTR(DEGREE_SLASH)), PSTR(DEGREE_SYMBOL));
             lcd_lib_draw_string(LCD_CHAR_MARGIN_LEFT + 2*LCD_CHAR_SPACING, 29, buffer);

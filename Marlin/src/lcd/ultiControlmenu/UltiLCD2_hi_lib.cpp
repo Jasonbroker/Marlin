@@ -360,7 +360,7 @@ static void lcd_menu_material_reheat()
     char *c = int_to_string(int(dsp_temperature[active_extruder]), buffer, PSTR("C/"));
     int_to_string(int(thermalManager.temp_hotend[active_extruder].target), c, PSTR("C"));
     lcd_lib_draw_string_center(24, buffer);
-    // lcd_lib_draw_heater(LCD_GFX_WIDTH/2-2, 40, getHeaterPower(active_extruder));
+    // lcd_lib_draw_heater(LCD_GFX_WIDTH/2-2, 40, thermalManager.getHeaterPower(active_extruder));
 
     lcd_progressbar(progress);
 

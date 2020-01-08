@@ -19,6 +19,8 @@
 #include "../../module/motion.h"
 #include "../../gcode/queue.h"
 #include "../../feature/fwretract.h"
+#include "../../module/stepper.h"
+#include "../../module/planner.h"
 
 uint8_t lcd_cache[LCD_CACHE_SIZE];
 
@@ -1114,7 +1116,7 @@ void lcd_menu_print_tune_heatup_nozzle0()
     int_to_string(int(dsp_temperature[0]), buffer, PSTR("C/"));
     int_to_string(int(thermalManager.temp_hotend[0].target), buffer+strlen(buffer), PSTR("C"));
     lcd_lib_draw_string_center(30, buffer);
-    lcd_lib_draw_heater(LCD_GFX_WIDTH/2-2, 40, getHeaterPower(0));
+    lcd_lib_draw_heater(LCD_GFX_WIDTH/2-2, 40, thermalManager.getHeaterPower(0));
     lcd_lib_update_screen();
 }
 #if EXTRUDERS > 1
@@ -1136,7 +1138,7 @@ void lcd_menu_print_tune_heatup_nozzle1()
     int_to_string(int(dsp_temperature[1]), buffer, PSTR("C/"));
     int_to_string(int(thermalManager.temp_hotend[1].target), buffer+strlen(buffer), PSTR("C"));
     lcd_lib_draw_string_center(30, buffer);
-    lcd_lib_draw_heater(LCD_GFX_WIDTH/2-2, 40, getHeaterPower(1));
+    lcd_lib_draw_heater(LCD_GFX_WIDTH/2-2, 40, thermalManager.getHeaterPower(1));
     lcd_lib_update_screen();
 }
 #endif
