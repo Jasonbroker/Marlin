@@ -1732,7 +1732,7 @@ void lcd_prepare_buildplate_adjust()
     add_homeing[Z_AXIS] = 0;
     queue.enqueue_now_P(PSTR("G28 Z0 X0 Y0"));
     char buffer[32] = {0};
-    sprintf_P(buffer, PSTR("G1 F%i Z%i X%i Y%i"), int(homing_feedrate[0]), 35, AXIS_CENTER_POS(X_AXIS), AXIS_CENTER_POS(Y_AXIS));
+    sprintf_P(buffer, PSTR("G1 F%i Z%i X%i Y%i"), int(homing_feedrate(0)), 35, AXIS_CENTER_POS(X_AXIS), AXIS_CENTER_POS(Y_AXIS));
     queue.enqueue_one_now(buffer);
     queue.enqueue_now_P(PSTR("M84 X0 Y0"));
 }
@@ -2101,7 +2101,7 @@ static void plan_move(AxisEnum axis)
         if ((abs(TARGET_POS(axis) - current_position[axis])>0.005) && !endstop_reached(axis, (TARGET_POS(axis)>current_position[axis]) ? 1 : -1))
         {
             current_position[axis] = TARGET_POS(axis);
-            planner.buffer_line(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS], current_position[E_AXIS], homing_feedrate[axis]/800, active_extruder);
+            planner.buffer_line(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS], current_position[E_AXIS], homing_feedrate(axis)/800, active_extruder);
         }
     }
 }

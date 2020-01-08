@@ -613,7 +613,7 @@ static void lcd_main_preheat()
         lcd_lib_draw_string_rightP(LCD_GFX_WIDTH-LCD_CHAR_MARGIN_RIGHT-26, ypos, PSTR("/"));
         int_to_string(dsp_temperature[e], buffer, PSTR(DEGREE_SYMBOL));
         lcd_lib_draw_string_right(LCD_GFX_WIDTH-LCD_CHAR_MARGIN_RIGHT-34, ypos, buffer);
-        lcd_lib_draw_heater(LCD_GFX_WIDTH-LCD_CHAR_MARGIN_RIGHT-70, ypos, thermalManager.getHeaterPower(e));
+        lcd_lib_draw_heater(LCD_GFX_WIDTH-LCD_CHAR_MARGIN_RIGHT-70, ypos, thermalManager.getHeaterPower((heater_ind_t)e));
         ypos -= LCD_LINE_HEIGHT+1;
     }
 
