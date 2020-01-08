@@ -18,6 +18,7 @@
 #include "tinkergnome.h"
 #include "../../module/motion.h"
 #include "../../gcode/queue.h"
+#include "../../feature/fwretract.h"
 
 uint8_t lcd_cache[LCD_CACHE_SIZE];
 
@@ -81,9 +82,9 @@ void abortPrint(bool bQuickstop)
     if (primed)
     {
         // perform the end-of-print retraction at the standard retract speed
-        plan_set_e_position((end_of_print_retraction / volume_to_filament_length[active_extruder]) - (retracted ? retract_length : 0), active_extruder, true);
+        plan_set_e_position((end_of_print_retraction / volume_to_filament_length[active_extruder]) - (retracted ? fwretract.settings.retract_length : 0), active_extruder, true);
         current_position[E_AXIS] = 0.0f;
-        plan_buffer_line(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS], current_position[E_AXIS], retract_feedrate/60, active_extruder);
+        plan_buffer_line(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS], current_position[E_AXIS], fwretract.settings.retract_feedrate_mm_s /60, active_extruder);
 
         // no longer primed
         retracted = false;
@@ -205,7 +206,7 @@ void doStartPrint()
         if (e != active_extruder)
         {
             plan_set_e_position(extruder_swap_retract_length / volume_to_filament_length[e], e, true);
-            plan_buffer_line(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS], current_position[E_AXIS], retract_feedrate/60, e);
+            plan_buffer_line(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS], current_position[E_AXIS], fwretract.settings.retract_feedrate_mm_s/60, e);
         }
 #endif
     }
@@ -1218,9 +1219,9 @@ static void lcd_retraction_details(uint8_t nr)
 {
     char buffer[32] = {0};
     if(nr == 1)
-        float_to_string2(retract_length, buffer, PSTR("mm"));
+        float_to_string2(fwretract.settings.retract_length, buffer, PSTR("mm"));
     else if(nr == 2)
-        int_to_string(retract_feedrate / 60 + 0.5, buffer, PSTR("mm/sec"));
+        int_to_string(fwretract.settings.retract_feedrate_mm_s / 60 + 0.5, buffer, PSTR("mm/sec"));
     else if(nr == 3)
         float_to_string2(end_of_print_retraction, buffer, PSTR("mm"));
 #if EXTRUDERS > 1
@@ -1240,9 +1241,9 @@ static void lcd_menu_print_tune_retraction()
         if (IS_SELECTED_SCROLL(0))
             menu.return_to_previous();
         else if (IS_SELECTED_SCROLL(1))
-            LCD_EDIT_SETTING_FLOAT001(retract_length, "Retract length", "mm", 0, 50);
+            LCD_EDIT_SETTING_FLOAT001(fwretract.settings.retract_length, "Retract length", "mm", 0, 50);
         else if (IS_SELECTED_SCROLL(2))
-            LCD_EDIT_SETTING_SPEED(retract_feedrate, "Retract speed", "mm/sec", 0, planner.settings.max_feedrate_mm_s[E_AXIS] * 60);
+            LCD_EDIT_SETTING_SPEED(fwretract.settings.retract_feedrate_mm_s, "Retract speed", "mm/sec", 0, planner.settings.max_feedrate_mm_s[E_AXIS] * 60);
         else if (IS_SELECTED_SCROLL(3))
             LCD_EDIT_SETTING_FLOAT001(end_of_print_retraction, "End of print retract", "mm", 0, 50);
 #if EXTRUDERS > 1

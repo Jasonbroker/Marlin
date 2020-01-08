@@ -10,6 +10,7 @@
 #include "UltiLCD2_hi_lib.h"
 #include "UltiLCD2_menu_utils.h"
 #include "UltiLCD2_menu_prefs.h"
+#include "../../feature/fwretract.h"
 
 // we use the lcd_cache memory to keep previous values in mind
 // #define FLOAT_SETTING(n) (*(float*)&lcd_cache[(n) * sizeof(float)])
@@ -1196,12 +1197,12 @@ void lcd_menu_axisdirection()
 
 static void lcd_preset_retract_speed()
 {
-    lcd_tune_speed(retract_feedrate, 0, planner.settings.max_feedrate_mm_s[E_AXIS]*60);
+    lcd_tune_speed(fwretract.settings.retract_feedrate_mm_s, 0, planner.settings.max_feedrate_mm_s[E_AXIS]*60);
 }
 
 static void lcd_preset_retract_length()
 {
-    lcd_tune_value(retract_length, 0, 50, 0.01);
+    lcd_tune_value(fwretract.settings.retract_length, 0, 50, 0.01);
 }
 
 #if EXTRUDERS > 1
@@ -1318,7 +1319,7 @@ static void drawRetractSubmenu(uint8_t nr, uint8_t &flags)
         }
         lcd_lib_draw_string_leftP(16, PSTR("Retract"));
         lcd_lib_draw_gfx(LCD_GFX_WIDTH - 2*LCD_CHAR_MARGIN_RIGHT - 8*LCD_CHAR_SPACING, 16, retractLenGfx);
-        float_to_string2(retract_length, buffer, PSTR("mm"));
+        float_to_string2(fwretract.settings.retract_length, buffer, PSTR("mm"));
         LCDMenu::drawMenuString(LCD_GFX_WIDTH-LCD_CHAR_MARGIN_RIGHT-7*LCD_CHAR_SPACING
                               , 16
                               , 7*LCD_CHAR_SPACING
@@ -1356,7 +1357,7 @@ static void drawRetractSubmenu(uint8_t nr, uint8_t &flags)
             flags |= MENU_STATUSLINE;
         }
         lcd_lib_draw_gfx(LCD_GFX_WIDTH - 2*LCD_CHAR_MARGIN_RIGHT - 8*LCD_CHAR_SPACING, 26, retractSpeedGfx);
-        int_to_string(retract_feedrate / 60 + 0.5, buffer, PSTR("mm/s"));
+        int_to_string(fwretract.settings.retract_feedrate_mm_s / 60 + 0.5, buffer, PSTR("mm/s"));
         LCDMenu::drawMenuString(LCD_GFX_WIDTH-LCD_CHAR_MARGIN_RIGHT-7*LCD_CHAR_SPACING
                               , 26
                               , 7*LCD_CHAR_SPACING

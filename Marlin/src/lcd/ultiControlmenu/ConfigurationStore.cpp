@@ -5,6 +5,7 @@
 #include "UltiLCD2.h"
 #include "ConfigurationStore.h"
 #include "../../module/stepper.h"
+#include "../../feature/fwretract.h"
 
 void _EEPROM_writeData(int &pos, uint8_t* value, uint8_t size)
 {
@@ -96,8 +97,8 @@ void Config_StoreSettings()
   EEPROM_WRITE_VAR(i,dummyByte);
   EEPROM_WRITE_VAR(i,dummyByte);
   #endif
-  EEPROM_WRITE_VAR(i,retract_length);
-  EEPROM_WRITE_VAR(i,retract_feedrate);
+  EEPROM_WRITE_VAR(i,fwretract.settings.retract_length);
+  EEPROM_WRITE_VAR(i,fwretract.settings.retract_feedrate_mm_s);
   char ver2[4]=EEPROM_VERSION;
   i=EEPROM_OFFSET;
   EEPROM_WRITE_VAR(i,ver2); // validate data
@@ -227,8 +228,8 @@ void Config_RetrieveSettings()
         EEPROM_READ_VAR(i,dummyByte);
         EEPROM_READ_VAR(i,dummyByte);
         #endif
-        EEPROM_READ_VAR(i,retract_length);
-        EEPROM_READ_VAR(i,retract_feedrate);
+        EEPROM_READ_VAR(i,fwretract.settings.retract_length);
+        EEPROM_READ_VAR(i,fwretract.settings.retract_feedrate_mm_s);
 
 		// Call updatePID (similar to when we have processed M301)
 		updatePID();
@@ -301,8 +302,8 @@ void Config_ResetDefault()
     led_brightness_level = 100;
     led_mode = LED_MODE_ALWAYS_ON;
     #endif
-    retract_length = 4.5;
-    retract_feedrate = 25 * 60;
+    fwretract.settings.retract_length = 4.5;
+    fwretract.settings.retract_feedrate_mm_s = 25 * 60;
 
 SERIAL_ECHO_START();
 SERIAL_ECHOLNPGM("Hardcoded Default Settings Loaded");

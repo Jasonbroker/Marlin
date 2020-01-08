@@ -408,7 +408,7 @@ static void materialInsertReady()
     {
         current_position[E_AXIS] -= end_of_print_retraction / volume_to_filament_length[active_extruder];
     }
-    plan_buffer_line(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS], current_position[E_AXIS], retract_feedrate/60, active_extruder);
+    plan_buffer_line(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS], current_position[E_AXIS], fwretract.settings.retract_feedrate_mm_s/60, active_extruder);
 
     if (!card.flag.sdprinting)
     {
