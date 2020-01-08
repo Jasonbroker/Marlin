@@ -184,13 +184,11 @@ static void lcd_menu_change_material_remove()
 {
     last_user_interaction = millis();
 
-    if (!blocks_queued())
+    if (!planner.has_blocks_queued())
     {
         menu.replace_menu(menu_t(lcd_menu_change_material_remove_wait_user, MAIN_MENU_ITEM_POS(0)));
         //Disable the extruder motor so you can pull out the remaining filament.
-        disable_e0();
-        disable_e1();
-        disable_e2();
+        disable_E0();
     #if EXTRUDERS > 1
         last_extruder = 0xFF;
     #endif
@@ -352,7 +350,7 @@ static void lcd_menu_change_material_insert_wait_user_ready()
 static void lcd_menu_change_material_insert_forward()
 {
     last_user_interaction = millis();
-    if (!blocks_queued())
+    if (!planner.has_blocks_queued())
     {
         lcd_lib_keyclick();
         // led_glow_dir = led_glow = 0;

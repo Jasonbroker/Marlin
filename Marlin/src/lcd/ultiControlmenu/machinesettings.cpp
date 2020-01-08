@@ -2,6 +2,7 @@
 #include "machinesettings.h"
 #include "../../Marlin.h"
 #include "../../module/temperature.h"
+#include "../../module/motion.h"
 
 MachineSettings::MachineSettings()
 {
@@ -38,7 +39,7 @@ bool MachineSettings::store(uint8_t index)
             return false;
         }
     }
-    settings[index]->feedmultiply = feedmultiply;
+    settings[index]->feedmultiply = feedrate_percentage;
 #if TEMP_SENSOR_BED != 0
     settings[index]->BedTemperature = thermalManager.temp_bed.target;
 #endif // TEMP_SENSOR_BED
@@ -76,7 +77,7 @@ bool MachineSettings::recall(uint8_t index)
         return false;
     }
 
-    feedmultiply = settings[index]->feedmultiply;
+    feedrate_percentage = settings[index]->feedmultiply;
 #if TEMP_SENSOR_BED != 0
     thermalManager.temp_bed.target = settings[index]->BedTemperature;
 #endif // TEMP_SENSOR_BED

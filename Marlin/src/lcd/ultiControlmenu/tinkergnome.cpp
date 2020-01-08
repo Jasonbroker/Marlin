@@ -426,7 +426,7 @@ static void lcd_print_tune_speed()
 
 static void lcd_print_tune_fan()
 {
-    lcd_tune_byte(thermalManager.fan_speed, 0, 100);
+    lcd_tune_byte(thermalManager.fan_speed[active_extruder], 0, 100);
 }
 
 static void lcd_print_flow_nozzle0()
@@ -465,7 +465,7 @@ static void lcd_tune_retract_speed()
 
 static void lcd_print_tune_accel()
 {
-    lcd_tune_value(acceleration, 0, 20000, 100.0);
+    lcd_tune_value(planner.settings.acceleration, 0, 20000, 100.0);
 }
 
 static void lcd_print_tune_xyjerk()
@@ -940,7 +940,7 @@ static void drawPrintSubmenu (uint8_t nr, uint8_t &flags)
                 flags |= MENU_STATUSLINE;
             }
             lcd_lib_draw_string_leftP(33, PSTR("Accel"));
-            int_to_string(acceleration, buffer, PSTR(UNIT_ACCELERATION));
+            int_to_string(planner.settings.acceleration, buffer, PSTR(UNIT_ACCELERATION));
             LCDMenu::drawMenuString(LCD_GFX_WIDTH-LCD_CHAR_MARGIN_RIGHT-10*LCD_CHAR_SPACING // 2*LCD_CHAR_MARGIN_LEFT+5*LCD_CHAR_SPACING //
                                   , 33
                                   , 10*LCD_CHAR_SPACING
@@ -1175,10 +1175,10 @@ static void drawPrintSubmenu (uint8_t nr, uint8_t &flags)
             if (flags & (MENU_SELECTED | MENU_ACTIVE))
             {
                 lcd_lib_draw_string_leftP(5, PSTR("Fan"));
-                lcd_lib_draw_bargraph(LCD_CHAR_MARGIN_LEFT+5*LCD_CHAR_SPACING, 5, LCD_GFX_WIDTH-LCD_CHAR_MARGIN_RIGHT, 11, float(thermalManager.fan_speed)/255);
+                lcd_lib_draw_bargraph(LCD_CHAR_MARGIN_LEFT+5*LCD_CHAR_SPACING, 5, LCD_GFX_WIDTH-LCD_CHAR_MARGIN_RIGHT, 11, float(thermalManager.fan_speed[active_extruder])/255);
                 flags |= MENU_STATUSLINE;
             }
-            int_to_string(float(thermalManager.fan_speed)*100/255 + 0.5f, buffer, PSTR("%"));
+            int_to_string(float(thermalManager.fan_speed[active_extruder])*100/255 + 0.5f, buffer, PSTR("%"));
             LCDMenu::drawMenuString(LCD_GFX_WIDTH-LCD_CHAR_MARGIN_RIGHT-4*LCD_CHAR_SPACING
     #if TEMP_SENSOR_BED != 0
                                   , 33
@@ -1196,9 +1196,9 @@ static void drawPrintSubmenu (uint8_t nr, uint8_t &flags)
             static uint8_t prevFanSpeed = 0;
 
             // start animation
-            if (!fanAnimate && thermalManager.fan_speed!=prevFanSpeed)
+            if (!fanAnimate && thermalManager.fan_speed[active_extruder]!=prevFanSpeed)
                 fanAnimate = 32;
-            if ((thermalManager.fan_speed == 0) || (!fanAnimate) || (fanAnimate%4))
+            if ((thermalManager.fan_speed[active_extruder] == 0) || (!fanAnimate) || (fanAnimate%4))
             {
     #if TEMP_SENSOR_BED != 0
                 lcd_lib_draw_gfx(LCD_GFX_WIDTH-LCD_CHAR_MARGIN_RIGHT-4*LCD_CHAR_SPACING-11, 33, fan1Gfx);
@@ -1210,7 +1210,7 @@ static void drawPrintSubmenu (uint8_t nr, uint8_t &flags)
             {
                 --fanAnimate;
             }
-            prevFanSpeed = thermalManager.fan_speed;
+            prevFanSpeed = thermalManager.fan_speed[active_extruder];
 
         }
     #if TEMP_SENSOR_BED != 0
@@ -2101,7 +2101,7 @@ static void plan_move(AxisEnum axis)
         if ((abs(TARGET_POS(axis) - current_position[axis])>0.005) && !endstop_reached(axis, (TARGET_POS(axis)>current_position[axis]) ? 1 : -1))
         {
             current_position[axis] = TARGET_POS(axis);
-            planner.buffer_line(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS], current_position[E_AXIS], homing_feedrate(axis)/800, active_extruder);
+            planner.buffer_line(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS], current_position[E_AXIS], homing_feedrate((AxisEnum)axis)/800, active_extruder);
         }
     }
 }

@@ -1891,7 +1891,7 @@ static void lcd_store_acceleration()
 
 static void lcd_preset_acceleration()
 {
-    lcd_tune_value(acceleration, 0, 20000, 100);
+    lcd_tune_value(planner.settings.acceleration, 0, 20000, 100);
 }
 
 static void lcd_preset_jerk()
@@ -1976,7 +1976,7 @@ static void drawAccelerationSubmenu(uint8_t nr, uint8_t &flags)
             flags |= MENU_STATUSLINE;
         }
         lcd_lib_draw_string_leftP(20, PSTR("Accel"));
-        int_to_string(acceleration, buffer, PSTR(UNIT_ACCELERATION));
+        int_to_string(planner.settings.acceleration, buffer, PSTR(UNIT_ACCELERATION));
         LCDMenu::drawMenuString(LCD_GFX_WIDTH-LCD_CHAR_MARGIN_RIGHT-10*LCD_CHAR_SPACING
                               , 20
                               , 10*LCD_CHAR_SPACING

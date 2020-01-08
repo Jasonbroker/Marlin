@@ -71,11 +71,11 @@ void abortPrint(bool bQuickstop)
     }
     else
     {
-        planner.set_position_mm(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS], current_position[E_AXIS], active_extruder, true);
+        planner.set_position_mm(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS], current_position[E_AXIS]);
     }
 
     // reset defaults
-    feedmultiply = 100;
+    feedrate_percentage = 100;
     for(uint8_t e=0; e<EXTRUDERS; e++)
     {
         extrudemultiply[e] = 100;
@@ -131,7 +131,7 @@ void abortPrint(bool bQuickstop)
 
 static void checkPrintFinished()
 {
-    if ((printing_state != PRINT_STATE_RECOVER) && (printing_state != PRINT_STATE_START) && (printing_state != PRINT_STATE_ABORT) && !card.flag.sdprinting && !queue.has_commands_queued() && !blocks_queued())
+    if ((printing_state != PRINT_STATE_RECOVER) && (printing_state != PRINT_STATE_START) && (printing_state != PRINT_STATE_ABORT) && !card.flag.sdprinting && !queue.has_commands_queued() && !planner.has_blocks_queued())
     {
         // normal end of gcode file
         recover_height = 0.0f;
@@ -560,7 +560,7 @@ void lcd_menu_print_select()
                     //reset all printing parameters to defaults
                     axis_relative_state = 0;
                     fanSpeed = 0;
-                    feedmultiply = 100;
+                    feedrate_percentage = 100;
                     current_nominal_speed = 0.0f;
                     fanSpeedPercent = 100;
                     for(uint8_t e=0; e<EXTRUDERS; e++)
@@ -679,9 +679,9 @@ void lcd_menu_print_heatup()
         }
 
 #if TEMP_SENSOR_BED != 0
-        if (thermalManager.temp_bed.celsius >= thermalManager.temp_bed.target - TEMP_WINDOW * 2 && !queue.has_commands_queued() && !blocks_queued())
+        if (thermalManager.temp_bed.celsius >= thermalManager.temp_bed.target - TEMP_WINDOW * 2 && !queue.has_commands_queued() && !planner.has_blocks_queued())
 #else
-        if (!commands_queued() && !blocks_queued())
+        if (!commands_queued() && !planner.has_blocks_queued())
 #endif // TEMP_SENSOR_BED
         {
             bool ready = true;
@@ -1058,7 +1058,7 @@ static void tune_item_details_callback(uint8_t nr)
 {
     char buffer[32] = {0};
     if (nr == 1)
-        int_to_string(feedmultiply, buffer, PSTR("%"));
+        int_to_string(feedrate_percentage, buffer, PSTR("%"));
     else if (nr == 2)
     {
         int_to_string(thermalManager.temp_hotend[0].target, int_to_string(dsp_temperature[0], buffer, PSTR("C/")), PSTR("C"));
@@ -1076,7 +1076,7 @@ static void tune_item_details_callback(uint8_t nr)
     }
 #endif
     else if (nr == 2 + BED_MENU_OFFSET + EXTRUDERS)
-        int_to_string(int(thermalManager.fan_speed) * 100 / 255, buffer, PSTR("%"));
+        int_to_string(int(thermalManager.fan_speed[active_extruder]) * 100 / 255, buffer, PSTR("%"));
     else if (nr == 3 + BED_MENU_OFFSET + EXTRUDERS)
         int_to_string(extrudemultiply[0], buffer, PSTR("%"));
 #if EXTRUDERS > 1
@@ -1162,7 +1162,7 @@ void lcd_menu_print_tune()
         if (IS_SELECTED_SCROLL(index++))
             menu.return_to_previous();
         else if (IS_SELECTED_SCROLL(index++))
-            LCD_EDIT_SETTING(feedmultiply, "Print speed", "%", 10, 1000);
+            LCD_EDIT_SETTING(feedrate_percentage, "Print speed", "%", 10, 1000);
         else if (IS_SELECTED_SCROLL(index++))
             menu.add_menu(menu_t(lcd_menu_print_tune_heatup_nozzle0, 0));
 #if EXTRUDERS > 1
@@ -1174,7 +1174,7 @@ void lcd_menu_print_tune()
             menu.add_menu(menu_t(lcd_menu_maintenance_advanced_bed_heatup, 0));//Use the maintainace heatup menu, which shows the current temperature.
 #endif
         else if (IS_SELECTED_SCROLL(index++))
-            LCD_EDIT_SETTING_BYTE_PERCENT(thermalManager.fan_speed, "Fan speed", "%", 0, 100);
+            LCD_EDIT_SETTING_BYTE_PERCENT(thermalManager.fan_speed[active_extruder], "Fan speed", "%", 0, 100);
 #if EXTRUDERS > 1
         else if (IS_SELECTED_SCROLL(index++))
             LCD_EDIT_SETTING(extrudemultiply[0], "Material flow 1", "%", 10, 1000);
@@ -1314,7 +1314,7 @@ static void lcd_print_resume()
 
 static void lcd_print_change_material()
 {
-    if (!blocks_queued())
+    if (!planner.has_blocks_queued())
     {
         lcd_material_change_init(true);
         menu.add_menu(menu_t(lcd_change_to_menu_change_material_return), false);
