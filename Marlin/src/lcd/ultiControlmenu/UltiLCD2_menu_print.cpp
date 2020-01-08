@@ -220,7 +220,7 @@ void doStartPrint()
             current_position[i] = recover_position[i];
         }
         // first recovering move
-        enquecommand(LCD_CACHE_FILENAME(0));
+        queue.enqueue_one_now(LCD_CACHE_FILENAME(0));
     }
 
     printing_state = PRINT_STATE_NORMAL;

@@ -83,7 +83,7 @@ static void homeAndRaiseBed()
     homeBed();
     char buffer[32] = {0};
     sprintf_P(buffer, PSTR("G1 F%i Z%i"), int(homing_feedrate[0]), 35);
-    enquecommand(buffer);
+    queue.enqueue_one_now(buffer);
 }
 
 static void lcd_menu_first_run_init_2()
@@ -103,7 +103,7 @@ static void homeAndParkHeadForCenterAdjustment()
     homeHead();
     char buffer[32] = {0};
     sprintf_P(buffer, PSTR("G1 F%i Z%i X%i Y%i"), int(homing_feedrate[0]), 35, int(AXIS_CENTER_POS(X_AXIS)), int(max_pos[Y_AXIS])-10);
-    enquecommand(buffer);
+    queue.enqueue_one_now(buffer);
 }
 
 static void lcd_menu_first_run_init_3()
@@ -126,11 +126,11 @@ static void parkHeadForLeftAdjustment()
 
     char buffer[32] = {0};
     sprintf_P(buffer, PSTR("G1 F%i Z5"), int(homing_feedrate[Z_AXIS]));
-    enquecommand(buffer);
+    queue.enqueue_one_now(buffer);
     sprintf_P(buffer, PSTR("G1 F%i X%i Y%i"), int(homing_feedrate[X_AXIS]), max(int(min_pos[X_AXIS]), 0)+10, max(int(min_pos[Y_AXIS]), 0)+15);
-    enquecommand(buffer);
+    queue.enqueue_one_now(buffer);
     sprintf_P(buffer, PSTR("G1 F%i Z0"), int(homing_feedrate[Z_AXIS]));
-    enquecommand(buffer);
+    queue.enqueue_one_now(buffer);
 }
 
 static void lcd_menu_first_run_bed_level_center_adjust()
@@ -163,11 +163,11 @@ static void parkHeadForRightAdjustment()
 {
     char buffer[32] = {0};
     sprintf_P(buffer, PSTR("G1 F%i Z5"), int(homing_feedrate[Z_AXIS]));
-    enquecommand(buffer);
+    queue.enqueue_one_now(buffer);
     sprintf_P(buffer, PSTR("G1 F%i X%i Y%i"), int(homing_feedrate[X_AXIS]), int(max_pos[X_AXIS])-10, max(int(min_pos[Y_AXIS]), 0)+15);
-    enquecommand(buffer);
+    queue.enqueue_one_now(buffer);
     sprintf_P(buffer, PSTR("G1 F%i Z0"), int(homing_feedrate[Z_AXIS]));
-    enquecommand(buffer);
+    queue.enqueue_one_now(buffer);
 }
 
 static void lcd_menu_first_run_bed_level_left_adjust()
@@ -203,11 +203,11 @@ static void parkHeadForCenterAdjustment()
 {
     char buffer[32] = {0};
     sprintf_P(buffer, PSTR("G1 F%i Z5"), int(homing_feedrate[Z_AXIS]));
-    enquecommand(buffer);
+    queue.enqueue_one_now(buffer);
     sprintf_P(buffer, PSTR("G1 F%i X%i Y%i"), int(homing_feedrate[X_AXIS]), int(AXIS_CENTER_POS(X_AXIS)), int(max_pos[Y_AXIS])-10);
-    enquecommand(buffer);
+    queue.enqueue_one_now(buffer);
     sprintf_P(buffer, PSTR("G1 F%i Z0"), int(homing_feedrate[Z_AXIS]));
-    enquecommand(buffer);
+    queue.enqueue_one_now(buffer);
 }
 
 static void lcd_menu_first_run_bed_level_paper()
@@ -315,7 +315,7 @@ static void parkHeadForHeating()
     lcd_material_reset_defaults();
     char buffer[32] = {0};
     sprintf_P(buffer, PSTR("G1 F%i X%i Y%i"), int(homing_feedrate[0]), int(AXIS_CENTER_POS(X_AXIS)), max(int(min_pos[Y_AXIS]), 0)+5);
-    enquecommand(buffer);
+    queue.enqueue_one_now(buffer);
 
     queue.enqueue_now_P((PSTR("M84"));//Disable motor power.
 }
