@@ -1466,7 +1466,7 @@ void lcd_menu_printing_tg()
                 if (card.isPaused())
                 {
                     lcd_lib_draw_gfx(54, 15, hourglassGfx);
-                    lcd_lib_draw_stringP(64, 15, (movesplanned() < 1) ? PSTR("Paused...") : PSTR("Pausing..."));
+                    lcd_lib_draw_stringP(64, 15, (planner.movesplanned() < 1) ? PSTR("Paused...") : PSTR("Pausing..."));
                 }
                 else if (IS_SD_PRINTING())
                 {
@@ -2147,7 +2147,7 @@ static void lcd_move_axis(AxisEnum axis, float diff)
                 movingSpeed = 6*((movingSpeed > 0) - (movingSpeed < 0));
             }
 
-            uint8_t steps = min(abs(movingSpeed)*2, (BLOCK_BUFFER_SIZE - movesplanned()) >> 1);
+            uint8_t steps = min(abs(movingSpeed)*2, (BLOCK_BUFFER_SIZE - planner.movesplanned()) >> 1);
             for (uint8_t i = 0; i < steps; ++i)
             {
                 TARGET_POS(axis) = round((current_position[axis]+float(movingSpeed)*diff)/diff)*diff;
@@ -2749,7 +2749,7 @@ static void lcd_menu_tune_extrude()
 
 static void lcd_extrude_return()
 {
-    thermalManager.extrude_min_temp(EXTRUDE_MINTEMP);
+    thermalManager.extrude_min_temp = EXTRUDE_MINTEMP;
     menu.return_to_previous();
     if (!card.flag.sdprinting)
     {
@@ -2798,7 +2798,7 @@ static void lcd_extrude_init_move()
 
 static void lcd_extrude_move()
 {
-    if (printing_state == PRINT_STATE_NORMAL && movesplanned() < 3)
+    if (printing_state == PRINT_STATE_NORMAL && planner.movesplanned() < 3)
     {
         if (lcd_tune_value(TARGET_POS(E_AXIS), -10000.0, +10000.0, 0.1))
         {

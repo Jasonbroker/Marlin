@@ -42,7 +42,7 @@ static void cancelMaterialInsert()
 #else
     digipot_current(2, stepper.motor_current_setting[2]);
 #endif
-    thermalManager.extrude_min_temp(EXTRUDE_MINTEMP);
+    thermalManager.extrude_min_temp = EXTRUDE_MINTEMP;
     menu.return_to_previous(false);
 }
 
@@ -133,7 +133,7 @@ void lcd_menu_change_material_preheat()
         if (preheat_end_time < last_user_interaction)
         {
             planner.quick_stop();
-            thermalManager.extrude_min_temp(0);
+            thermalManager.extrude_min_temp = 0;
             current_position[E_AXIS] = 0.0f;
             plan_set_e_position(current_position[E_AXIS], active_extruder, true);
 
@@ -251,7 +251,7 @@ void lcd_menu_insert_material_preheat()
     if (temp < 0) temp = 0;
     if (temp > target && temp < target + 20 && (card.isPaused() || !queue.has_commands_queued()))
     {
-        thermalManager.extrude_min_temp(0);
+        thermalManager.extrude_min_temp = 0;
         menu.replace_menu(menu_t(lcd_menu_change_material_insert_wait_user, MAIN_MENU_ITEM_POS(0)));
         temp = target;
     }
@@ -440,7 +440,7 @@ static void lcd_menu_change_material_insert()
         lcd_lib_draw_string_centerP(30, PSTR("comes out the nozzle"));
 #endif
 
-        if (movesplanned() < 2)
+        if (planner.movesplanned() < 2)
         {
             current_position[E_AXIS] += 0.5 / volume_to_filament_length[active_extruder];
             plan_buffer_line(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS], current_position[E_AXIS], FILAMENT_INSERT_EXTRUDE_SPEED, active_extruder);

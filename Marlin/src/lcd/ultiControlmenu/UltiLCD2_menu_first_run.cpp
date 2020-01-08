@@ -140,7 +140,7 @@ static void lcd_menu_first_run_bed_level_center_adjust()
     if (lcd_lib_encoder_pos == ENCODER_NO_SELECTION)
         lcd_lib_encoder_pos = 0;
 
-    if (printing_state == PRINT_STATE_NORMAL && lcd_lib_encoder_pos != 0 && movesplanned() < 4)
+    if (printing_state == PRINT_STATE_NORMAL && lcd_lib_encoder_pos != 0 && planner.movesplanned() < 4)
     {
         current_position[Z_AXIS] -= float(lcd_lib_encoder_pos) * 0.05;
         plan_buffer_line(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS], current_position[E_AXIS], 60, 0);
@@ -229,7 +229,7 @@ static void lcd_menu_first_run_bed_level_paper_center()
     if (lcd_lib_encoder_pos == ENCODER_NO_SELECTION)
         lcd_lib_encoder_pos = 0;
 
-    if (printing_state == PRINT_STATE_NORMAL && lcd_lib_encoder_pos != 0 && movesplanned() < 4)
+    if (printing_state == PRINT_STATE_NORMAL && lcd_lib_encoder_pos != 0 && planner.movesplanned() < 4)
     {
         current_position[Z_AXIS] -= float(lcd_lib_encoder_pos) * 0.05;
         lcd_lib_encoder_pos = 0;
@@ -472,7 +472,7 @@ static void lcd_menu_first_run_material_load_insert()
 {
     LED_GLOW
 
-    if (movesplanned() < 2)
+    if (planner.movesplanned() < 2)
     {
         current_position[E_AXIS] += 0.5;
         plan_buffer_line(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS], current_position[E_AXIS], FILAMENT_INSERT_SPEED, 0);
@@ -519,7 +519,7 @@ static void lcd_menu_first_run_material_load_wait()
     lcd_lib_draw_string_centerP(20, PSTR("material exits"));
     lcd_lib_draw_string_centerP(30, PSTR("from nozzle..."));
 
-    if (movesplanned() < 2)
+    if (planner.movesplanned() < 2)
     {
         current_position[E_AXIS] += 0.5;
         plan_buffer_line(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS], current_position[E_AXIS], FILAMENT_INSERT_EXTRUDE_SPEED, 0);

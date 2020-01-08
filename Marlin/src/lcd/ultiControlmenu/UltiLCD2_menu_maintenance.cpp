@@ -297,7 +297,7 @@ void start_move_material()
     // remove nozzle selection menu
     menu.return_to_previous();
 #endif // EXTRUDERS
-    thermalManager.extrude_min_temp(0);
+    thermalManager.extrude_min_temp = 0;
     // reset e-position
     current_position[E_AXIS] = 0;
     plan_set_e_position(current_position[E_AXIS], active_extruder, true);
@@ -438,7 +438,7 @@ static void lcd_menu_maintenance_extrude()
 {
     if (lcd_lib_encoder_pos / ENCODER_TICKS_PER_SCROLL_MENU_ITEM != 0)
     {
-        if (printing_state == PRINT_STATE_NORMAL && movesplanned() < 3)
+        if (printing_state == PRINT_STATE_NORMAL && planner.movesplanned() < 3)
         {
             current_position[E_AXIS] += lcd_lib_encoder_pos * 0.1;
             plan_buffer_line(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS], current_position[E_AXIS], 10, active_extruder);
@@ -452,7 +452,7 @@ static void lcd_menu_maintenance_extrude()
     }
     if (lcd_lib_button_pressed || !thermalManager.temp_hotend[active_extruder].target)
     {
-        thermalManager.extrude_min_temp(EXTRUDE_MINTEMP);
+        thermalManager.extrude_min_temp = EXTRUDE_MINTEMP;
         thermalManager.temp_hotend[active_extruder].target = 0;
         menu.return_to_previous();
     }
