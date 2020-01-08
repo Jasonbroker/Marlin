@@ -146,9 +146,9 @@ void lcd_menu_change_material_preheat()
             max_e_jerk = FILAMENT_LONG_MOVE_JERK;
 
             current_position[E_AXIS] -= 1.0 / volume_to_filament_length[active_extruder];
-            plan_buffer_line(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS], current_position[E_AXIS], planner.settings.max_feedrate_mm_s[E_AXIS], active_extruder);
+            planner.buffer_line(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS], current_position[E_AXIS], planner.settings.max_feedrate_mm_s[E_AXIS], active_extruder);
             current_position[E_AXIS] -= FILAMENT_REVERSAL_LENGTH / volume_to_filament_length[active_extruder];
-            plan_buffer_line(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS], current_position[E_AXIS], planner.settings.max_feedrate_mm_s[E_AXIS], active_extruder);
+            planner.buffer_line(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS], current_position[E_AXIS], planner.settings.max_feedrate_mm_s[E_AXIS], active_extruder);
 
             planner.settings.max_feedrate_mm_s[E_AXIS] = old_max_feedrate_e;
             retract_acceleration = old_retract_acceleration;
@@ -294,7 +294,7 @@ static void lcd_menu_change_material_insert_wait_user()
     if (thermalManager.temp_hotend[active_extruder].target && (printing_state == PRINT_STATE_NORMAL) && (movesplanned() < 2))
     {
         current_position[E_AXIS] += 0.5 / volume_to_filament_length[active_extruder];
-        plan_buffer_line(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS], current_position[E_AXIS], FILAMENT_INSERT_SPEED, active_extruder);
+        planner.buffer_line(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS], current_position[E_AXIS], FILAMENT_INSERT_SPEED, active_extruder);
     }
 
     lcd_question_screen(NULL, lcd_menu_change_material_insert_wait_user_ready, PSTR("READY"), NULL, cancelMaterialInsert, PSTR("CANCEL"));
@@ -339,7 +339,7 @@ static void lcd_menu_change_material_insert_wait_user_ready()
     plan_set_e_position(current_position[E_AXIS], active_extruder, true);
 
     current_position[E_AXIS] += FILAMENT_FORWARD_LENGTH / volume_to_filament_length[active_extruder];
-    plan_buffer_line(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS], current_position[E_AXIS], planner.settings.max_feedrate_mm_s[E_AXIS], active_extruder);
+    planner.buffer_line(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS], current_position[E_AXIS], planner.settings.max_feedrate_mm_s[E_AXIS], active_extruder);
 
     //Put back original values.
     planner.settings.max_feedrate_mm_s[E_AXIS] = old_max_feedrate_e;
@@ -408,7 +408,7 @@ static void materialInsertReady()
     {
         current_position[E_AXIS] -= end_of_print_retraction / volume_to_filament_length[active_extruder];
     }
-    plan_buffer_line(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS], current_position[E_AXIS], fwretract.settings.retract_feedrate_mm_s/60, active_extruder);
+    planner.buffer_line(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS], current_position[E_AXIS], fwretract.settings.retract_feedrate_mm_s/60, active_extruder);
 
     if (!card.flag.sdprinting)
     {
@@ -443,7 +443,7 @@ static void lcd_menu_change_material_insert()
         if (planner.movesplanned() < 2)
         {
             current_position[E_AXIS] += 0.5 / volume_to_filament_length[active_extruder];
-            plan_buffer_line(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS], current_position[E_AXIS], FILAMENT_INSERT_EXTRUDE_SPEED, active_extruder);
+            planner.buffer_line(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS], current_position[E_AXIS], FILAMENT_INSERT_EXTRUDE_SPEED, active_extruder);
         }
         lcd_lib_update_screen();
     }

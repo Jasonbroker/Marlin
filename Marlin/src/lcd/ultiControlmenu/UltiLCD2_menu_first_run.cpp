@@ -143,7 +143,7 @@ static void lcd_menu_first_run_bed_level_center_adjust()
     if (printing_state == PRINT_STATE_NORMAL && lcd_lib_encoder_pos != 0 && planner.movesplanned() < 4)
     {
         current_position[Z_AXIS] -= float(lcd_lib_encoder_pos) * 0.05;
-        plan_buffer_line(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS], current_position[E_AXIS], 60, 0);
+        planner.buffer_line(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS], current_position[E_AXIS], 60, 0);
     }
     lcd_lib_encoder_pos = 0;
 
@@ -233,7 +233,7 @@ static void lcd_menu_first_run_bed_level_paper_center()
     {
         current_position[Z_AXIS] -= float(lcd_lib_encoder_pos) * 0.05;
         lcd_lib_encoder_pos = 0;
-        plan_buffer_line(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS], current_position[E_AXIS], 60, 0);
+        planner.buffer_line(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS], current_position[E_AXIS], 60, 0);
     }
 
     if (blocks_queued())
@@ -460,7 +460,7 @@ static void runMaterialForward()
     current_position[E_AXIS] = 0;
     plan_set_e_position(current_position[E_AXIS], active_extruder, true);
     current_position[E_AXIS] = FILAMENT_FORWARD_LENGTH;
-    plan_buffer_line(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS], current_position[E_AXIS], planner.settings.max_feedrate_mm_s[E_AXIS], 0);
+    planner.buffer_line(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS], current_position[E_AXIS], planner.settings.max_feedrate_mm_s[E_AXIS], 0);
 
     //Put back original values.
     planner.settings.max_feedrate_mm_s[E_AXIS] = old_max_feedrate_e;
@@ -475,7 +475,7 @@ static void lcd_menu_first_run_material_load_insert()
     if (planner.movesplanned() < 2)
     {
         current_position[E_AXIS] += 0.5;
-        plan_buffer_line(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS], current_position[E_AXIS], FILAMENT_INSERT_SPEED, 0);
+        planner.buffer_line(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS], current_position[E_AXIS], FILAMENT_INSERT_SPEED, 0);
     }
 
     lcd_info_screen(lcd_menu_first_run_material_load_forward, runMaterialForward, PSTR("CONTINUE"));
@@ -522,7 +522,7 @@ static void lcd_menu_first_run_material_load_wait()
     if (planner.movesplanned() < 2)
     {
         current_position[E_AXIS] += 0.5;
-        plan_buffer_line(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS], current_position[E_AXIS], FILAMENT_INSERT_EXTRUDE_SPEED, 0);
+        planner.buffer_line(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS], current_position[E_AXIS], FILAMENT_INSERT_EXTRUDE_SPEED, 0);
     }
 
     lcd_lib_update_screen();
