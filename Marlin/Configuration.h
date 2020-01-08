@@ -19,8 +19,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+
 #pragma once
 
+#include "src/core/macros.h"
 /**
  * Configuration.h
  *
