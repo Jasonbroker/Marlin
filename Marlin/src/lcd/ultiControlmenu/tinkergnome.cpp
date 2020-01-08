@@ -20,6 +20,7 @@
 #include "../../gcode/queue.h"
 #include "../../module/motion.h"
 #include "../../module/planner.h"
+#include "../../module/stepper.h"
 
 #include "tinkergnome.h"
 
@@ -1261,9 +1262,9 @@ void lcd_menu_print_heatup_tg()
         }
 
 #if TEMP_SENSOR_BED != 0
-        if (thermalManager.temp_bed.celsius >= thermalManager.temp_bed.target - TEMP_WINDOW * 2 && !queue.has_commands_queued() && !planner.has_blocks_queued()())
+        if (thermalManager.temp_bed.celsius >= thermalManager.temp_bed.target - TEMP_WINDOW * 2 && !queue.has_commands_queued() && !planner.has_blocks_queued())
 #else
-        if (!queue.has_commands_queued() && !planner.has_blocks_queued()())
+        if (!queue.has_commands_queued() && !planner.has_blocks_queued())
 #endif // TEMP_SENSOR_BED
         {
             bool ready = true;
@@ -1499,7 +1500,7 @@ void lcd_menu_printing_tg()
                 // lcd_lib_draw_string_left(5, PSTR("Paused..."));
                 lcd_lib_draw_string_left(5, card.currentLongFileName());
                 lcd_lib_draw_gfx(54, 15, hourglassGfx);
-                if (!planner.has_blocks_queued()())
+                if (!planner.has_blocks_queued())
                 {
                     lcd_lib_draw_stringP(64, 15, PSTR("Paused..."));
                     lcd_lib_draw_string_leftP(BOTTOM_MENU_YPOS, PSTR("Click to continue..."));
@@ -2094,7 +2095,7 @@ static bool endstop_reached(AxisEnum axis, int8_t direction)
 
 static void plan_move(AxisEnum axis)
 {
-    if (!queue.has_commands_queued() && !planner.has_blocks_queued()())
+    if (!queue.has_commands_queued() && !planner.has_blocks_queued())
     {
         // enque next move
         if ((abs(TARGET_POS(axis) - current_position[axis])>0.005) && !endstop_reached(axis, (TARGET_POS(axis)>current_position[axis]) ? 1 : -1))
@@ -2859,7 +2860,7 @@ static void lcd_extrude_pull()
 {
     if (lcd_lib_button_down)
     {
-        if (printing_state == PRINT_STATE_NORMAL && !planner.has_blocks_queued()())
+        if (printing_state == PRINT_STATE_NORMAL && !planner.has_blocks_queued())
         {
             TARGET_POS(E_AXIS) -= FILAMENT_REVERSAL_LENGTH / volume_to_filament_length[active_extruder];
             planner.buffer_line(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS], TARGET_POS(E_AXIS), planner.settings.max_feedrate_mm_s[E_AXIS]*0.7f, active_extruder);
