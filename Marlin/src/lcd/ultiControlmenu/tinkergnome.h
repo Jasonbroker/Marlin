@@ -60,4 +60,6 @@ FORCE_INLINE void lcd_print_tune_bed() { lcd_tune_value(thermalManager.temp_bed.
 #define MAX_HEATING_TEMPERATURE_INCREASE 10
 #define MAX_HEATING_CHECK_MILLIS (30 * 1000)
 
+extern float volume_to_filament_length[EXTRUDERS];
+
 #endif //TINKERGNOME_H

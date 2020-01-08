@@ -76,6 +76,9 @@ static void lcd_position_z_axis();
 
 void tinkergnome_init()
 {
+    for(uint8_t e=0; e<EXTRUDERS; ++e)
+        volume_to_filament_length[e] = 1.0f;
+
     sleep_state = 0x0;
 
     uint16_t version = GET_EXPERT_VERSION()+1;
@@ -2629,7 +2632,7 @@ static void lcd_extrude_headtofront()
 static void lcd_extrude_disablexy()
 {
     lcd_lib_keyclick();
-    process_command_P(PSTR("M84 X0 Y0"));
+    queue.enqueue_now_P(PSTR("M84 X0 Y0"));
 }
 
 static const menu_t & get_extrude_tune_menuoption(uint8_t nr, menu_t &opt)
@@ -2812,7 +2815,7 @@ static void lcd_extrude_quit_move()
 {
     // disable E-steppers
     st_synchronize();
-    process_command_P(PSTR("M84 E0"));
+    queue.enqueue_now_P(PSTR("M84 E0"));
 }
 
 static void lcd_extrude_init_pull()
