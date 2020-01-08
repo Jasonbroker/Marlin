@@ -2821,9 +2821,9 @@ static void lcd_extrude_init_pull()
     TARGET_POS(E_AXIS) = st_get_position(E_AXIS) / e_steps_per_unit(active_extruder);
     //Set E motor power lower so the motor will skip instead of grind.
 #if EXTRUDERS > 1 && defined(MOTOR_CURRENT_PWM_E_PIN) && MOTOR_CURRENT_PWM_E_PIN > -1
-    digipot_current(2, active_extruder ? (motor_current_e2*2/3) : (motor_current_setting[2]*2/3));
+    stepper.digipot_current(2, active_extruder ? (motor_current_e2*2/3) : (motor_current_setting[2]*2/3));
 #else
-    digipot_current(2, stepper.motor_current_setting[2]*2/3);
+    stepper.digipot_current(2, stepper.motor_current_setting[2]*2/3);
 #endif
     //increase max. feedrate and reduce acceleration
     OLD_FEEDRATE = planner.settings.max_feedrate_mm_s[E_AXIS];
@@ -2842,9 +2842,9 @@ static void lcd_extrude_quit_pull()
     planner.max_jerk.e = OLD_JERK;
     //Set E motor power to default.
 #if EXTRUDERS > 1 && defined(MOTOR_CURRENT_PWM_E_PIN) && MOTOR_CURRENT_PWM_E_PIN > -1
-    digipot_current(2, active_extruder ? motor_current_e2 : stepper.motor_current_setting[2]);
+    stepper.digipot_current(2, active_extruder ? motor_current_e2 : stepper.motor_current_setting[2]);
 #else
-    digipot_current(2, stepper.motor_current_setting[2]);
+    stepper.digipot_current(2, stepper.motor_current_setting[2]);
 #endif
     // disable E-steppers
     lcd_extrude_quit_move();

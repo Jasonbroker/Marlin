@@ -1420,15 +1420,15 @@ static void lcd_store_motorcurrent()
 #if (EXTRUDERS > 1) && defined(MOTOR_CURRENT_PWM_E_PIN) && (MOTOR_CURRENT_PWM_E_PIN > -1)
     for (uint8_t i=0; i<2; ++i)
     {
-        digipot_current(i, stepper.motor_current_setting[i]);
+        stepper.digipot_current(i, stepper.motor_current_setting[i]);
     }
     //Set E motor power to default.
-    digipot_current(2, active_extruder ? motor_current_e2 : stepper.motor_current_setting[2]);
+    stepper.digipot_current(2, active_extruder ? motor_current_e2 : stepper.motor_current_setting[2]);
     SET_MOTOR_CURRENT_E2(motor_current_e2);
 #else
     for (uint8_t i=0; i<3; ++i)
     {
-        digipot_current(i, stepper.motor_current_setting[i]);
+        stepper.digipot_current(i, stepper.motor_current_setting[i]);
     }
 #endif
     Config_StoreSettings();
@@ -1439,7 +1439,7 @@ static void lcd_preset_current_xy()
 {
     if (lcd_tune_value(stepper.motor_current_setting[0], 0, 1500))
     {
-        digipot_current(0, stepper.motor_current_setting[0]);
+        stepper.digipot_current(0, stepper.motor_current_setting[0]);
     }
 }
 
@@ -1447,7 +1447,7 @@ static void lcd_preset_current_z()
 {
     if (lcd_tune_value(stepper.motor_current_setting[1], 0, 1500))
     {
-        digipot_current(1, stepper.motor_current_setting[1]);
+        stepper.digipot_current(1, stepper.motor_current_setting[1]);
     }
 }
 
@@ -1457,7 +1457,7 @@ static void lcd_preset_current_e()
     {
         if (!active_extruder)
         {
-            digipot_current(2, stepper.motor_current_setting[2]);
+            stepper.digipot_current(2, stepper.motor_current_setting[2]);
         }
     }
 }

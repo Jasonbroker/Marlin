@@ -19,6 +19,7 @@
 #include "../../module/motion.h"
 #include "../../gcode/gcode.h"
 #include "../../gcode/queue.h"
+#include "../../module/planner.h"
 
 static void lcd_menu_maintenance_advanced_heatup();
 //static void lcd_menu_maintenance_led();

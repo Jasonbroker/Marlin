@@ -336,7 +336,7 @@ static void lcd_menu_first_run_material_select_1()
 {
     if (eeprom_read_byte(EEPROM_MATERIAL_COUNT_OFFSET()) == 1)
     {
-        digipot_current(2, stepper.motor_current_setting[2]);//Set E motor power to default.
+        stepper.digipot_current(2, stepper.motor_current_setting[2]);//Set E motor power to default.
 
         for(uint8_t e=0; e<EXTRUDERS; e++)
             lcd_material_set_material(0, e);
@@ -381,7 +381,7 @@ static void lcd_menu_first_run_material_select_material()
 
     if (lcd_lib_button_pressed)
     {
-        digipot_current(2, stepper.motor_current_setting[2]);//Set E motor power to default.
+        stepper.digipot_current(2, stepper.motor_current_setting[2]);//Set E motor power to default.
 
         for(uint8_t e=0; e<EXTRUDERS; e++)
             lcd_material_set_material(SELECTED_SCROLL_MENU_ITEM(), e);
@@ -497,7 +497,7 @@ static void lcd_menu_first_run_material_load_forward()
     {
         lcd_lib_keyclick();
         // led_glow_dir = led_glow = 0;
-        digipot_current(2, stepper.motor_current_setting[2]*2/3);//Set E motor power lower so the motor will skip instead of grind.
+        stepper.digipot_current(2, stepper.motor_current_setting[2]*2/3);//Set E motor power lower so the motor will skip instead of grind.
         menu.replace_menu(menu_t(lcd_menu_first_run_material_load_wait, MAIN_MENU_ITEM_POS(0)));
     }
 
