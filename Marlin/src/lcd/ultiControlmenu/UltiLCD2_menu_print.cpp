@@ -131,7 +131,7 @@ void abortPrint(bool bQuickstop)
 
 static void checkPrintFinished()
 {
-    if ((printing_state != PRINT_STATE_RECOVER) && (printing_state != PRINT_STATE_START) && (printing_state != PRINT_STATE_ABORT) && !card.flag.sdprinting && !queue.has_commands_queued() && !blocks_queued())
+    if ((printing_state != PRINT_STATE_RECOVER) && (printing_state != PRINT_STATE_START) && (printing_state != PRINT_STATE_ABORT) && !card.flag.sdprinting && !queue.has_commands_queued() && !planner.has_blocks_queued())
     {
         // normal end of gcode file
         recover_height = 0.0f;
@@ -679,9 +679,9 @@ void lcd_menu_print_heatup()
         }
 
 #if TEMP_SENSOR_BED != 0
-        if (thermalManager.temp_bed.celsius >= thermalManager.temp_bed.target - TEMP_WINDOW * 2 && !queue.has_commands_queued() && !blocks_queued())
+        if (thermalManager.temp_bed.celsius >= thermalManager.temp_bed.target - TEMP_WINDOW * 2 && !queue.has_commands_queued() && !planner.has_blocks_queued())
 #else
-        if (!commands_queued() && !blocks_queued())
+        if (!commands_queued() && !planner.has_blocks_queued())
 #endif // TEMP_SENSOR_BED
         {
             bool ready = true;
@@ -1314,7 +1314,7 @@ static void lcd_print_resume()
 
 static void lcd_print_change_material()
 {
-    if (!blocks_queued())
+    if (!planner.has_blocks_queued())
     {
         lcd_material_change_init(true);
         menu.add_menu(menu_t(lcd_change_to_menu_change_material_return), false);

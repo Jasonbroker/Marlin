@@ -147,7 +147,7 @@ static void lcd_menu_first_run_bed_level_center_adjust()
     }
     lcd_lib_encoder_pos = 0;
 
-    if (blocks_queued())
+    if (planner.has_blocks_queued())
         lcd_info_screen(NULL, NULL, PSTR("CONTINUE"));
     else
         lcd_info_screen(lcd_menu_first_run_bed_level_left_adjust, parkHeadForLeftAdjustment, PSTR("CONTINUE"));
@@ -236,7 +236,7 @@ static void lcd_menu_first_run_bed_level_paper_center()
         planner.buffer_line(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS], current_position[E_AXIS], 60, 0);
     }
 
-    if (blocks_queued())
+    if (planner.has_blocks_queued())
         lcd_info_screen(NULL, NULL, PSTR("CONTINUE"));
     else
         lcd_info_screen(lcd_menu_first_run_bed_level_paper_left, parkHeadForLeftAdjustment, PSTR("CONTINUE"));
@@ -493,7 +493,7 @@ static void lcd_menu_first_run_material_load_forward()
     DRAW_PROGRESS_NR(18);
     lcd_lib_draw_string_centerP(20, PSTR("Loading material..."));
 
-    if (!blocks_queued())
+    if (!planner.has_blocks_queued())
     {
         lcd_lib_keyclick();
         // led_glow_dir = led_glow = 0;
