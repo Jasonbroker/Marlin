@@ -2749,7 +2749,7 @@ static void lcd_menu_tune_extrude()
 
 static void lcd_extrude_return()
 {
-    set_extrude_min_temp(EXTRUDE_MINTEMP);
+    thermalManager.extrude_min_temp(EXTRUDE_MINTEMP);
     menu.return_to_previous();
     if (!card.flag.sdprinting)
     {

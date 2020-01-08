@@ -42,7 +42,7 @@ static void cancelMaterialInsert()
 #else
     digipot_current(2, stepper.motor_current_setting[2]);
 #endif
-    set_extrude_min_temp(EXTRUDE_MINTEMP);
+    thermalManager.extrude_min_temp(EXTRUDE_MINTEMP);
     menu.return_to_previous(false);
 }
 
@@ -133,7 +133,7 @@ void lcd_menu_change_material_preheat()
         if (preheat_end_time < last_user_interaction)
         {
             planner.quick_stop();
-            set_extrude_min_temp(0);
+            thermalManager.extrude_min_temp(0);
             current_position[E_AXIS] = 0.0f;
             plan_set_e_position(current_position[E_AXIS], active_extruder, true);
 
@@ -251,7 +251,7 @@ void lcd_menu_insert_material_preheat()
     if (temp < 0) temp = 0;
     if (temp > target && temp < target + 20 && (card.isPaused() || !queue.has_commands_queued()))
     {
-        set_extrude_min_temp(0);
+        thermalManager.extrude_min_temp(0);
         menu.replace_menu(menu_t(lcd_menu_change_material_insert_wait_user, MAIN_MENU_ITEM_POS(0)));
         temp = target;
     }

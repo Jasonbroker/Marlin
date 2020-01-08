@@ -297,7 +297,7 @@ void start_move_material()
     // remove nozzle selection menu
     menu.return_to_previous();
 #endif // EXTRUDERS
-    set_extrude_min_temp(0);
+    thermalManager.extrude_min_temp(0);
     // reset e-position
     current_position[E_AXIS] = 0;
     plan_set_e_position(current_position[E_AXIS], active_extruder, true);
@@ -452,7 +452,7 @@ static void lcd_menu_maintenance_extrude()
     }
     if (lcd_lib_button_pressed || !thermalManager.temp_hotend[active_extruder].target)
     {
-        set_extrude_min_temp(EXTRUDE_MINTEMP);
+        thermalManager.extrude_min_temp(EXTRUDE_MINTEMP);
         thermalManager.temp_hotend[active_extruder].target = 0;
         menu.return_to_previous();
     }
