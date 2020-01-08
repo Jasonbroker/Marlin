@@ -264,14 +264,14 @@ void Config_ResetDefault()
     // steps per sq second need to be updated to agree with the units per sq second
     planner.reset_acceleration_rates();
 
-    acceleration=DEFAULT_ACCELERATION;
-    retract_acceleration=DEFAULT_RETRACT_ACCELERATION;
+    planner.settings.acceleration=DEFAULT_ACCELERATION;
+    planner.settings.retract_acceleration=DEFAULT_RETRACT_ACCELERATION;
     planner.settings.min_feedrate_mm_s=DEFAULT_MINIMUMFEEDRATE;
     planner.settings.min_segment_time_us=DEFAULT_MINSEGMENTTIME;
     planner.settings.min_travel_feedrate_mm_s=DEFAULT_MINTRAVELFEEDRATE;
-    max_xy_jerk=DEFAULT_XYJERK;
-    max_z_jerk=DEFAULT_ZJERK;
-    max_e_jerk=DEFAULT_EJERK;
+    planner.max_jerk.x=DEFAULT_XYJERK;
+    planner.max_jerk.z=DEFAULT_ZJERK;
+    planner.max_jerk.e=DEFAULT_EJERK;
     add_homeing[0] = add_homeing[1] = add_homeing[2] = 0;
 #ifdef ULTIPANEL
     plaPreheatHotendTemp = PREHEAT_1_TEMP_HOTEND;

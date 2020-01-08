@@ -2827,19 +2827,19 @@ static void lcd_extrude_init_pull()
 #endif
     //increase max. feedrate and reduce acceleration
     OLD_FEEDRATE = planner.settings.max_feedrate_mm_s[E_AXIS];
-    OLD_ACCEL = retract_acceleration;
-    OLD_JERK = max_e_jerk;
+    OLD_ACCEL = planner.settings.retract_acceleration;
+    OLD_JERK = planner.max_jerk.e;
     planner.settings.max_feedrate_mm_s[E_AXIS] = float(FILAMENT_FAST_STEPS) / e_steps_per_unit(active_extruder);
-    retract_acceleration = float(FILAMENT_LONG_ACCELERATION_STEPS) / e_steps_per_unit(active_extruder);
-    max_e_jerk = FILAMENT_LONG_MOVE_JERK;
+    planner.settings.retract_acceleration = float(FILAMENT_LONG_ACCELERATION_STEPS) / e_steps_per_unit(active_extruder);
+    planner.max_jerk.e = FILAMENT_LONG_MOVE_JERK;
 }
 
 static void lcd_extrude_quit_pull()
 {
     // reset feeedrate and acceleration to default
     planner.settings.max_feedrate_mm_s[E_AXIS] = OLD_FEEDRATE;
-    retract_acceleration = OLD_ACCEL;
-    max_e_jerk = OLD_JERK;
+    planner.settings.retract_acceleration = OLD_ACCEL;
+    planner.max_jerk.e = OLD_JERK;
     //Set E motor power to default.
 #if EXTRUDERS > 1 && defined(MOTOR_CURRENT_PWM_E_PIN) && MOTOR_CURRENT_PWM_E_PIN > -1
     digipot_current(2, active_extruder ? motor_current_e2 : stepper.motor_current_setting[2]);

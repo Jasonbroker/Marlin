@@ -138,12 +138,12 @@ void lcd_menu_change_material_preheat()
             plan_set_e_position(current_position[E_AXIS], active_extruder, true);
 
             float old_max_feedrate_e = planner.settings.max_feedrate_mm_s[E_AXIS];
-            float old_retract_acceleration = retract_acceleration;
-            float old_max_e_jerk = max_e_jerk;
+            float old_retract_acceleration = planner.settings.retract_acceleration;
+            float old_max_e_jerk = planner.max_jerk.e;
 
             planner.settings.max_feedrate_mm_s[E_AXIS] = float(FILAMENT_FAST_STEPS) / e_steps_per_unit(active_extruder);
-            retract_acceleration = float(FILAMENT_LONG_ACCELERATION_STEPS) / e_steps_per_unit(active_extruder);
-            max_e_jerk = FILAMENT_LONG_MOVE_JERK;
+            planner.settings.retract_acceleration = float(FILAMENT_LONG_ACCELERATION_STEPS) / e_steps_per_unit(active_extruder);
+            planner.max_jerk.e = FILAMENT_LONG_MOVE_JERK;
 
             current_position[E_AXIS] -= 1.0 / volume_to_filament_length[active_extruder];
             planner.buffer_line(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS], current_position[E_AXIS], planner.settings.max_feedrate_mm_s[E_AXIS], active_extruder);
@@ -151,8 +151,8 @@ void lcd_menu_change_material_preheat()
             planner.buffer_line(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS], current_position[E_AXIS], planner.settings.max_feedrate_mm_s[E_AXIS], active_extruder);
 
             planner.settings.max_feedrate_mm_s[E_AXIS] = old_max_feedrate_e;
-            retract_acceleration = old_retract_acceleration;
-            max_e_jerk = old_max_e_jerk;
+            planner.settings.retract_acceleration = old_retract_acceleration;
+            planner.max_jerk.e = old_max_e_jerk;
 
             menu.replace_menu(menu_t(lcd_menu_change_material_remove), false);
             // temp = target;
@@ -327,12 +327,12 @@ static void lcd_menu_change_material_insert_wait_user_ready()
 
     //Override the max feedrate and acceleration values to get a better insert speed and speedup/slowdown
     float old_max_feedrate_e = planner.settings.max_feedrate_mm_s[E_AXIS];
-    float old_retract_acceleration = retract_acceleration;
-    float old_max_e_jerk = max_e_jerk;
+    float old_retract_acceleration = planner.settings.retract_acceleration;
+    float old_max_e_jerk = planner.max_jerk.e;
 
     planner.settings.max_feedrate_mm_s[E_AXIS] = float(FILAMENT_FAST_STEPS) / e_steps_per_unit(active_extruder);
-    retract_acceleration = float(FILAMENT_LONG_ACCELERATION_STEPS) / e_steps_per_unit(active_extruder);
-    max_e_jerk = FILAMENT_LONG_MOVE_JERK;
+    planner.settings.retract_acceleration = float(FILAMENT_LONG_ACCELERATION_STEPS) / e_steps_per_unit(active_extruder);
+    planner.max_jerk.e = FILAMENT_LONG_MOVE_JERK;
 
     planner.quick_stop();
     current_position[E_AXIS] = 0.0f;
@@ -343,8 +343,8 @@ static void lcd_menu_change_material_insert_wait_user_ready()
 
     //Put back original values.
     planner.settings.max_feedrate_mm_s[E_AXIS] = old_max_feedrate_e;
-    retract_acceleration = old_retract_acceleration;
-    max_e_jerk = old_max_e_jerk;
+    planner.settings.retract_acceleration = old_retract_acceleration;
+    planner.max_jerk.e = old_max_e_jerk;
 
     menu.replace_menu(menu_t(lcd_menu_change_material_insert_forward));
 }
