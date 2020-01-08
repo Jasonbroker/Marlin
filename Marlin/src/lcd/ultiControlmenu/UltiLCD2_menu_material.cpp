@@ -54,7 +54,7 @@ void lcd_material_change_init(bool printing)
         // move head to front
         char buffer[32] = {0};
         homeHead();
-        sprintf_P(buffer, PSTR("G1 F%i X%i Y%i"), int(homing_feedrate(0)), int(AXIS_CENTER_POS(X_AXIS)), int(min_pos[Y_AXIS])+5);
+        sprintf_P(buffer, PSTR("G1 F%i X%i Y%i"), int(homing_feedrate((AxisEnum)0)), int(AXIS_CENTER_POS(X_AXIS)), int(min_pos[Y_AXIS])+5);
         queue.enqueue_one_now(buffer);
         menu.add_menu(menu_t(lcd_menu_material_main_return));
     }
@@ -65,7 +65,7 @@ void lcd_menu_material_main_return()
 {
     doCooldown();
     homeHead();
-    queue.enqueue_now_P((PSTR("M84 X Y E"));
+    queue.enqueue_now_P(PSTR("M84 X Y E"));
     menu.return_to_previous(false);
 }
 
@@ -93,9 +93,9 @@ void lcd_menu_change_material_preheat()
 {
     last_user_interaction = millis();
 #ifdef USE_CHANGE_TEMPERATURE
-    setTargetHotend(material[active_extruder].change_temperature, active_extruder);
+    thermalManager.setTargetHotend(material[active_extruder].change_temperature, active_extruder);
 #else
-    setTargetHotend(material[active_extruder].temperature[0], active_extruder);
+    thermalManager.setTargetHotend(material[active_extruder].temperature[0], active_extruder);
 #endif
     int16_t temp = thermalManager.degHotend(active_extruder) - 20;
     int16_t target = thermalManager.degTargetHotend(active_extruder) - 20;
@@ -227,7 +227,7 @@ static void lcd_menu_change_material_remove_wait_user_ready()
 static void lcd_menu_change_material_remove_wait_user()
 {
     LED_GLOW
-    setTargetHotend(material[active_extruder].temperature[0], active_extruder);
+    thermalManager.setTargetHotend(material[active_extruder].temperature[0], active_extruder);
     lcd_question_screen(NULL, lcd_menu_change_material_remove_wait_user_ready, PSTR("READY"), NULL, cancelMaterialInsert, PSTR("CANCEL"));
 #if EXTRUDERS > 1
     lcd_lib_draw_stringP(3, 10, PSTR("Extruder"));
@@ -245,7 +245,7 @@ static void lcd_menu_change_material_remove_wait_user()
 void lcd_menu_insert_material_preheat()
 {
     last_user_interaction = millis();
-    setTargetHotend(material[active_extruder].temperature[0], active_extruder);
+    thermalManager.setTargetHotend(material[active_extruder].temperature[0], active_extruder);
     int16_t temp = thermalManager.degHotend(active_extruder) - 20;
     int16_t target = thermalManager.degTargetHotend(active_extruder) - 20 - 10;
     if (temp < 0) temp = 0;
@@ -415,7 +415,7 @@ static void materialInsertReady()
         // cool down nozzle
         for(uint8_t n=0; n<EXTRUDERS; n++)
         {
-            setTargetHotend(0, n);
+            thermalManager.setTargetHotend(0, n);
         }
     }
 }

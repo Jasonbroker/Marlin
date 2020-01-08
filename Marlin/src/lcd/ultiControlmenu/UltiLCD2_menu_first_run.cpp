@@ -63,7 +63,7 @@ static void homeAndParkHeadForCenterAdjustment2()
     add_homeing[Z_AXIS] = 0;
     queue.enqueue_now_P(PSTR("G28 Z0 X0 Y0"));
     char buffer[32] = {0};
-    sprintf_P(buffer, PSTR("G1 F%i Z%i X%i Y%i"), int(homing_feedrate(0)), 35, int(AXIS_CENTER_POS(X_AXIS)), int(max_pos[Y_AXIS])-10);
+    sprintf_P(buffer, PSTR("G1 F%i Z%i X%i Y%i"), int(homing_feedrate((AxisEnum)0)), 35, int(AXIS_CENTER_POS(X_AXIS)), int(max_pos[Y_AXIS])-10);
     queue.enqueue_one_now(buffer);
     menu.return_to_previous(false);
 }
@@ -82,7 +82,7 @@ static void homeAndRaiseBed()
 {
     homeBed();
     char buffer[32] = {0};
-    sprintf_P(buffer, PSTR("G1 F%i Z%i"), int(homing_feedrate(0)), 35);
+    sprintf_P(buffer, PSTR("G1 F%i Z%i"), int(homing_feedrate((AxisEnum)0)), 35);
     queue.enqueue_one_now(buffer);
 }
 
@@ -102,7 +102,7 @@ static void homeAndParkHeadForCenterAdjustment()
 {
     homeHead();
     char buffer[32] = {0};
-    sprintf_P(buffer, PSTR("G1 F%i Z%i X%i Y%i"), int(homing_feedrate(0)), 35, int(AXIS_CENTER_POS(X_AXIS)), int(max_pos[Y_AXIS])-10);
+    sprintf_P(buffer, PSTR("G1 F%i Z%i X%i Y%i"), int(homing_feedrate((AxisEnum)0)), 35, int(AXIS_CENTER_POS(X_AXIS)), int(max_pos[Y_AXIS])-10);
     queue.enqueue_one_now(buffer);
 }
 
@@ -314,7 +314,7 @@ static void parkHeadForHeating()
 {
     lcd_material_reset_defaults();
     char buffer[32] = {0};
-    sprintf_P(buffer, PSTR("G1 F%i X%i Y%i"), int(homing_feedrate(0)), int(AXIS_CENTER_POS(X_AXIS)), max(int(min_pos[Y_AXIS]), 0)+5);
+    sprintf_P(buffer, PSTR("G1 F%i X%i Y%i"), int(homing_feedrate((AxisEnum)0)), int(AXIS_CENTER_POS(X_AXIS)), max(int(min_pos[Y_AXIS]), 0)+5);
     queue.enqueue_one_now(buffer);
 
     queue.enqueue_now_P(PSTR("M84"));//Disable motor power.

@@ -11,6 +11,7 @@
 #include "UltiLCD2_menu_utils.h"
 #include "UltiLCD2_menu_prefs.h"
 #include "../../feature/fwretract.h"
+#include "tinkergnome.h"
 
 // we use the lcd_cache memory to keep previous values in mind
 // #define FLOAT_SETTING(n) (*(float*)&lcd_cache[(n) * sizeof(float)])
