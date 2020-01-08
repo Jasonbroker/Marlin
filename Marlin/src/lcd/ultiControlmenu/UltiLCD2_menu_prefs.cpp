@@ -36,6 +36,12 @@ uint16_t motor_current_e2 = 0;
 float e2_steps_per_unit = 282.0f;
 #endif
 
+#define AUTOTUNE_OK            0x01
+#define AUTOTUNE_BAD_EXTRUDER  0x02
+#define AUTOTUNE_TEMP_HIGH     0x04
+#define AUTOTUNE_TIMEOUT       0x08
+#define AUTOTUNE_ABORT         0x10
+
 uint8_t axis_direction = DEFAULT_AXIS_DIR;
 
 uint16_t led_timeout = LED_DIM_TIME;

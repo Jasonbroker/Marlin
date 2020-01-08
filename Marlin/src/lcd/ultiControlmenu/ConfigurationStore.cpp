@@ -1,4 +1,4 @@
-#include "../../Marlin.h"
+#include "../../../Marlin.h"
 #include "../../module/planner.h"
 #include "../../module/temperature.h"
 #include "../ultralcd.h"
@@ -269,7 +269,7 @@ void Config_ResetDefault()
     planner.settings.min_feedrate_mm_s=DEFAULT_MINIMUMFEEDRATE;
     planner.settings.min_segment_time_us=DEFAULT_MINSEGMENTTIME;
     planner.settings.min_travel_feedrate_mm_s=DEFAULT_MINTRAVELFEEDRATE;
-    planner.max_jerk.x=DEFAULT_XYJERK;
+    planner.max_jerk.x=DEFAULT_XJERK;
     planner.max_jerk.z=DEFAULT_ZJERK;
     planner.max_jerk.e=DEFAULT_EJERK;
     add_homeing[0] = add_homeing[1] = add_homeing[2] = 0;

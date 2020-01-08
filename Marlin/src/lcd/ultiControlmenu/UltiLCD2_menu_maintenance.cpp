@@ -503,7 +503,6 @@ void lcd_menu_maintenance_advanced_bed_heatup()
 static void lcd_menu_advanced_version()
 {
     lcd_info_screen(NULL, lcd_change_to_previous_menu, PSTR("Return"));
-    lcd_lib_draw_string_centerP(30, PSTR(STRING_VERSION_CONFIG_H));
     lcd_lib_draw_string_centerP(40, PSTR(STRING_CONFIG_H_AUTHOR));
     lcd_lib_update_screen();
 }

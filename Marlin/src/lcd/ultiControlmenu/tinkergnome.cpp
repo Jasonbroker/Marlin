@@ -18,6 +18,7 @@
 #include "UltiLCD2_menu_maintenance.h"
 #include "../../feature/fwretract.h"
 #include "../../gcode/queue.h"
+#include "../../module/motion.h"
 
 #include "tinkergnome.h"
 
@@ -415,7 +416,7 @@ static const menu_t & get_print_menuoption(uint8_t nr, menu_t &opt)
 
 static void lcd_print_tune_speed()
 {
-    lcd_tune_value(feedmultiply, 0, 999);
+    lcd_tune_value(feedrate_percentage, 0, 999);
 }
 
 static void lcd_print_tune_fan()
@@ -1108,7 +1109,7 @@ static void drawPrintSubmenu (uint8_t nr, uint8_t &flags)
                 flags |= MENU_STATUSLINE;
             }
             lcd_lib_draw_gfx(LCD_CHAR_MARGIN_LEFT, 33, speedGfx);
-            int_to_string(feedmultiply, buffer, PSTR("%"));
+            int_to_string(feedrate_percentage, buffer, PSTR("%"));
             LCDMenu::drawMenuString(LCD_CHAR_MARGIN_LEFT+12
                                   , 33
                                   , 24

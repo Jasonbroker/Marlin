@@ -75,7 +75,7 @@ void abortPrint(bool bQuickstop)
     }
 
     // reset defaults
-    feedmultiply = 100;
+    feedrate_percentage = 100;
     for(uint8_t e=0; e<EXTRUDERS; e++)
     {
         extrudemultiply[e] = 100;
@@ -256,7 +256,7 @@ static void userStartPrint()
 
 static void cardUpdir()
 {
-    card.updir();
+    card.cdup();
 }
 
 static void lcd_sd_menu_filename_callback(uint8_t nr, uint8_t offsetY, uint8_t flags)
@@ -265,7 +265,7 @@ static void lcd_sd_menu_filename_callback(uint8_t nr, uint8_t offsetY, uint8_t f
     memset(buffer, '\0', sizeof(buffer));
     if (nr == 0)
     {
-        if (card.atRoot())
+        if (card.flag.workDirIsRoot)
         {
             strcpy_P(buffer, PSTR("< RETURN"));
         }else{
@@ -293,7 +293,7 @@ static void lcd_sd_menu_filename_callback(uint8_t nr, uint8_t offsetY, uint8_t f
             if (card.getSd2Card().errorCode() && card.isMounted())
             {
                 // On a read error reset the file position and try to keep going. (not pretty, but these read errors are annoying as hell)
-                card.sd2card.error(0);
+                card.getSd2Card().error(0);
                 LCD_CACHE_ID(idx) = 0xFF;
                 clearLongFilename();
             }
@@ -317,7 +317,7 @@ static void lcd_sd_menu_filename_callback(uint8_t nr, uint8_t offsetY, uint8_t f
             if (card.getSd2Card().errorCode() && card.isMounted())
             {
                 // On a read error try to keep going with short file name. (not pretty, but these read errors are annoying as hell)
-                card.sd2card.error(0);
+                card.getSd2Card().error(0);
                 clearLongFilename();
                 goto far_break;
             }
@@ -351,7 +351,7 @@ void lcd_sd_menu_details_callback(uint8_t nr)
                     card.getfilename(nr - 1);
                     if (card.getSd2Card().errorCode())
                     {
-                        card.sd2card.error(0);
+                        card.getSd2Card().error(0);
                         return;
                     }
                     LCD_DETAIL_CACHE_ID() = nr;
@@ -401,7 +401,7 @@ void lcd_sd_menu_details_callback(uint8_t nr)
                     if (card.getSd2Card().errorCode())
                     {
                         //On a read error reset the file position and try to keep going. (not pretty, but these read errors are annoying as hell)
-                        card.sd2card.error(0);
+                        card.getSd2Card().error(0);
                         LCD_DETAIL_CACHE_ID() = 0xFF;
                     }
                 }
@@ -481,7 +481,7 @@ void lcd_menu_print_select()
         card.release();
         return;
     }
-    if (!(card.sd2card.errorCode == 0))
+    if (!(card.getSd2Card().errorCode == 0))
     {
         lcd_info_screen(NULL, lcd_change_to_previous_menu);
         lcd_lib_draw_string_centerP(16, PSTR("Reading card..."));
@@ -501,7 +501,7 @@ void lcd_menu_print_select()
     uint8_t nrOfFiles = LCD_CACHE_NR_OF_FILES();
     if (nrOfFiles == 0)
     {
-        if (card.atRoot())
+        if (card.flag.workDirIsRoot)
             lcd_info_screen(reset_printing_state, lcd_change_to_previous_menu, PSTR("OK"));
         else
             lcd_info_screen(lcd_menu_print_select, cardUpdir, PSTR("OK"));
@@ -516,14 +516,14 @@ void lcd_menu_print_select()
         uint16_t selIndex = uint16_t(SELECTED_SCROLL_MENU_ITEM());
         if (selIndex == 0)
         {
-            if (card.atRoot())
+            if (card.flag.workDirIsRoot)
             {
                 reset_printing_state();
                 menu.return_to_previous();
             }else{
                 lcd_clear_cache();
                 lcd_lib_keyclick();
-                card.updir();
+                card.cdup();
             }
         }else{
             card.getfilename(selIndex - 1);
@@ -560,7 +560,7 @@ void lcd_menu_print_select()
                     //reset all printing parameters to defaults
                     axis_relative_state = 0;
                     fanSpeed = 0;
-                    feedmultiply = 100;
+                    feedrate_percentage = 100;
                     current_nominal_speed = 0.0f;
                     fanSpeedPercent = 100;
                     for(uint8_t e=0; e<EXTRUDERS; e++)
@@ -1058,7 +1058,7 @@ static void tune_item_details_callback(uint8_t nr)
 {
     char buffer[32] = {0};
     if (nr == 1)
-        int_to_string(feedmultiply, buffer, PSTR("%"));
+        int_to_string(feedrate_percentage, buffer, PSTR("%"));
     else if (nr == 2)
     {
         int_to_string(thermalManager.temp_hotend[0].target, int_to_string(dsp_temperature[0], buffer, PSTR("C/")), PSTR("C"));
@@ -1162,7 +1162,7 @@ void lcd_menu_print_tune()
         if (IS_SELECTED_SCROLL(index++))
             menu.return_to_previous();
         else if (IS_SELECTED_SCROLL(index++))
-            LCD_EDIT_SETTING(feedmultiply, "Print speed", "%", 10, 1000);
+            LCD_EDIT_SETTING(feedrate_percentage, "Print speed", "%", 10, 1000);
         else if (IS_SELECTED_SCROLL(index++))
             menu.add_menu(menu_t(lcd_menu_print_tune_heatup_nozzle0, 0));
 #if EXTRUDERS > 1

@@ -211,3 +211,5 @@
 #define SPINDLE_LASER_PWM_PIN     9   // Hardware PWM
 #define SPINDLE_LASER_ENA_PIN    10   // Pullup!
 #define SPINDLE_DIR_PIN          11   // use the EXP3 PWM header
+
+#define DEFAULT_PWM_MOTOR_CURRENT  {1300, 1300, 1250}

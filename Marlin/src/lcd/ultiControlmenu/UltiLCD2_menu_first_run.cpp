@@ -317,7 +317,7 @@ static void parkHeadForHeating()
     sprintf_P(buffer, PSTR("G1 F%i X%i Y%i"), int(homing_feedrate[0]), int(AXIS_CENTER_POS(X_AXIS)), max(int(min_pos[Y_AXIS]), 0)+5);
     queue.enqueue_one_now(buffer);
 
-    queue.enqueue_now_P((PSTR("M84"));//Disable motor power.
+    queue.enqueue_now_P(PSTR("M84"));//Disable motor power.
 }
 
 static void lcd_menu_first_run_material_load()
@@ -552,7 +552,7 @@ static void lcd_menu_first_run_print_card_detect()
         return;
     }
 
-    if (!(card.sd2card.errorCode() == 0))
+    if (!(card.getSd2Card().errorCode() == 0))
     {
         lcd_info_screen(NULL, lcd_return_to_main_menu);
         DRAW_PROGRESS_NR(21);
