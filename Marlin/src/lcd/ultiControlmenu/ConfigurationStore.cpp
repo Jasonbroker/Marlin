@@ -293,7 +293,7 @@ void Config_ResetDefault()
 //    Kc = DEFAULT_Kc;
 //#endif//PID_ADD_EXTRUSION_RATE
 #endif//PIDTEMP
-    float tmp_motor_current_setting[]=DEFAULT_PWM_MOTOR_CURRENT;
+    float tmp_motor_current_setting[]=PWM_MOTOR_CURRENT;
     stepper.motor_current_setting[0] = tmp_motor_current_setting[0];
     stepper.motor_current_setting[1] = tmp_motor_current_setting[1];
     stepper.motor_current_setting[2] = tmp_motor_current_setting[2];
