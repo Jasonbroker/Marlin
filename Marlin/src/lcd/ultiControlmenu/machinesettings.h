@@ -2,6 +2,7 @@
 #define MACHINESETTINGS_H
 
 #include "../../../Configuration.h"
+#include <stdint.h>
 
 #define MAX_MACHINE_SETTINGS 10
 #define AXIS_CENTER_POS(n) (max(int(min_pos[n]),0)+((int(max_pos[n])-max(int(min_pos[n]),0))/2))
