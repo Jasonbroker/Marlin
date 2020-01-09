@@ -209,7 +209,7 @@ void doStartPrint()
     if (printing_state == PRINT_STATE_START)
     {
         // move to the recover start position
-        planner.set_e_position_mm(recover_position[E_AXIS], active_extruder, true);
+        planner.set_e_position_mm(recover_position[E_AXIS]);
         planner.buffer_line(recover_position[X_AXIS], recover_position[Y_AXIS], recover_position[Z_AXIS], recover_position[E_AXIS], min(homing_feedrate(X_AXIS), homing_feedrate(Z_AXIS)), active_extruder);
         for(int8_t i=0; i < NUM_AXIS; i++) {
             current_position[i] = recover_position[i];
@@ -276,7 +276,7 @@ static void lcd_sd_menu_filename_callback(uint8_t nr, uint8_t offsetY, uint8_t f
         }
         if (buffer[0] == '\0')
         {
-            card.getFilenameFromNr(buffer, nr - 1);
+            card.selectFileByName(buffer);
             idx = nr % LCD_CACHE_COUNT;
             LCD_CACHE_ID(idx) = nr;
             strncpy(LCD_CACHE_FILENAME(idx), buffer, LCD_CACHE_TEXT_SIZE_SHORT);
@@ -305,7 +305,7 @@ static void lcd_sd_menu_filename_callback(uint8_t nr, uint8_t offsetY, uint8_t f
                 }
             }
             // nothing in cache - load from card
-            card.getFilenameFromNr(buffer, nr - 1);
+            card.selectFileByName(buffer);
             if (card.getSd2Card().errorCode() && card.isMounted())
             {
                 // On a read error try to keep going with short file name. (not pretty, but these read errors are annoying as hell)

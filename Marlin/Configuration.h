@@ -2223,5 +2223,9 @@
 //#define EDITABLE_SERVO_ANGLES
 
 #define END_OF_PRINT_RETRACTION 20
-
+#define END_OF_PRINT_RECOVERY_SPEED 5 	// speed to recover that assumed retraction at (mm/s)
 #define LEVELING_OFFSET 0.1				// Assumed thickness of feeler gauge/paper used in leveling (mm)
+
+#define PRIMING_HEIGHT 30				// Height at which to perform the priming extrusions
+#define PRIMING_MM3	50					// number of mm^3 of plastic to extrude when priming
+#define PRIMING_MM3_PER_SEC 5			// Rate at which to prime head (in mm^3/s)
