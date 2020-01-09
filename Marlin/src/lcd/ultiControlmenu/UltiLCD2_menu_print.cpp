@@ -361,7 +361,7 @@ void lcd_sd_menu_details_callback(uint8_t nr)
                         LCD_DETAIL_CACHE_NOZZLE_DIAMETER(e) = 0.4;
                         LCD_DETAIL_CACHE_MATERIAL_TYPE(e)[0] = '\0';
                     }
-                    card.openFile(card.currentFileName(), true);
+                    card.openFileRead(card.currentFileName());
                     if (card.isFileOpen())
                     {
                         for(uint8_t n=0;n<16;n++)
@@ -534,7 +534,7 @@ void lcd_menu_print_select()
                 active_extruder = (swapExtruders() ? 1 : 0);
             #else
             #endif // EXTRUDERS
-                card.openFile(card.currentFileName(), true);
+                card.openFileRead(card.currentFileName());
                 if (card.isFileOpen() && !queue.has_commands_queued())
                 {
                     if (led_mode == LED_MODE_WHILE_PRINTING || led_mode == LED_MODE_BLINK_ON_DONE)
@@ -1473,7 +1473,7 @@ static void drawResumeSubmenu(uint8_t nr, uint8_t &flags)
                                 , LCD_LINE_HEIGHT
                                 , 52
                                 , LCD_LINE_HEIGHT*4
-                                , movesplanned() ? PSTR("PAUSING|") : PSTR("RESUME|")
+                                , planner.movesplanned() ? PSTR("PAUSING|") : PSTR("RESUME|")
                                 , ALIGN_CENTER
                                 , flags);
         if (flags & MENU_SELECTED)

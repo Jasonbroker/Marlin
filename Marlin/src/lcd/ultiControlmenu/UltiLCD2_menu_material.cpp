@@ -289,7 +289,7 @@ static void lcd_menu_change_material_insert_wait_user()
 {
     LED_GLOW
 
-    if (thermalManager.temp_hotend[active_extruder].target && (printing_state == PRINT_STATE_NORMAL) && (movesplanned() < 2))
+    if (thermalManager.temp_hotend[active_extruder].target && (printing_state == PRINT_STATE_NORMAL) && (planner.movesplanned() < 2))
     {
         current_position[E_AXIS] += 0.5 / volume_to_filament_length[active_extruder];
         planner.buffer_line(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS], current_position[E_AXIS], FILAMENT_INSERT_SPEED, active_extruder);
@@ -400,7 +400,7 @@ static void materialInsertReady()
     planner.set_e_position_mm(current_position[E_AXIS]);
     if (fwretract.retracted[active_extruder])
     {
-        current_position[E_AXIS] -= retract_recover_length;
+        current_position[E_AXIS] -= settings.retract_recover_extra;
     }
     else
     {
@@ -512,6 +512,9 @@ static void lcd_menu_material_export_done()
 
 static void lcd_menu_material_export()
 {
+    menu.replace_menu(menu_t(lcd_menu_material_export_done));
+    return;
+    /*
     if (!card.isMounted())
     {
         LED_GLOW
@@ -533,7 +536,7 @@ static void lcd_menu_material_export()
     }
 
     card.cdroot();
-    card.openFile("MATERIAL.TXT", false);
+    card.openFileWrite("MATERIAL.TXT");
     uint8_t count = eeprom_read_byte(EEPROM_MATERIAL_COUNT_OFFSET());
     for(uint8_t n=0; n<count; ++n)
     {
@@ -597,6 +600,7 @@ static void lcd_menu_material_export()
     }
     card.closefile();
     menu.replace_menu(menu_t(lcd_menu_material_export_done));
+    */
 }
 
 static void lcd_menu_material_import_done()
@@ -631,7 +635,7 @@ static void lcd_menu_material_import()
     }
 
     card.cdroot();
-    card.openFile("MATERIAL.TXT", true);
+    card.openFileWrite("MATERIAL.TXT");
     if (!card.isFileOpen())
     {
         lcd_info_screen(NULL, lcd_change_to_previous_menu);
@@ -643,7 +647,7 @@ static void lcd_menu_material_import()
 
     char buffer[32] = {0};
     uint8_t count = 0xFF;
-    while(card.fgets(buffer, sizeof(buffer)) > 0)
+    while(card..file.fgets(buffer, sizeof(buffer)) > 0)
     {
         buffer[sizeof(buffer)-1] = '\0';
         char* c = strchr(buffer, '\n');
@@ -1089,7 +1093,7 @@ void lcd_material_reset_defaults()
 void lcd_material_set_material(uint8_t nr, uint8_t e)
 {
     material[e].temperature[0] = eeprom_read_word(EEPROM_MATERIAL_TEMPERATURE_OFFSET(nr));
-    set_maxtemp(e, constrain(material[e].temperature[0] + 15, HEATER_0_MAXTEMP, min(HEATER_0_MAXTEMP + 15, material[e].temperature[0] + 15)));
+    thermalManager.temp_range[e].maxtemp = constrain(material[e].temperature[0] + 15, HEATER_0_MAXTEMP, min(HEATER_0_MAXTEMP + 15, material[e].temperature[0] + 15));
 
 #if TEMP_SENSOR_BED != 0
     material[e].bed_temperature = eeprom_read_word(EEPROM_MATERIAL_BED_TEMPERATURE_OFFSET(nr));
@@ -1146,7 +1150,7 @@ void lcd_material_read_current_material()
     for(uint8_t e=0; e<EXTRUDERS; ++e)
     {
         material[e].temperature[0] = eeprom_read_word(EEPROM_MATERIAL_TEMPERATURE_OFFSET(EEPROM_MATERIAL_SETTINGS_MAX_COUNT+e));
-        set_maxtemp(e, constrain(material[e].temperature[0] + 15, HEATER_0_MAXTEMP, min(HEATER_0_MAXTEMP + 15, material[e].temperature[0] + 15)));
+        thermalManager.temp_range[e].maxtemp = constrain(material[e].temperature[0] + 15, HEATER_0_MAXTEMP, min(HEATER_0_MAXTEMP + 15, material[e].temperature[0] + 15));
 #if TEMP_SENSOR_BED != 0
         material[e].bed_temperature = eeprom_read_word(EEPROM_MATERIAL_BED_TEMPERATURE_OFFSET(EEPROM_MATERIAL_SETTINGS_MAX_COUNT+e));
 #endif
@@ -1175,7 +1179,7 @@ void lcd_material_store_current_material()
     for(uint8_t e=0; e<EXTRUDERS; ++e)
     {
         eeprom_write_word(EEPROM_MATERIAL_TEMPERATURE_OFFSET(EEPROM_MATERIAL_SETTINGS_MAX_COUNT+e), material[e].temperature[0]);
-        set_maxtemp(e, constrain(material[e].temperature[0] + 15, HEATER_0_MAXTEMP, min(HEATER_0_MAXTEMP + 15, material[e].temperature[0] + 15)));
+        thermalManager.temp_range[e].maxtemp = constrain(material[e].temperature[0] + 15, HEATER_0_MAXTEMP, min(HEATER_0_MAXTEMP + 15, material[e].temperature[0] + 15));
 #if TEMP_SENSOR_BED != 0
         eeprom_write_word(EEPROM_MATERIAL_BED_TEMPERATURE_OFFSET(EEPROM_MATERIAL_SETTINGS_MAX_COUNT+e), material[e].bed_temperature);
 #endif

@@ -151,6 +151,7 @@ public:
   static inline void setIndex(const uint32_t index) { sdpos = index; file.seekSet(index); }
   static inline char* getWorkDirName() { workDir.getDosName(filename); return filename; }
   static inline int16_t get() { sdpos = file.curPosition(); return (int16_t)file.read(); }
+  FORCE_INLINE int16_t fgets(char* str, int16_t num) { return file.fgets(str, num, NULL); }
   static inline int16_t read(void* buf, uint16_t nbyte) { return file.isOpen() ? file.read(buf, nbyte) : -1; }
   static inline int16_t write(void* buf, uint16_t nbyte) { return file.isOpen() ? file.write(buf, nbyte) : -1; }
 
