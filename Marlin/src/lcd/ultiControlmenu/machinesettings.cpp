@@ -3,6 +3,7 @@
 #include "../../Marlin.h"
 #include "../../module/temperature.h"
 #include "../../module/motion.h"
+#include "../../module/planner.h"
 
 MachineSettings::MachineSettings()
 {
@@ -52,15 +53,15 @@ bool MachineSettings::store(uint8_t index)
     for (int i=0; i<NUM_AXIS; i++)
     {
         settings[index]->max_acceleration_units_per_sq_second[i] = planner.settings.max_acceleration_mm_per_s2[i];
-        settings[index]->max_feedrate[i] = max_feedrate[i];
+        settings[index]->max_feedrate[i] = planner.settings.max_feedrate_mm_s[i];
     }
-    settings[index]->acceleration = acceleration;
+    settings[index]->acceleration = planner.settings.acceleration;
     settings[index]->minimumfeedrate = planner.settings.min_feedrate_mm_s;
     settings[index]->mintravelfeedrate = planner.settings.min_travel_feedrate_mm_s;
     settings[index]->minsegmenttime = planner.settings.min_segment_time_us;
-    settings[index]->max_xy_jerk = max_xy_jerk;
-    settings[index]->max_z_jerk = max_z_jerk;
-    settings[index]->max_e_jerk = max_e_jerk;
+    settings[index]->max_xy_jerk = planner.max_jerk[X_AXIS];
+    settings[index]->max_z_jerk = planner.max_jerk[Z_AXIS];
+    settings[index]->max_e_jerk = planner.max_jerk[E_AXIS];
 
     return true;
 }
@@ -92,13 +93,13 @@ bool MachineSettings::recall(uint8_t index)
       planner.settings.max_acceleration_mm_per_s2[i] = settings[index]->max_acceleration_units_per_sq_second[i];
       planner.settings.max_feedrate[i] = settings[index]->max_feedrate[i];
     }
-    acceleration = settings[index]->acceleration;
+    planner.settings.acceleration = settings[index]->acceleration;
     planner.settings.min_feedrate_mm_s = settings[index]->minimumfeedrate;
     planner.settings.min_travel_feedrate_mm_s = settings[index]->mintravelfeedrate;
     planner.settings.min_segment_time_us = settings[index]->minsegmenttime;
-    max_xy_jerk = settings[index]->max_xy_jerk;
-    max_z_jerk = settings[index]->max_z_jerk;
-    max_e_jerk = settings[index]->max_e_jerk;
+    planner.max_jerk[X_AXIS] = settings[index]->max_xy_jerk;
+    planner.max_jerk[Z_AXIS] = settings[index]->max_z_jerk;
+    planner.max_jerk[E_AXIS] = settings[index]->max_e_jerk;
 
     delete settings[index];
     settings[index] = 0;

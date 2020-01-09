@@ -8,6 +8,7 @@
 #include "../../gcode/queue.h"
 #include "../../inc/Conditionals_post.h"
 #include "tinkergnome.h"
+#include <avr/pgmspace.h>
 
 // colors for the encoder led ring
 #define LED_INPUT lcd_lib_led_color(192, 8, 0); led_update();

@@ -454,7 +454,7 @@ static void lcd_tune_retract_length()
 #if EXTRUDERS > 1
 static void lcd_tune_swap_length()
 {
-    lcd_tune_value(extruder_swap_retract_length, 0, 50, 0.01);
+    lcd_tune_value(fwretract.settings.swap_retract_length, 0, 50, 0.01);
 }
 #endif // EXTRUDERS
 

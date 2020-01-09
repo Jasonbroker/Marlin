@@ -400,7 +400,7 @@ static void materialInsertReady()
     planner.set_e_position_mm(current_position[E_AXIS]);
     if (fwretract.retracted[active_extruder])
     {
-        current_position[E_AXIS] -= settings.retract_recover_extra;
+        current_position[E_AXIS] -= fwretract.settings.retract_recover_extra;
     }
     else
     {
@@ -647,7 +647,7 @@ static void lcd_menu_material_import()
 
     char buffer[32] = {0};
     uint8_t count = 0xFF;
-    while(card..file.fgets(buffer, sizeof(buffer)) > 0)
+    while(card.fgets(buffer, sizeof(buffer)) > 0)
     {
         buffer[sizeof(buffer)-1] = '\0';
         char* c = strchr(buffer, '\n');

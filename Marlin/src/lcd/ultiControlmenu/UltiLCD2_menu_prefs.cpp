@@ -12,6 +12,7 @@
 #include "UltiLCD2_menu_prefs.h"
 #include "../../feature/fwretract.h"
 #include "tinkergnome.h"
+#include <avr/pgmspace.h>
 
 // we use the lcd_cache memory to keep previous values in mind
 // #define FLOAT_SETTING(n) (*(float*)&lcd_cache[(n) * sizeof(float)])
@@ -2451,7 +2452,7 @@ static void lcd_start_autotune()
 {
     lcd_cache[0] = 0; // status flag
     menu.replace_menu(menu_t(lcd_menu_autotune_info));
-    PID_autotune(float(WORD_SETTING(2)), lcd_cache[1]-1, lcd_cache[2], autotune_callback);
+    thermalManager.PID_autotune(float(WORD_SETTING(2)), lcd_cache[1]-1, lcd_cache[2], autotune_callback);
 }
 
 static const menu_t & get_autotune_menuoption(uint8_t nr, menu_t &opt)
@@ -2693,8 +2694,8 @@ static void init_tempcontrol_e1()
 void init_tempcontrol_e1()
 #endif
 {
-    FLOAT_SETTING(1) = unscalePID_i(Ki);
-    FLOAT_SETTING(2) = unscalePID_d(Kd);
+    FLOAT_SETTING(1) = unscalePID_i(thermalManager.temp_bed.pid.Ki);
+    FLOAT_SETTING(2) = unscalePID_d(thermalManager.temp_bed.pid.Kd);
     // menu.set_selection(1);
 }
 
@@ -2849,7 +2850,7 @@ static void drawTempExtr1Submenu(uint8_t nr, uint8_t &flags)
             flags |= MENU_STATUSLINE;
         }
         lcd_lib_draw_stringP(LCD_GFX_WIDTH/2, 30, PSTR("Ki"));
-        float_to_string2(unscalePID_i(Ki), buffer, NULL);
+        float_to_string2(unscalePID_i(thermalManager.temp_bed.pid.Ki), buffer, NULL);
 
         LCDMenu::drawMenuString(LCD_GFX_WIDTH - LCD_CHAR_MARGIN_RIGHT - 6*LCD_CHAR_SPACING
                                 , 30
