@@ -1340,7 +1340,7 @@ void lcd_menu_print_heatup_tg()
     lcd_lib_draw_string_rightP(LCD_GFX_WIDTH-LCD_CHAR_MARGIN_RIGHT-26, ypos, PSTR("/"));
     int_to_string(dsp_temperature[0], buffer, PSTR(DEGREE_SYMBOL));
     lcd_lib_draw_string_right(LCD_GFX_WIDTH-LCD_CHAR_MARGIN_RIGHT-34, ypos, buffer);
-    lcd_lib_draw_heater(LCD_GFX_WIDTH-LCD_CHAR_MARGIN_RIGHT-70, ypos, .thermalManager.getHeaterPower(0));
+    lcd_lib_draw_heater(LCD_GFX_WIDTH-LCD_CHAR_MARGIN_RIGHT-70, ypos, thermalManager.getHeaterPower(0));
 
     menu.process_submenu(get_heatup_menuoption, EXTRUDERS + BED_MENU_OFFSET + 2);
 
@@ -1351,7 +1351,7 @@ void lcd_menu_print_heatup_tg()
     }
     if (!(flags & MENU_STATUSLINE))
     {
-        lcd_lib_draw_string_left(5, card.currentLongFileName());
+        lcd_lib_draw_string_left(5, card.longest_filename());
     }
 
     lcd_lib_update_screen();
@@ -1498,7 +1498,7 @@ void lcd_menu_printing_tg()
                 lcd_lib_encoder_pos = ENCODER_NO_SELECTION;
                 menu.reset_submenu();
                 // lcd_lib_draw_string_left(5, PSTR("Paused..."));
-                lcd_lib_draw_string_left(5, card.currentLongFileName());
+                lcd_lib_draw_string_left(5, card.longest_filename());
                 lcd_lib_draw_gfx(54, 15, hourglassGfx);
                 if (!planner.has_blocks_queued())
                 {
@@ -1570,7 +1570,7 @@ void lcd_menu_printing_tg()
             }
             else if (card.isFileOpen())
             {
-                lcd_lib_draw_string_left(5, card.currentLongFileName());
+                lcd_lib_draw_string_left(5, card.longest_filename());
             }
         }
         lcd_lib_update_screen();
@@ -1871,7 +1871,7 @@ static void lcd_menu_recover_file()
     }
     if (!(flags & MENU_STATUSLINE))
     {
-        lcd_lib_draw_string_left(5, card.currentLongFileName());
+        lcd_lib_draw_string_left(5, card.longest_filename());
     }
 
     lcd_lib_update_screen();

@@ -79,12 +79,12 @@ void abortPrint(bool bQuickstop)
     if (primed)
     {
         // perform the end-of-print retraction at the standard retract speed
-        planner.set_e_position_mm((end_of_print_retraction / volume_to_filament_length[active_extruder]) - (fwretract.retracted ? fwretract.settings.retract_length : 0), active_extruder, true);
+        planner.set_e_position_mm((end_of_print_retraction / volume_to_filament_length[active_extruder]) - (fwretract.retracted[active_extruder] ? fwretract.settings.retract_length : 0));
         current_position[E_AXIS] = 0.0f;
         planner.buffer_line(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS], current_position[E_AXIS], fwretract.settings.retract_feedrate_mm_s/60, active_extruder);
 
         // no longer primed
-        fwretract.retracted = false;
+        fwretract.retracted[active_extruder] = false;
         primed = false;
     }
 
@@ -106,7 +106,7 @@ void abortPrint(bool bQuickstop)
     // finish all moves
     planner.finish_and_disable();
     current_position[E_AXIS] = 0.0f;
-    planner.set_e_position_mm(current_position[E_AXIS], active_extruder, true);
+    planner.set_e_position_mm(current_position[E_AXIS]);
 
     stoptime=millis();
     //If we where paused, make sure we abort that pause. Else strange things happen: https://github.com/Ultimaker/Ultimaker2Marlin/issues/32
@@ -115,12 +115,11 @@ void abortPrint(bool bQuickstop)
     if (led_mode == LED_MODE_WHILE_PRINTING)
         analogWrite(LED_PIN, 0);
 
-    fanSpeedPercent = 100;
+    thermalManager.fan_speed[active_extruder] = 100;
     for(uint8_t e=0; e<EXTRUDERS; e++)
     {
         volume_to_filament_length[e] = 1.0;
     }
-    axis_relative_state = 0;
 }
 
 static void checkPrintFinished()
@@ -134,12 +133,12 @@ static void checkPrintFinished()
         menu.add_menu(menu_t(lcd_menu_print_ready, MAIN_MENU_ITEM_POS(0)), false);
         abortPrint(false);
     }
-    else if (position_error)
-    {
-        sleep_state &= ~SLEEP_LED_OFF;
-        menu.replace_menu(menu_t(lcd_menu_print_error_position, MAIN_MENU_ITEM_POS(0)));
-        abortPrint(true);
-    }
+    // else if (position_error)
+    // {
+    //     sleep_state &= ~SLEEP_LED_OFF;
+    //     menu.replace_menu(menu_t(lcd_menu_print_error_position, MAIN_MENU_ITEM_POS(0)));
+    //     abortPrint(true);
+    // }
     else if (card.getSd2Card().errorCode())
     {
         sleep_state &= ~SLEEP_LED_OFF;
@@ -159,12 +158,12 @@ void doStartPrint()
 
     // zero the extruder position
     current_position[E_AXIS] = 0.0;
-    planner.set_e_position_mm(current_position[E_AXIS], active_extruder, true);
+    planner.set_e_position_mm(current_position[E_AXIS]);
 
 	// since we are going to prime the nozzle, forget about any G10/G11 retractions that happened at end of previous print
-	retracted = false;
+	fwretract.retracted[active_extruder] = false;
 	primed = false;
-	position_error = false;
+	// position_error = false;
 
     for(int8_t e = EXTRUDERS-1; e>=0; --e)
     {
@@ -190,11 +189,11 @@ void doStartPrint()
             primed = true;
         }
         // undo the end-of-print retraction
-        planner.set_e_position_mm((- end_of_print_retraction) / volume_to_filament_length[e], e, true);
+        planner.set_e_position_mm((- end_of_print_retraction) / volume_to_filament_length[e]);
         planner.buffer_line(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS], current_position[E_AXIS], END_OF_PRINT_RECOVERY_SPEED, e);
 
         // perform additional priming
-        planner.set_e_position_mm(-PRIMING_MM3, e, true);
+        planner.set_e_position_mm(-PRIMING_MM3);
         planner.buffer_line(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS], current_position[E_AXIS], (PRIMING_MM3_PER_SEC * volume_to_filament_length[e]), e);
 
 #if EXTRUDERS > 1
@@ -202,7 +201,7 @@ void doStartPrint()
         if (e != active_extruder)
         {
             planner.set_e_position_mm(extruder_swap_retract_length / volume_to_filament_length[e], e, true);
-            planner.buffer_line(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS], current_position[E_AXIS], retract_feedrate/60, e);
+            planner.buffer_line(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS], current_position[E_AXIS], fwretraction.settings.retract_feedrate_mm_s/60, e);
         }
 #endif
     }
@@ -216,7 +215,7 @@ void doStartPrint()
             current_position[i] = recover_position[i];
         }
         // first recovering move
-        enquecommand(LCD_CACHE_FILENAME(0));
+        queue.enqueue_one_now(LCD_CACHE_FILENAME(0));
     }
 
     printing_state = PRINT_STATE_NORMAL;
@@ -532,7 +531,7 @@ void lcd_menu_print_select()
                 {
                     if (led_mode == LED_MODE_WHILE_PRINTING || led_mode == LED_MODE_BLINK_ON_DONE)
                         analogWrite(LED_PIN, 255 * int(led_brightness_level) / 100);
-                    if (!card.currentLongFileName()[0])
+                    if (!card.longest_filename())
                         card.setLongFilename(card.currentFileName());
                     card.truncateLongFilename(20);
 
@@ -550,8 +549,7 @@ void lcd_menu_print_select()
                     menu.return_to_main();
 
                     //reset all printing parameters to defaults
-                    axis_relative_state = 0;
-                    fanSpeed = 0;
+                    thermalManager.fan_speed = 0;
                     feedrate_percentage = 100;
                     current_nominal_speed = 0.0f;
                     fanSpeedPercent = 100;
@@ -569,7 +567,7 @@ void lcd_menu_print_select()
 #if TEMP_SENSOR_BED != 0
                         thermalManager.temp_bed.target = 0;
 #endif
-                        fanSpeedPercent = 0;
+                        thermalManager.fan_speed[active_extruder] = 0;
                         for(uint8_t e=0; e<EXTRUDERS; ++e)
                         {
 //                            SERIAL_ECHOPGM("MATERIAL_");
@@ -590,7 +588,6 @@ void lcd_menu_print_select()
 #if TEMP_SENSOR_BED != 0
                             thermalManager.temp_bed.target = max(thermalManager.temp_bed.target, material[e].bed_temperature);
 #endif
-                            thermalManager.fanPercent = max(thermalManager.fanPercent, material[e].fan_speed);
                             volume_to_filament_length[e] = 1.0 / (M_PI * (material[e].diameter / 2.0) * (material[e].diameter / 2.0));
                             planner.flow_percentage[e] = material[e].flow;
                         }
@@ -610,7 +607,7 @@ void lcd_menu_print_select()
                             char buffer[32] = {0};
                             homeAll();
                             sprintf_P(buffer, PSTR("G1 F12000 X%i Y%i"), max(int(min_pos[X_AXIS]), 0)+5, max(int(min_pos[Y_AXIS]), 0)+5);
-                            enquecommand(buffer);
+                            queue.enqueue_one_now(buffer);
                             printing_state = PRINT_STATE_NORMAL;
 
                             if (ui_mode & UI_MODE_EXPERT)
@@ -726,7 +723,7 @@ void lcd_menu_print_heatup()
 
     lcd_lib_draw_string_centerP(10, PSTR("Heating up..."));
     lcd_lib_draw_string_centerP(20, PSTR("Preparing to print:"));
-    lcd_lib_draw_string_center(30, card.currentLongFileName());
+    lcd_lib_draw_string_center(30, card.longest_filename());
 
     lcd_progressbar(progress);
 
@@ -759,7 +756,7 @@ static void lcd_menu_print_printing()
         {
         default:
             lcd_lib_draw_string_centerP(20, PSTR("Printing:"));
-            lcd_lib_draw_string_center(30, card.currentLongFileName());
+            lcd_lib_draw_string_center(30, card.longest_filename());
             break;
         case PRINT_STATE_HEATING:
             lcd_lib_draw_string_centerP(20, PSTR("Heating"));
@@ -990,7 +987,7 @@ void lcd_menu_print_ready()
         {
             LED_GLOW
         }
-        lcd_lib_draw_string_center(16, card.currentLongFileName());
+        lcd_lib_draw_string_center(16, card.longest_filename());
         lcd_lib_draw_string_centerP(40, PSTR("Print finished"));
     }
     lcd_lib_update_screen();
@@ -1108,7 +1105,7 @@ void lcd_menu_print_tune_heatup_nozzle0()
     int_to_string(int(dsp_temperature[0]), buffer, PSTR("C/"));
     int_to_string(int(thermalManager.temp_hotend[0].target), buffer+strlen(buffer), PSTR("C"));
     lcd_lib_draw_string_center(30, buffer);
-    lcd_lib_draw_heater(LCD_GFX_WIDTH/2-2, 40, getHeaterPower(0));
+    lcd_lib_draw_heater(LCD_GFX_WIDTH/2-2, 40, thermalManager.getHeaterPower(0));
     lcd_lib_update_screen();
 }
 #if EXTRUDERS > 1
@@ -1215,7 +1212,7 @@ static void lcd_retraction_details(uint8_t nr)
     if(nr == 1)
         float_to_string2(fwretract.settings.retract_length, buffer, PSTR("mm"));
     else if(nr == 2)
-        int_to_string(retract_feedrate / 60 + 0.5, buffer, PSTR("mm/sec"));
+        int_to_string(fwretract.settings.retract_feedrate_mm_s / 60 + 0.5, buffer, PSTR("mm/sec"));
     else if(nr == 3)
         float_to_string2(end_of_print_retraction, buffer, PSTR("mm"));
 #if EXTRUDERS > 1
@@ -1277,7 +1274,7 @@ void lcd_print_pause()
         uint8_t y = max(int(min_pos[Y_AXIS]), 0) + 5;
 
         sprintf_P(buffer, PSTR("M601 X%u Y%u Z%u L%u"), x, y, zdiff, uint8_t(end_of_print_retraction));
-        process_command(buffer, false);
+        queue.enqueue_one_now(buffer);
 
     }
 }

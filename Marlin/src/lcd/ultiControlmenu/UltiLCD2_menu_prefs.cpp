@@ -2709,7 +2709,7 @@ static void lcd_preset_e1_kd()
 {
     if (lcd_tune_value(FLOAT_SETTING(2), 0.0f, 999.99f, 0.01f))
     {
-        Kd = scalePID_d(FLOAT_SETTING(2));
+        thermalManager.temp_hotendp[1].pid.Kd = scalePID_d(FLOAT_SETTING(2));
     }
 }
 
@@ -2717,13 +2717,13 @@ static void lcd_preset_e1_ki()
 {
     if (lcd_tune_value(FLOAT_SETTING(1), 0.0f, 999.99f, 0.01f))
     {
-        Ki = scalePID_i(FLOAT_SETTING(1));
+        thermalManager.temp_hotendp[1].pid.Ki = scalePID_i(FLOAT_SETTING(1));
     }
 }
 
 static void lcd_preset_e1_kp()
 {
-    lcd_tune_value(Kp, 0.0f, 999.99f, 0.01f);
+    lcd_tune_value(thermalManager.temp_hotendp[1].pid.Kp, 0.0f, 999.99f, 0.01f);
 }
 
 static const menu_t & get_temp_e1_menuoption(uint8_t nr, menu_t &opt)
