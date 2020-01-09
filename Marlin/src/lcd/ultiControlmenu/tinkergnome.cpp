@@ -1427,22 +1427,22 @@ void lcd_menu_printing_tg()
         lcd_lib_draw_hline(3, 124, 13);
 
         // calculate speeds
-        if (current_block!=NULL)
-        {
+    //     if (stepper.current_block!=NULL)
+    //     {
 
-            if ((current_block->steps_e > 0) && (current_block->step_event_count > 0) && (current_block->steps_x || current_block->steps_y))
-            {
-    //                float block_time = current_block->millimeters / current_block->nominal_speed;
-    //                float mm_e = current_block->steps_e / axis_steps_per_mm[E_AXIS];
+    //         if ((stepper.current_block->steps_e > 0) && (stepper.current_block->step_event_count > 0) && (stepper.current_block->steps_x || stepper.current_block->steps_y))
+    //         {
+    // //                float block_time = current_block->millimeters / current_block->nominal_speed;
+    // //                float mm_e = current_block->steps_e / axis_steps_per_mm[E_AXIS];
 
-                // calculate live extrusion rate from e speed and filament area
-                float speed_e = current_block->steps_e * current_block->nominal_rate / planner.settings.axis_steps_per_mm[E_AXIS] / current_block->step_event_count;
-                float volume = (volume_to_filament_length[current_block->active_extruder] < 0.99) ? speed_e / volume_to_filament_length[current_block->active_extruder] : speed_e*DEFAULT_FILAMENT_AREA;
+    //             // calculate live extrusion rate from e speed and filament area
+    //             float speed_e = stepper.current_block->steps_e * stepper.current_block->nominal_rate / planner.settings.axis_steps_per_mm[E_AXIS] / stepper.current_block->step_event_count;
+    //             float volume = (volume_to_filament_length[stepper.current_block->active_extruder] < 0.99) ? speed_e / volume_to_filament_length[stepper.current_block->active_extruder] : speed_e*DEFAULT_FILAMENT_AREA;
 
-                e_smoothed_speed[current_block->active_extruder] = (e_smoothed_speed[current_block->active_extruder]*LOW_PASS_SMOOTHING) + ( volume *(1.0-LOW_PASS_SMOOTHING));
-                current_nominal_speed = current_block->nominal_speed;
-            }
-        }
+    //             e_smoothed_speed[stepper.current_block->active_extruder] = (e_smoothed_speed[stepper.current_block->active_extruder]*LOW_PASS_SMOOTHING) + ( volume *(1.0-LOW_PASS_SMOOTHING));
+    //             current_nominal_speed = stepper.current_block->nominal_speed;
+    //         }
+    //     }
 
 #if EXTRUDERS > 1
         char buffer[32] = {0};

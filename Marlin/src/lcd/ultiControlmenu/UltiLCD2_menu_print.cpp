@@ -534,10 +534,10 @@ void lcd_menu_print_select()
                     if (led_mode == LED_MODE_WHILE_PRINTING || led_mode == LED_MODE_BLINK_ON_DONE)
                         analogWrite(LED_PIN, 255 * int(led_brightness_level) / 100);
                     if (!card.longest_filename())
-                    {
-                        char fileName[27];
-                        card.longFilename = strcpy(fileName, card.filename);
-                    }
+                    // {
+                    //     char fileName[27] = card.filename;
+                    //     card.longFilename = fileName;
+                    // }
                     truncateLongFilename(20);
 
                     char buffer[64];
