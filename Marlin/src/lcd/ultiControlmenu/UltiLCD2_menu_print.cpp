@@ -339,7 +339,7 @@ void lcd_sd_menu_details_callback(uint8_t nr)
                 char buffer[64];
                 if (LCD_DETAIL_CACHE_ID() != nr)
                 {
-                    card.getfilename(nr - 1);
+                    card.getfilename_sorted(nr - 1);
                     if (card.getSd2Card().errorCode())
                     {
                         card.getSd2Card().error(0);
@@ -353,7 +353,7 @@ void lcd_sd_menu_details_callback(uint8_t nr)
                         LCD_DETAIL_CACHE_NOZZLE_DIAMETER(e) = 0.4;
                         LCD_DETAIL_CACHE_MATERIAL_TYPE(e)[0] = '\0';
                     }
-                    card.openFileRead(card.currentFileName());
+                    card.openFileRead(card.filename);
                     if (card.isFileOpen())
                     {
                         for(uint8_t n=0;n<16;n++)
@@ -472,7 +472,7 @@ void lcd_menu_print_select()
         card.release();
         return;
     }
-    if (!(card.getSd2Card().errorCode == 0))
+    if (!(card.getSd2Card().errorCode() == 0))
     {
         lcd_info_screen(NULL, lcd_change_to_previous_menu);
         lcd_lib_draw_string_centerP(16, PSTR("Reading card..."));
@@ -517,7 +517,7 @@ void lcd_menu_print_select()
                 card.cdup();
             }
         }else{
-            card.getfilename(selIndex - 1);
+            card.getfilename_sorted(selIndex - 1);
             if (card.flag.filenameIsDir)
             {
                 //Start print
@@ -526,13 +526,13 @@ void lcd_menu_print_select()
                 active_extruder = (swapExtruders() ? 1 : 0);
             #else
             #endif // EXTRUDERS
-                card.openFileRead(card.currentFileName());
+                card.openFileRead(card.filename);
                 if (card.isFileOpen() && !queue.has_commands_queued())
                 {
                     if (led_mode == LED_MODE_WHILE_PRINTING || led_mode == LED_MODE_BLINK_ON_DONE)
                         analogWrite(LED_PIN, 255 * int(led_brightness_level) / 100);
                     if (!card.longest_filename())
-                        card.setLongFilename(card.currentFileName());
+                        card.setLongFilename(card.filename);
                     card.truncateLongFilename(20);
 
                     char buffer[64];
@@ -635,7 +635,7 @@ void lcd_menu_print_select()
             {
                 lcd_lib_keyclick();
                 lcd_clear_cache();
-                card.chdir(card.currentFileName());
+                card.chdir(card.filename));
                 SELECT_SCROLL_MENU_ITEM(0);
             }
             return;//Return so we do not continue after changing the directory or selecting a file. The nrOfFiles is invalid at this point.

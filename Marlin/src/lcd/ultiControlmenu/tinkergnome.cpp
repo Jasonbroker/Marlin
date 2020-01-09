@@ -2018,7 +2018,7 @@ void lcd_menu_maintenance_expert()
         {
             for (uint8_t i=0; i<EXTRUDERS; ++i)
             {
-                recover_temperature[i] = thermalManager.temp_hotend[i].target];
+                recover_temperature[i] = thermalManager.temp_hotend[i].target;
             }
             printing_state = PRINT_STATE_RECOVER;
             // select file

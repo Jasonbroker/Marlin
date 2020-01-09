@@ -2709,7 +2709,7 @@ static void lcd_preset_e1_kd()
 {
     if (lcd_tune_value(FLOAT_SETTING(2), 0.0f, 999.99f, 0.01f))
     {
-        thermalManager.temp_hotendp[1].pid.Kd = scalePID_d(FLOAT_SETTING(2));
+        thermalManager.temp_hotend[1].pid.Kd = scalePID_d(FLOAT_SETTING(2));
     }
 }
 
@@ -2717,13 +2717,13 @@ static void lcd_preset_e1_ki()
 {
     if (lcd_tune_value(FLOAT_SETTING(1), 0.0f, 999.99f, 0.01f))
     {
-        thermalManager.temp_hotendp[1].pid.Ki = scalePID_i(FLOAT_SETTING(1));
+        thermalManager.temp_hotend[1].pid.Ki = scalePID_i(FLOAT_SETTING(1));
     }
 }
 
 static void lcd_preset_e1_kp()
 {
-    lcd_tune_value(thermalManager.temp_hotendp[1].pid.Kp, 0.0f, 999.99f, 0.01f);
+    lcd_tune_value(thermalManager.temp_hotend[1].pid.Kp, 0.0f, 999.99f, 0.01f);
 }
 
 static const menu_t & get_temp_e1_menuoption(uint8_t nr, menu_t &opt)
@@ -2831,7 +2831,7 @@ static void drawTempExtr1Submenu(uint8_t nr, uint8_t &flags)
             flags |= MENU_STATUSLINE;
         }
         lcd_lib_draw_stringP(LCD_GFX_WIDTH/2, 20, PSTR("Kp"));
-        float_to_string2(, buffer, NULL);
+        float_to_string2(thermalManager.temp_hotend[active_extruder].pid.Kp, buffer, NULL);
 
         LCDMenu::drawMenuString(LCD_GFX_WIDTH - LCD_CHAR_MARGIN_RIGHT - 6*LCD_CHAR_SPACING
                                 , 20
@@ -2869,7 +2869,7 @@ static void drawTempExtr1Submenu(uint8_t nr, uint8_t &flags)
             flags |= MENU_STATUSLINE;
         }
         lcd_lib_draw_stringP(LCD_GFX_WIDTH/2, 40, PSTR("Kd"));
-        float_to_string2(unscalePID_d(Kd), buffer, NULL);
+        float_to_string2(unscalePID_d(thermalManager.temp_hotend[active_extruder].pid.Kd), buffer, NULL);
 
         LCDMenu::drawMenuString(LCD_GFX_WIDTH - LCD_CHAR_MARGIN_RIGHT - 6*LCD_CHAR_SPACING
                                 , 40
