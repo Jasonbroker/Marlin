@@ -252,9 +252,9 @@ class Stepper {
       static bool initialized;
     #endif
 
+  static block_t* current_block;          // A pointer to the block currently being traced
   private:
-
-    static block_t* current_block;          // A pointer to the block currently being traced
+  // static block_t* current_block;          // A pointer to the block currently being traced
 
     static uint8_t last_direction_bits,     // The next stepping-bits to be output
                    axis_did_move;           // Last Movement in the given direction is not null, as computed when the last movement was fetched from planner

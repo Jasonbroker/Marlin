@@ -1359,7 +1359,7 @@ void lcd_menu_print_heatup_tg()
 
 static unsigned long predictTimeLeft()
 {
-    if ((printing_state == PRINT_STATE_HEATING) || (printing_state == PRINT_STATE_HEATING_BED) || (!card.getFilePos()) || (!card.getFileSize()))
+    if ((printing_state == PRINT_STATE_HEATING) || (printing_state == PRINT_STATE_HEATING_BED) || (!card.getIndex()) || (!card.getFileSize()))
     {
         return 0;
     }
@@ -1374,7 +1374,7 @@ static unsigned long predictTimeLeft()
         printTime = m/1000L - starttime/1000L;
     }
 
-    float progress = float(card.getFilePos()) / float(card.getFileSize());
+    float progress = float(card.getIndex()) / float(card.getFileSize());
 
     if ((printTime < 60) || (progress < 0.01f))
     {
@@ -1456,7 +1456,7 @@ void lcd_menu_printing_tg()
                 uint32_t divisor = (card.getFileSize() + 123) / 124;
                 if (divisor)
                 {
-                    progress = card.getFilePos() / divisor;
+                    progress = card.getIndex() / divisor;
                 }
             }
 #else
@@ -1521,7 +1521,7 @@ void lcd_menu_printing_tg()
             lcd_lib_draw_string_leftP(15, PSTR("Z"));
 
             // calculate current z position
-            float_to_string2(current_position(Z_AXIS) / planner.settings.axis_steps_per_mm[Z_AXIS], buffer, 0);
+            float_to_string2(current_position.z / planner.settings.axis_steps_per_mm[Z_AXIS], buffer, 0);
             lcd_lib_draw_string(LCD_CHAR_MARGIN_LEFT+12, 15, buffer);
 #endif
         }

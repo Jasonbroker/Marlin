@@ -459,6 +459,8 @@ void lcd_sd_menu_details_callback(uint8_t nr)
     }
 }
 
+FORCE_INLINE void truncateLongFilename(uint8_t pos) { card.longFilename[pos] = '\0'; if (char *point = strchr(card.longFilename, '.')) *point = '\0'; }
+
 void lcd_menu_print_select()
 {
     if (!card.isMounted())
@@ -483,7 +485,7 @@ void lcd_menu_print_select()
     }
 
     if (LCD_CACHE_NR_OF_FILES() == 0xFF)
-        LCD_CACHE_NR_OF_FILES() = card.getnrfilenames();
+        LCD_CACHE_NR_OF_FILES() = card.get_num_Files();
     if (card.getSd2Card().errorCode())
     {
         LCD_CACHE_NR_OF_FILES() = 0xFF;
@@ -532,8 +534,11 @@ void lcd_menu_print_select()
                     if (led_mode == LED_MODE_WHILE_PRINTING || led_mode == LED_MODE_BLINK_ON_DONE)
                         analogWrite(LED_PIN, 255 * int(led_brightness_level) / 100);
                     if (!card.longest_filename())
-                        card.setLongFilename(card.filename);
-                    card.truncateLongFilename(20);
+                    {
+                        char fileName[27];
+                        card.longFilename = strcpy(fileName, card.filename);
+                    }
+                    truncateLongFilename(20);
 
                     char buffer[64];
                     card.fgets(buffer, sizeof(buffer));
@@ -549,10 +554,9 @@ void lcd_menu_print_select()
                     menu.return_to_main();
 
                     //reset all printing parameters to defaults
-                    thermalManager.fan_speed = 0;
+                    thermalManager.fan_speed[active_extruder] = 0;
                     feedrate_percentage = 100;
                     current_nominal_speed = 0.0f;
-                    fanSpeedPercent = 100;
                     for(uint8_t e=0; e<EXTRUDERS; e++)
                     {
                         volume_to_filament_length[e] = 1.0;
@@ -635,7 +639,7 @@ void lcd_menu_print_select()
             {
                 lcd_lib_keyclick();
                 lcd_clear_cache();
-                card.chdir(card.filename));
+                card.cd(card.filename);
                 SELECT_SCROLL_MENU_ITEM(0);
             }
             return;//Return so we do not continue after changing the directory or selecting a file. The nrOfFiles is invalid at this point.
@@ -750,7 +754,7 @@ static void lcd_menu_print_printing()
     else
     {
         lcd_question_screen(lcd_menu_print_tune, NULL, PSTR("TUNE"), lcd_menu_print_pause, lcd_select_first_submenu, PSTR("PAUSE"));
-        uint8_t progress = card.getFilePos() / ((card.getFileSize() + 123) / 124);
+        uint8_t progress = card.percentDone();
         char buffer[32] = {0};
         switch(printing_state)
         {
@@ -773,7 +777,7 @@ static void lcd_menu_print_printing()
         }
         float printTimeMs = (millis() - starttime);
         float printTimeSec = printTimeMs / 1000L;
-        float totalTimeMs = float(printTimeMs) * float(card.getFileSize()) / float(card.getFilePos());
+        float totalTimeMs = float(printTimeMs) * float(card.getFileSize()) / float(card.getIndex());
         static float totalTimeSmoothSec;
         totalTimeSmoothSec = (totalTimeSmoothSec * 999L + totalTimeMs / 1000L) / 1000L;
         if (isinf(totalTimeSmoothSec))
