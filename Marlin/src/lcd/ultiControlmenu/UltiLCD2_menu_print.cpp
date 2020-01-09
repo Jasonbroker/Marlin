@@ -36,11 +36,6 @@ static void lcd_menu_print_tune_retraction();
 
 static bool primed = false;
 
-// zzc added
-void clearLongFileName()
-{
-    card.longest_filename = '\0';
-}
 // zzc added end
 
 void lcd_clear_cache()
@@ -84,9 +79,9 @@ void abortPrint(bool bQuickstop)
     if (primed)
     {
         // perform the end-of-print retraction at the standard retract speed
-        plan_set_e_position((end_of_print_retraction / volume_to_filament_length[active_extruder]) - (fwretract.retracted ? fwretract.settings.retract_length : 0), active_extruder, true);
+        planner.set_e_position_mm((end_of_print_retraction / volume_to_filament_length[active_extruder]) - (fwretract.retracted ? fwretract.settings.retract_length : 0), active_extruder, true);
         current_position[E_AXIS] = 0.0f;
-        plan_buffer_line(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS], current_position[E_AXIS], fwretract.settings.retract_feedrate_mm_s/60, active_extruder);
+        planner.buffer_line(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS], current_position[E_AXIS], fwretract.settings.retract_feedrate_mm_s/60, active_extruder);
 
         // no longer primed
         fwretract.retracted = false;
@@ -111,7 +106,7 @@ void abortPrint(bool bQuickstop)
     // finish all moves
     planner.finish_and_disable();
     current_position[E_AXIS] = 0.0f;
-    plan_set_e_position(current_position[E_AXIS], active_extruder, true);
+    planner.set_e_position_mm(current_position[E_AXIS], active_extruder, true);
 
     stoptime=millis();
     //If we where paused, make sure we abort that pause. Else strange things happen: https://github.com/Ultimaker/Ultimaker2Marlin/issues/32
@@ -164,7 +159,7 @@ void doStartPrint()
 
     // zero the extruder position
     current_position[E_AXIS] = 0.0;
-    plan_set_e_position(current_position[E_AXIS], active_extruder, true);
+    planner.set_e_position_mm(current_position[E_AXIS], active_extruder, true);
 
 	// since we are going to prime the nozzle, forget about any G10/G11 retractions that happened at end of previous print
 	retracted = false;
@@ -190,24 +185,24 @@ void doStartPrint()
         {
             // move to priming height
             current_position[Z_AXIS] = priming_z;
-            plan_buffer_line(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS], current_position[E_AXIS], homing_feedrate(Z_AXIS)/60, e);
+            planner.buffer_line(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS], current_position[E_AXIS], homing_feedrate(Z_AXIS)/60, e);
             // note that we have primed, so that we know to de-prime at the end
             primed = true;
         }
         // undo the end-of-print retraction
-        plan_set_e_position((- end_of_print_retraction) / volume_to_filament_length[e], e, true);
-        plan_buffer_line(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS], current_position[E_AXIS], END_OF_PRINT_RECOVERY_SPEED, e);
+        planner.set_e_position_mm((- end_of_print_retraction) / volume_to_filament_length[e], e, true);
+        planner.buffer_line(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS], current_position[E_AXIS], END_OF_PRINT_RECOVERY_SPEED, e);
 
         // perform additional priming
-        plan_set_e_position(-PRIMING_MM3, e, true);
-        plan_buffer_line(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS], current_position[E_AXIS], (PRIMING_MM3_PER_SEC * volume_to_filament_length[e]), e);
+        planner.set_e_position_mm(-PRIMING_MM3, e, true);
+        planner.buffer_line(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS], current_position[E_AXIS], (PRIMING_MM3_PER_SEC * volume_to_filament_length[e]), e);
 
 #if EXTRUDERS > 1
         // for extruders other than the first one, perform end of print retraction
         if (e != active_extruder)
         {
-            plan_set_e_position(extruder_swap_retract_length / volume_to_filament_length[e], e, true);
-            plan_buffer_line(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS], current_position[E_AXIS], retract_feedrate/60, e);
+            planner.set_e_position_mm(extruder_swap_retract_length / volume_to_filament_length[e], e, true);
+            planner.buffer_line(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS], current_position[E_AXIS], retract_feedrate/60, e);
         }
 #endif
     }
@@ -215,8 +210,8 @@ void doStartPrint()
     if (printing_state == PRINT_STATE_START)
     {
         // move to the recover start position
-        plan_set_e_position(recover_position[E_AXIS], active_extruder, true);
-        plan_buffer_line(recover_position[X_AXIS], recover_position[Y_AXIS], recover_position[Z_AXIS], recover_position[E_AXIS], min(homing_feedrate(X_AXIS), homing_feedrate(Z_AXIS)), active_extruder);
+        planner.set_e_position_mm(recover_position[E_AXIS], active_extruder, true);
+        planner.buffer_line(recover_position[X_AXIS], recover_position[Y_AXIS], recover_position[Z_AXIS], recover_position[E_AXIS], min(homing_feedrate(X_AXIS), homing_feedrate(Z_AXIS)), active_extruder);
         for(int8_t i=0; i < NUM_AXIS; i++) {
             current_position[i] = recover_position[i];
         }
@@ -294,7 +289,6 @@ static void lcd_sd_menu_filename_callback(uint8_t nr, uint8_t offsetY, uint8_t f
                 // On a read error reset the file position and try to keep going. (not pretty, but these read errors are annoying as hell)
                 card.getSd2Card().error(0);
                 LCD_CACHE_ID(idx) = 0xFF;
-                clearLongFilename();
             }
         }
         if (flags & MENU_SELECTED)
@@ -317,7 +311,6 @@ static void lcd_sd_menu_filename_callback(uint8_t nr, uint8_t offsetY, uint8_t f
             {
                 // On a read error try to keep going with short file name. (not pretty, but these read errors are annoying as hell)
                 card.getSd2Card().error(0);
-                clearLongFilename();
                 goto far_break;
             }
             idx = nr % LCD_CACHE_REMAIN_COUNT;

@@ -91,7 +91,7 @@ bool MachineSettings::recall(uint8_t index)
     for (int i=0; i<NUM_AXIS; i++)
     {
       planner.settings.max_acceleration_mm_per_s2[i] = settings[index]->max_acceleration_units_per_sq_second[i];
-      planner.settings.max_feedrate[i] = settings[index]->max_feedrate[i];
+      planner.settings.max_feedrate_mm_s[i] = settings[index]->max_feedrate[i];
     }
     planner.settings.acceleration = settings[index]->acceleration;
     planner.settings.min_feedrate_mm_s = settings[index]->minimumfeedrate;
