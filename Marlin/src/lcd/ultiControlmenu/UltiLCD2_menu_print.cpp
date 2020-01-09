@@ -78,7 +78,7 @@ void abortPrint(bool bQuickstop)
     feedrate_percentage = 100;
     for(uint8_t e=0; e<EXTRUDERS; e++)
     {
-        extrudemultiply[e] = 100;
+        planner.flow_percentage[e] = 100;
     }
 
     if (primed)
@@ -565,7 +565,7 @@ void lcd_menu_print_select()
                     for(uint8_t e=0; e<EXTRUDERS; e++)
                     {
                         volume_to_filament_length[e] = 1.0;
-                        extrudemultiply[e] = 100;
+                        planner.flow_percentage[e] = 100;
                         e_smoothed_speed[e] = 0.0f;
                     }
 
@@ -599,7 +599,7 @@ void lcd_menu_print_select()
 #endif
                             thermalManager.fanPercent = max(thermalManager.fanPercent, material[e].fan_speed);
                             volume_to_filament_length[e] = 1.0 / (M_PI * (material[e].diameter / 2.0) * (material[e].diameter / 2.0));
-                            extrudemultiply[e] = material[e].flow;
+                            planner.flow_percentage[e] = material[e].flow;
                         }
 
                         if (printing_state == PRINT_STATE_RECOVER)
@@ -1077,10 +1077,10 @@ static void tune_item_details_callback(uint8_t nr)
     else if (nr == 2 + BED_MENU_OFFSET + EXTRUDERS)
         int_to_string(int(thermalManager.fan_speed[active_extruder]) * 100 / 255, buffer, PSTR("%"));
     else if (nr == 3 + BED_MENU_OFFSET + EXTRUDERS)
-        int_to_string(extrudemultiply[0], buffer, PSTR("%"));
+        int_to_string(planner.flow_percentage[0], buffer, PSTR("%"));
 #if EXTRUDERS > 1
     else if (nr == 4 + BED_MENU_OFFSET + EXTRUDERS)
-        int_to_string(extrudemultiply[1], buffer, PSTR("%"));
+        int_to_string(planner.flow_percentage[1], buffer, PSTR("%"));
 #endif
     else if (nr == 4 + BED_MENU_OFFSET + 2*EXTRUDERS)
     {
@@ -1176,12 +1176,12 @@ void lcd_menu_print_tune()
             LCD_EDIT_SETTING_BYTE_PERCENT(thermalManager.fan_speed[active_extruder], "Fan speed", "%", 0, 100);
 #if EXTRUDERS > 1
         else if (IS_SELECTED_SCROLL(index++))
-            LCD_EDIT_SETTING(extrudemultiply[0], "Material flow 1", "%", 10, 1000);
+            LCD_EDIT_SETTING(planner.flow_percentage[0], "Material flow 1", "%", 10, 1000);
         else if (IS_SELECTED_SCROLL(index++))
-            LCD_EDIT_SETTING(extrudemultiply[1], "Material flow 2", "%", 10, 1000);
+            LCD_EDIT_SETTING(planner.flow_percentage[1], "Material flow 2", "%", 10, 1000);
 #else
         else if (IS_SELECTED_SCROLL(index++))
-            LCD_EDIT_SETTING(extrudemultiply[0], "Material flow", "%", 10, 1000);
+            LCD_EDIT_SETTING(planner.flow_percentage[0], "Material flow", "%", 10, 1000);
 #endif
         else if (IS_SELECTED_SCROLL(index++))
             menu.add_menu(menu_t(lcd_menu_print_tune_retraction, 0));
@@ -1257,7 +1257,7 @@ static void lcd_menu_print_tune_retraction()
 
 void lcd_print_pause()
 {
-    if (!card.isPaused()
+    if (!card.isPaused())
     {
         card.pauseSDPrint();
         primed = false;
