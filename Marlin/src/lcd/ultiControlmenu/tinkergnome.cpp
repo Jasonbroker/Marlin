@@ -31,6 +31,7 @@
 
 unsigned long starttime = 0;
 unsigned long stoptime = 0;
+float volume_to_filament_length[EXTRUDERS];
 uint8_t printing_state = PRINT_STATE_NORMAL;
 
 #define MOVE_DELAY 500  // 500ms

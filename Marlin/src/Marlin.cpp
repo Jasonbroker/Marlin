@@ -56,6 +56,7 @@
 #include "gcode/gcode.h"
 #include "gcode/parser.h"
 #include "gcode/queue.h"
+#include "lcd/ultiControlmenu/UltiLCD2.h"
 
 #if ENABLED(TOUCH_BUTTONS)
   #include "feature/touch/xpt2046.h"
@@ -936,7 +937,9 @@ void setup() {
     leds.setup();
   #endif
 
-  ui.init();
+  // ui.init();
+  lcd_init();
+
   #if HAS_SPI_LCD && ENABLED(SHOW_BOOTSCREEN)
     ui.show_bootscreen();
   #endif
