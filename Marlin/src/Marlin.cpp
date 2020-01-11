@@ -181,6 +181,10 @@
   #include "libs/L6470/L6470_Marlin.h"
 #endif
 
+float add_homeing[3]={0,0,0};
+float min_pos[3] = { X_MIN_POS, Y_MIN_POS, Z_MIN_POS };
+float max_pos[3] = { X_MAX_POS, Y_MAX_POS, Z_MAX_POS };
+
 const char NUL_STR[] PROGMEM = "",
            G28_STR[] PROGMEM = "G28",
            M21_STR[] PROGMEM = "M21",

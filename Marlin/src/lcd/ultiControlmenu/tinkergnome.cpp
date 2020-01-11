@@ -29,6 +29,10 @@
 // #define LED_DONE() lcd_lib_led_color(0, 8+led_glow, 8)
 // #define LED_COOL() lcd_lib_led_color(0, 4, 16+led_glow)
 
+unsigned long starttime = 0;
+unsigned long stoptime = 0;
+uint8_t printing_state = PRINT_STATE_NORMAL;
+
 #define MOVE_DELAY 500  // 500ms
 
 // Use the lcd_cache memory to store manual moving positions
