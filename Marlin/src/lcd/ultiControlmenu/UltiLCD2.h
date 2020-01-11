@@ -35,4 +35,27 @@ extern float dsp_temperature_bed;
 
 #endif
 
+class MarlinUI {
+    public:
+    FORCE_INLINE static void init() {lcd_init();};
+    void set_status(const char* message, const bool=false);
+    static void set_status_P(PGM_P const message, const int8_t level=0);
+    static void reset_status();
+    static void refresh();
+    void MarlinUI::update();
+    void MarlinUI::update_buttons();
+
+    static inline void set_alert_status_P(PGM_P const) {}
+
+    static inline void reset_alert_level() {}  // 999
+
+
+    // just for adaput for marlin2
+    static constexpr bool wait_for_bl_move = false;
+    static constexpr bool has_status() { return false; }
+    void status_printf_P(const uint8_t, PGM_P message, ...);
+}; 
+
+extern MarlinUI ui;
+
 #endif//ULTI_LCD2_H

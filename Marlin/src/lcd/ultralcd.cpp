@@ -31,7 +31,11 @@
 #endif
 
 #include "ultralcd.h"
+
+#ifndef ENABLE_ULTILCD2
 MarlinUI ui;
+#endif
+
 
 // All displays share the MarlinUI class
 #if HAS_DISPLAY
@@ -1581,6 +1585,7 @@ void MarlinUI::update() {
   // Send the status line as a host notification
   //
 
+#ifndef ENABLE_ULTILCD2
   void MarlinUI::set_status(const char * const message, const bool) {
     #if ENABLED(HOST_PROMPT_SUPPORT)
       host_action_notify(message);
@@ -1604,5 +1609,6 @@ void MarlinUI::update() {
       UNUSED(message);
     #endif
   }
+  #endif
 
 #endif // !HAS_DISPLAY

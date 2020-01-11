@@ -299,4 +299,50 @@ const char * lcd_getstatus()
     return lcd_status_message;
 }
 
+// Marlin 2.0
+
+void MarlinUI::status_printf_P(const uint8_t, PGM_P const message, ...) {
+#if ENABLED(HOST_PROMPT_SUPPORT)
+    host_action_notify(message);
+#else
+    UNUSED(message);
+#endif
+}
+
+void MarlinUI::set_status(const char * const message, const bool) {
+#if ENABLED(HOST_PROMPT_SUPPORT)
+    host_action_notify(message);
+#else
+    UNUSED(message);
+#endif
+}
+
+void MarlinUI::set_status_P(PGM_P message, const int8_t) {
+#if ENABLED(HOST_PROMPT_SUPPORT)
+    host_action_notify(message);
+#else
+    UNUSED(message);
+#endif
+}
+
+void MarlinUI::reset_status() {
+
+}
+
+void MarlinUI::update() {
+    lcd_update();
+}
+
+
+void MarlinUI::update_buttons() {
+
+}
+
+void MarlinUI::refresh() {
+
+}
+
+
+MarlinUI ui;
+
 #endif//ENABLE_ULTILCD2

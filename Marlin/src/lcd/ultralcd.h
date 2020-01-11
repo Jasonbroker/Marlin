@@ -245,7 +245,7 @@
 ////////////////////////////////////////////
 //////////// MarlinUI Singleton ////////////
 ////////////////////////////////////////////
-
+#ifndef ENABLE_ULTILCD2
 class MarlinUI {
 public:
 
@@ -623,6 +623,13 @@ private:
 };
 
 extern MarlinUI ui;
+
+#else
+
+#include "ultiControlmenu/UltiLCD2.h"
+
+#endif
+
 
 #define LCD_MESSAGEPGM_P(x)      ui.set_status_P(x)
 #define LCD_ALERTMESSAGEPGM_P(x) ui.set_alert_status_P(x)

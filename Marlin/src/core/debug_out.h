@@ -26,29 +26,33 @@
 //  (or not) in a given .cpp file
 //
 
-#undef DEBUG_PRINT_P
-#undef DEBUG_ECHO_START
-#undef DEBUG_ERROR_START
-#undef DEBUG_CHAR
-#undef DEBUG_ECHO
-#undef DEBUG_ECHO_F
-#undef DEBUG_ECHOLN
-#undef DEBUG_ECHOPGM
-#undef DEBUG_ECHOLNPGM
-#undef DEBUG_ECHOPAIR
-#undef DEBUG_ECHOPAIR_P
-#undef DEBUG_ECHOPAIR_F
-#undef DEBUG_ECHOPAIR_F_P
-#undef DEBUG_ECHOLNPAIR
-#undef DEBUG_ECHOLNPAIR_P
-#undef DEBUG_ECHOLNPAIR_F
-#undef DEBUG_ECHOLNPAIR_F_P
-#undef DEBUG_ECHO_MSG
-#undef DEBUG_ERROR_MSG
-#undef DEBUG_EOL
-#undef DEBUG_POS
-#undef DEBUG_XYZ
-#undef DEBUG_DELAY
+// #undef DEBUG_PRINT_P
+// #undef DEBUG_ECHO_START
+// #undef DEBUG_ERROR_START
+// #undef DEBUG_CHAR
+// #undef DEBUG_ECHO
+// #undef DEBUG_ECHO_F
+// #undef DEBUG_ECHOLN
+// #undef DEBUG_ECHOPGM
+// #undef DEBUG_ECHOLNPGM
+// #undef DEBUG_ECHOPAIR
+// #undef DEBUG_ECHOPAIR_P
+// #undef DEBUG_ECHOPAIR_F
+// #undef DEBUG_ECHOPAIR_F_P
+// #undef DEBUG_ECHOLNPAIR
+// #undef DEBUG_ECHOLNPAIR_P
+// #undef DEBUG_ECHOLNPAIR_F
+// #undef DEBUG_ECHOLNPAIR_F_P
+// #undef DEBUG_ECHO_MSG
+// #undef DEBUG_ERROR_MSG
+// #undef DEBUG_EOL
+// #undef DEBUG_POS
+// #undef DEBUG_XYZ
+// #undef DEBUG_DELAY
+
+#include "../module/motion.h"
+
+#define DEBUG_OUT 1
 
 #if DEBUG_OUT
   #define DEBUG_PRINT_P(P)        serialprintPGM(P)

@@ -937,8 +937,7 @@ void setup() {
     leds.setup();
   #endif
 
-  // ui.init();
-  lcd_init();
+  ui.init();
 
   #if HAS_SPI_LCD && ENABLED(SHOW_BOOTSCREEN)
     ui.show_bootscreen();
