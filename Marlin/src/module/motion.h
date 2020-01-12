@@ -119,9 +119,15 @@ FORCE_INLINE signed char pgm_read_any(const signed char *p) { return pgm_read_by
   FORCE_INLINE T NAME(AxisEnum axis) { return pgm_read_any(&NAME##_P[axis]); }
 
 XYZ_DEFS(float, base_min_pos,   MIN_POS);
+#ifdef ULTI_CONTROLLER
+float base_max_pos(AxisEnum axis);
+float base_home_pos(AxisEnum axis);
+float max_length(AxisEnum axis);
+#else
 XYZ_DEFS(float, base_max_pos,   MAX_POS);
 XYZ_DEFS(float, base_home_pos,  HOME_POS);
 XYZ_DEFS(float, max_length,     MAX_LENGTH);
+#endif
 XYZ_DEFS(float, home_bump_mm,   HOME_BUMP_MM);
 XYZ_DEFS(signed char, home_dir, HOME_DIR);
 
@@ -249,6 +255,7 @@ void homeaxis(const AxisEnum axis);
 #if HAS_HOME_OFFSET || HAS_POSITION_SHIFT
   #if HAS_HOME_OFFSET
     extern xyz_pos_t home_offset;
+    extern xyz_pos_t ultimaker_home_offset;
   #endif
   #if HAS_POSITION_SHIFT
     extern xyz_pos_t position_shift;

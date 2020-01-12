@@ -73,9 +73,20 @@
 #define XYZ_CONSTS(T, NAME, OPT) const PROGMEM XYZval<T> NAME##_P = { X_##OPT, Y_##OPT, Z_##OPT }
 
 XYZ_CONSTS(float, base_min_pos,   MIN_POS);
+
+#ifdef ULTI_CONTROLLER
+xyz_pos_t ultimaker_home_offset{0};
+XYZval<float> base_max_pos_P = { X_MAX_POS, Y_MAX_POS, Z_MAX_POS };
+XYZval<float> base_home_pos_P = { X_HOME_POS, Y_HOME_POS, Z_HOME_POS };
+XYZval<float> max_length_P = { X_MAX_LENGTH, Y_MAX_LENGTH, Z_MAX_LENGTH };
+float base_max_pos(AxisEnum axis) { return base_max_pos_P[axis] + ultimaker_home_offset[axis]; };
+float base_home_pos(AxisEnum axis) { return base_max_pos_P[axis] + ultimaker_home_offset[axis];; };
+float max_length(AxisEnum axis) { return max_length_P[axis] + ultimaker_home_offset[axis]; };
+#else
 XYZ_CONSTS(float, base_max_pos,   MAX_POS);
 XYZ_CONSTS(float, base_home_pos,  HOME_POS);
 XYZ_CONSTS(float, max_length,     MAX_LENGTH);
+#endif
 XYZ_CONSTS(float, home_bump_mm,   HOME_BUMP_MM);
 XYZ_CONSTS(signed char, home_dir, HOME_DIR);
 
@@ -1721,7 +1732,11 @@ void homeaxis(const AxisEnum axis) {
    * Also refreshes the workspace offset.
    */
   void set_home_offset(const AxisEnum axis, const float v) {
-    home_offset[axis] = v;
+    #ifdef ULTI_CONTROLLER
+      ultimaker_home_offset[axis] = v;
+    #else
+      home_offset[axis] = v;
+    #endif
     update_workspace_offset(axis);
   }
 #endif // HAS_M206_COMMAND

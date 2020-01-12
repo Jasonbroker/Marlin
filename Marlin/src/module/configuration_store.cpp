@@ -545,7 +545,7 @@ void MarlinSettings::postprocess() {
     // Home Offset
     //
     {
-      _FIELD_TEST(home_offset);
+      _FIELD_TEST(ultimaker_home_offset);
 
       #if HAS_SCARA_OFFSET
         EEPROM_WRITE(scara_home_offset);
@@ -553,7 +553,7 @@ void MarlinSettings::postprocess() {
         #if !HAS_HOME_OFFSET
           const xyz_pos_t home_offset{0};
         #endif
-        EEPROM_WRITE(home_offset);
+        EEPROM_WRITE(ultimaker_home_offset);
       #endif
 
       #if HAS_HOTEND_OFFSET
@@ -1355,15 +1355,15 @@ void MarlinSettings::postprocess() {
       // Home Offset (M206 / M665)
       //
       {
-        _FIELD_TEST(home_offset);
+        _FIELD_TEST(ultimaker_home_offset);
 
         #if HAS_SCARA_OFFSET
           EEPROM_READ(scara_home_offset);
         #else
           #if !HAS_HOME_OFFSET
-            xyz_pos_t home_offset;
+            xyz_pos_t ultimaker_home_offset;
           #endif
-          EEPROM_READ(home_offset);
+          EEPROM_READ(ultimaker_home_offset);
         #endif
       }
 
@@ -2282,6 +2282,7 @@ void MarlinSettings::reset() {
     scara_home_offset.reset();
   #elif HAS_HOME_OFFSET
     home_offset.reset();
+    ultimaker_home_offset.reset();
   #endif
 
   #if HAS_HOTEND_OFFSET
@@ -2817,13 +2818,13 @@ void MarlinSettings::reset() {
       CONFIG_ECHO_START();
       SERIAL_ECHOLNPAIR_P(
         #if IS_CARTESIAN
-            PSTR("  M206 X"), LINEAR_UNIT(home_offset.x)
-          , SP_Y_STR, LINEAR_UNIT(home_offset.y)
+            PSTR("  M206 X"), LINEAR_UNIT(ultimaker_home_offset.x)
+          , SP_Y_STR, LINEAR_UNIT(ultimaker_home_offset.y)
           , SP_Z_STR
         #else
           PSTR("  M206 Z")
         #endif
-        , LINEAR_UNIT(home_offset.z)
+        , LINEAR_UNIT(ultimaker_home_offset.z)
       );
     #endif
 
