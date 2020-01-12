@@ -80,7 +80,7 @@ XYZval<float> base_max_pos_P = { X_MAX_POS, Y_MAX_POS, Z_MAX_POS };
 XYZval<float> base_home_pos_P = { X_HOME_POS, Y_HOME_POS, Z_HOME_POS };
 XYZval<float> max_length_P = { X_MAX_LENGTH, Y_MAX_LENGTH, Z_MAX_LENGTH };
 float base_max_pos(AxisEnum axis) { return base_max_pos_P[axis] + ultimaker_home_offset[axis]; };
-float base_home_pos(AxisEnum axis) { return base_max_pos_P[axis] + ultimaker_home_offset[axis];; };
+float base_home_pos(AxisEnum axis) { return base_home_pos_P[axis] + ultimaker_home_offset[axis];; };
 float max_length(AxisEnum axis) { return max_length_P[axis] + ultimaker_home_offset[axis]; };
 #else
 XYZ_CONSTS(float, base_max_pos,   MAX_POS);
