@@ -31,6 +31,7 @@
 
 #include "Marlin.h"
 #include "ultralcd.h"
+#include "lifetime_stats.h"
 #include "UltiLCD2.h"
 #include "temperature.h"
 #include "watchdog.h"
@@ -133,7 +134,7 @@ static int maxttemp[EXTRUDERS] = ARRAY_BY_EXTRUDERS( 16383, 16383, 16383 );
 static void min_temp_error(uint8_t e);
 static void max_temp_error(uint8_t e);
 
-#ifdef BED_MAXTEMP
+#if (TEMP_SENSOR_BED != 0) && defined(BED_MAXTEMP)
 static int bed_maxttemp_raw = HEATER_BED_RAW_HI_TEMP;
 #endif
 
@@ -337,6 +338,7 @@ void PID_autotune(float temp, int extruder, int ncycles, autotuneFunc_t pCallbac
       return;
     }
     lcd_update();
+    lifetime_stats_tick();
     if (pCallback)
     {
         if (!pCallback(0, cycles, Kp, Ki, Kd))
@@ -667,7 +669,10 @@ void manage_heater()
   if (!pidTempBed())
   {
     if(millis() - previous_millis_bed_heater < BED_CHECK_INTERVAL)
+    {
+      soft_pwm_bed = soft_pwm_bed ? limit_power(power_buildplate, MAX_BED_POWER>>1, budget) : 0;
       return;
+    }
     previous_millis_bed_heater = millis();
   }
 
@@ -1019,7 +1024,7 @@ void tp_init()
   }
 #endif //MAXTEMP 2
 
-#ifdef BED_MINTEMP
+#if (TEMP_SENSOR_BED != 0) && defined(BED_MINTEMP)
   /* No bed MINTEMP error implemented?!? */ /*
   while(analog2tempBed(bed_minttemp_raw) < BED_MINTEMP) {
 #if HEATER_BED_RAW_LO_TEMP < HEATER_BED_RAW_HI_TEMP
@@ -1030,7 +1035,7 @@ void tp_init()
   }
   */
 #endif //BED_MINTEMP
-#ifdef BED_MAXTEMP
+#if (TEMP_SENSOR_BED != 0) && defined(BED_MAXTEMP)
   while(analog2tempBed(bed_maxttemp_raw) > BED_MAXTEMP) {
 #if HEATER_BED_RAW_LO_TEMP < HEATER_BED_RAW_HI_TEMP
     bed_maxttemp_raw -= OVERSAMPLENR;

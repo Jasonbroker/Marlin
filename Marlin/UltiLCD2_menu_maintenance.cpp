@@ -9,6 +9,7 @@
 #include "UltiLCD2_menu_utils.h"
 #include "UltiLCD2_menu_prefs.h"
 #include "cardreader.h"
+#include "lifetime_stats.h"
 #include "ConfigurationStore.h"
 #include "machinesettings.h"
 #include "temperature.h"
@@ -164,6 +165,10 @@ static void lcd_preferences_item(uint8_t nr, uint8_t offsetY, uint8_t flags)
         strcpy_P(buffer, PSTR("Print area"));
     else if (nr == index++)
         strcpy_P(buffer, PSTR("Power budget"));
+    else if (nr == index++)
+        strcpy_P(buffer, PSTR("Version"));
+    else if (nr == index++)
+        strcpy_P(buffer, PSTR("Runtime stats"));
     else if (nr == index++)
         strcpy_P(buffer, PSTR("Factory reset"));
     else
@@ -501,7 +506,7 @@ void lcd_menu_maintenance_advanced_bed_heatup()
 
 static void lcd_menu_advanced_version()
 {
-    lcd_info_screen(NULL, lcd_change_to_previous_menu, PSTR("Return"));
+    lcd_info_screen(NULL, lcd_change_to_previous_menu, PSTR("RETURN"));
     lcd_lib_draw_string_centerP(30, PSTR(STRING_VERSION_CONFIG_H));
     lcd_lib_draw_string_centerP(40, PSTR(STRING_CONFIG_H_AUTHOR));
     lcd_lib_update_screen();
@@ -509,6 +514,24 @@ static void lcd_menu_advanced_version()
 
 static void lcd_menu_advanced_stats()
 {
+    lcd_info_screen(NULL, lcd_change_to_previous_menu, PSTR("RETURN"));
+    lcd_lib_draw_string_centerP(10, PSTR("Machine on for:"));
+    char buffer[24] = {0};
+    char* c = int_to_string(lifetime_minutes / 60, buffer, PSTR(":"));
+    if (lifetime_minutes % 60 < 10)
+        *c++ = '0';
+    c = int_to_string(lifetime_minutes % 60, c);
+    lcd_lib_draw_string_center(20, buffer);
+
+    lcd_lib_draw_string_centerP(30, PSTR("Printing:"));
+    c = int_to_string(lifetime_print_minutes / 60, buffer, PSTR(":"));
+    if (lifetime_print_minutes % 60 < 10)
+        *c++ = '0';
+    c = int_to_string(lifetime_print_minutes % 60, c);
+    strcpy_P(c, PSTR(" Mat:"));
+    c += 5;
+    c = int_to_string(lifetime_print_centimeters / 100, c, PSTR("m"));
+    lcd_lib_draw_string_center(40, buffer);
     lcd_lib_update_screen();
 }
 
@@ -631,8 +654,8 @@ static void lcd_led_details(uint8_t nr)
 
 static void init_maintenance_led()
 {
-    lcd_cache[0] = led_mode;
-    lcd_cache[1] = led_brightness_level;
+    cache._byte[0] = led_mode;
+    cache._byte[1] = led_brightness_level;
 }
 
 static void lcd_menu_maintenance_led()
@@ -645,7 +668,7 @@ static void lcd_menu_maintenance_led()
         {
             if (led_mode != LED_MODE_ALWAYS_ON)
                 analogWrite(LED_PIN, 0);
-            if ((led_mode != lcd_cache[0]) || (led_brightness_level != lcd_cache[1]))
+            if ((led_mode != cache._byte[0]) || (led_brightness_level != cache._byte[1]))
                 Config_StoreSettings();
             menu.return_to_previous();
         }
@@ -680,7 +703,7 @@ static void lcd_menu_maintenance_led()
 
 static void lcd_uimode_item(uint8_t nr, uint8_t offsetY, uint8_t flags)
 {
-    char buffer[20] = {' '};
+    char buffer[LINE_ENTRY_TEXT_LENGTH] = {' '};
 
     if (nr == 0)
     {
@@ -712,7 +735,7 @@ static void lcd_uimode_item(uint8_t nr, uint8_t offsetY, uint8_t flags)
 
 static void lcd_clicksound_item(uint8_t nr, uint8_t offsetY, uint8_t flags)
 {
-    char buffer[20] = {' '};
+    char buffer[LINE_ENTRY_TEXT_LENGTH] = {' '};
     if (nr == 0)
     {
         strcpy_P(buffer, PSTR("< RETURN"));
@@ -751,7 +774,7 @@ static void lcd_clicksound_item(uint8_t nr, uint8_t offsetY, uint8_t flags)
 
 static void lcd_scrollentry_item(uint8_t nr, uint8_t offsetY, uint8_t flags)
 {
-    char buffer[20] = {' '};
+    char buffer[LINE_ENTRY_TEXT_LENGTH] = {' '};
 
     if (nr == 0)
     {

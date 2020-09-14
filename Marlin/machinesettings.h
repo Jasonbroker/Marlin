@@ -21,7 +21,7 @@ class MachineSettings {
     // recall settings
     bool recall(uint8_t index);
 
-	bool has_saved_settings(uint8_t index) const { return (index < MAX_MACHINE_SETTINGS) ? !!settings[index] : false; }
+	bool has_saved_settings(uint8_t index) const { return (index < MAX_MACHINE_SETTINGS) ? settings[index] : false; }
 
   private:
     // the structure of each setting

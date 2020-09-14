@@ -1,7 +1,6 @@
 #ifndef ULTILCD2_GFX_H
 #define ULTILCD2_GFX_H
 
-// gfx 一些样式定义
 extern const uint8_t ultimakerTextGfx[] PROGMEM;
 // extern const uint8_t ultimakerTextOutlineGfx[] PROGMEM;
 // extern const uint8_t ultimakerRobotGfx[] PROGMEM;
@@ -32,6 +31,7 @@ extern const uint8_t fan1Gfx[] PROGMEM;
 extern const uint8_t retractSpeedGfx[] PROGMEM;
 extern const uint8_t retractLenGfx[] PROGMEM;
 extern const uint8_t revSpeedGfx[] PROGMEM;
+extern const uint8_t fwdSpeedGfx[] PROGMEM;
 extern const uint8_t homeGfx[] PROGMEM;
 extern const uint8_t contrastGfx[] PROGMEM;
 extern const uint8_t brightnessGfx[] PROGMEM;

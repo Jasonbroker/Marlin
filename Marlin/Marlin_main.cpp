@@ -38,6 +38,7 @@
 #include "cardreader.h"
 #include "watchdog.h"
 #include "ConfigurationStore.h"
+#include "lifetime_stats.h"
 #include "electronics_test.h"
 #include "language.h"
 #include "pins_arduino.h"
@@ -171,7 +172,7 @@ float homing_feedrate[] = HOMING_FEEDRATE;
 int feedmultiply=100; //100->1 200->2
 int extrudemultiply[EXTRUDERS]=ARRAY_BY_EXTRUDERS(100, 100, 100); //100->1 200->2
 float current_position[NUM_AXIS] = { 0.0, 0.0, 0.0, 0.0 };
-float add_homeing[3]={0,0,0};
+float add_homing[3]={0,0,0};
 float min_pos[3] = { X_MIN_POS, Y_MIN_POS, Z_MIN_POS };
 float max_pos[3] = { X_MAX_POS, Y_MAX_POS, Z_MAX_POS };
 // Extruder offset, only in XY plane
@@ -243,9 +244,6 @@ static bool comment_mode = false;
 static char *strchr_pointer = 0; // just a pointer to find chars in the cmd string like X, Y, Z, E, etc
 
 const int sensitive_pins[] = SENSITIVE_PINS; // Sensitive pin list for M42
-
-//static float tt = 0;
-//static float bt = 0;
 
 //Inactivity shutdown variables
 static unsigned long previous_millis_cmd = 0;
@@ -545,6 +543,7 @@ void setup()
   // loads data from EEPROM if available else uses defaults (and resets step acceleration rate)
   Config_RetrieveSettings();
   PowerBudget_RetrieveSettings();
+  lifetime_stats_init();
   tp_init();    // Initialize temperature loop
   plan_init();  // Initialize planner;
   filament_sensor_init(); // Initialize filament sensor
@@ -604,11 +603,15 @@ static bool code_seen(const char *cmd, char code)
  * Copy a command directly into the main command buffer, from RAM.
  * Returns true if successfully adds the command
  */
-static bool insertcommand(const char* cmd, bool isSerialCmd) {
-  if (*cmd == ';' || buflen >= BUFSIZE) return false;
-  strcpy(cmdbuffer[bufindw], cmd);
-  commit_command(isSerialCmd);
-  return true;
+static bool insertcommand(const char* cmd, bool isSerialCmd)
+{
+    if (*cmd == ';' || buflen >= BUFSIZE)
+    {
+        return false;
+    }
+    strcpy(cmdbuffer[bufindw], cmd);
+    commit_command(isSerialCmd);
+    return true;
 }
 
 static void gcode_line_error(const char* err, bool doFlush) {
@@ -904,15 +907,15 @@ static void axis_is_at_home(int axis)
         }
     }
 
-    current_position[axis] = baseHomePos + add_homeing[axis];
+    current_position[axis] = baseHomePos + add_homing[axis];
 #if (EXTRUDERS > 1)
     if (axis <= Y_AXIS)
     {
         current_position[axis] += extruder_offset[axis][active_extruder];
     }
 #endif
-    // min_pos[axis] =          base_min_pos(axis);// + add_homeing[axis];
-    // max_pos[axis] =          base_max_pos(axis);// + add_homeing[axis];
+    // min_pos[axis] =          base_min_pos(axis);// + add_homing[axis];
+    // max_pos[axis] =          base_max_pos(axis);// + add_homing[axis];
 }
 
 // Move the given axis to the home position.
@@ -1378,19 +1381,19 @@ void process_command(const char *strCmd, bool sendAck)
           if(code_seen(strCmd, axis_codes[X_AXIS]))
           {
             if(code_value_long() != 0) {
-              current_position[X_AXIS]=code_value()+add_homeing[X_AXIS];
+              current_position[X_AXIS]=code_value()+add_homing[X_AXIS];
             }
           }
 
           if(code_seen(strCmd, axis_codes[Y_AXIS])) {
             if(code_value_long() != 0) {
-              current_position[Y_AXIS]=code_value()+add_homeing[Y_AXIS];
+              current_position[Y_AXIS]=code_value()+add_homing[Y_AXIS];
             }
           }
 
           if(code_seen(strCmd, axis_codes[Z_AXIS])) {
             if(code_value_long() != 0) {
-              current_position[Z_AXIS]=code_value()+add_homeing[Z_AXIS];
+              current_position[Z_AXIS]=code_value()+add_homing[Z_AXIS];
             }
           }
           plan_set_position(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS], current_position[E_AXIS], active_extruder, true);
@@ -1434,7 +1437,7 @@ void process_command(const char *strCmd, bool sendAck)
       printing_state = PRINT_STATE_WAIT_USER;
       LCD_MESSAGEPGM(MSG_USERWAIT);
 
-//      serial_action_P(PSTR("pause"));
+      serial_action_P(PSTR("paused"));
 
       codenum = 0;
       if(code_seen(strCmd, 'P')) codenum = code_value(); // milliseconds to wait
@@ -1456,7 +1459,7 @@ void process_command(const char *strCmd, bool sendAck)
           idle();
         }
       }
-//      serial_action_P(PSTR("resume"));
+      serial_action_P(PSTR("resumed"));
       LCD_MESSAGEPGM(MSG_RESUMING);
     }
     break;
@@ -1468,14 +1471,14 @@ void process_command(const char *strCmd, bool sendAck)
         if (printing_state == PRINT_STATE_RECOVER)
           break;
 
-//        serial_action_P(PSTR("pause"));
         card.pauseSDPrint();
+        serial_action_P(PSTR("paused"));
         while(card.pause())
         {
           idle();
         }
         plan_set_e_position(current_position[E_AXIS], active_extruder, true);
-//        serial_action_P(PSTR("resume"));
+        serial_action_P(PSTR("resumed"));
     }
     break;
 #endif
@@ -1765,7 +1768,7 @@ void process_command(const char *strCmd, bool sendAck)
         }
         #endif // EXTRUDERS
 
-        while(current_temperature_bed < target_temperature_bed - TEMP_WINDOW)
+        while(current_temperature_bed < degTargetBed() - TEMP_WINDOW)
         {
           m = millis();
           if((m - codenum) > 1000 ) //Print Temp Reading every 1 second while heating up.
@@ -2109,9 +2112,12 @@ void process_command(const char *strCmd, bool sendAck)
     }
     break;
     case 206: // M206 additional homing offset
-      for(int8_t i=0; i < 3; i++)
+      for(uint8_t i=0; i < 3; ++i)
       {
-        if(code_seen(strCmd, axis_codes[i])) add_homeing[i] = code_value();
+        if(code_seen(strCmd, axis_codes[i]))
+        {
+          add_homing[i] = code_value();
+        }
       }
       break;
     #ifdef FWRETRACT
@@ -2198,7 +2204,7 @@ void process_command(const char *strCmd, bool sendAck)
     {
       if(code_seen(strCmd, 'S'))
       {
-        extrudemultiply[active_extruder] = code_value() ;
+        extrudemultiply[active_extruder] = code_value();
       }
     }
     break;
@@ -2404,8 +2410,8 @@ void process_command(const char *strCmd, bool sendAck)
         if (printing_state == PRINT_STATE_RECOVER)
           break;
 
-        float target[4];
-        float lastpos[4];
+        float target[NUM_AXIS];
+        float lastpos[NUM_AXIS];
         target[X_AXIS]=current_position[X_AXIS];
         target[Y_AXIS]=current_position[Y_AXIS];
         target[Z_AXIS]=current_position[Z_AXIS];
@@ -2534,8 +2540,8 @@ void process_command(const char *strCmd, bool sendAck)
         if (printing_state == PRINT_STATE_RECOVER)
           break;
 
-//        serial_action_P(PSTR("pause"));
         card.pauseSDPrint();
+        serial_action_P(PSTR("paused"));
 
         st_synchronize();
         float target[NUM_AXIS];
@@ -2632,7 +2638,7 @@ void process_command(const char *strCmd, bool sendAck)
           memcpy(current_position, target, sizeof(current_position));
           memcpy(destination, current_position, sizeof(destination));
         }
-        serial_action_P(PSTR("resume"));
+        serial_action_P(PSTR("resumed"));
     }
     break;
 
@@ -2973,7 +2979,7 @@ static void get_coordinates(const char *cmd)
             {
                 if(!retracted)
                 {
-                    destination[Z_AXIS]+=retract_zlift; //not sure why chaninging current_position negatively does not work.
+                    destination[Z_AXIS]+=retract_zlift; //not sure why changing current_position negatively does not work.
                     //if slicer retracted by echange=-1mm and you want to retract 3mm, corrrectede=-2mm additionally
                     float correctede=-echange-retract_length;
                     //to generate the additional steps, not the destination is changed, but inversely the current position
@@ -3094,7 +3100,7 @@ static void prepare_move(const char *cmd)
     calculate_delta(destination);
     if (card.sdprinting && (printing_state == PRINT_STATE_RECOVER) && (destination[Z_AXIS] >= recover_height-0.01f))
     {
-      recover_start_print();
+      recover_start_print(cmd);
     }
     else if (printing_state != PRINT_STATE_RECOVER)
     {
@@ -3197,20 +3203,23 @@ void idle()
     manage_inactivity();
 
     lcd_update();
+    lifetime_stats_tick();
 
     // detect serial communication
     if (commands_queued() && serialCmd)
     {
-      sleep_state |= SLEEP_SERIAL_CMD;
-      lastSerialCommandTime = millis();
+        sleep_state |= SLEEP_SERIAL_CMD;
+        lastSerialCommandTime = millis();
     }
     else if ((lastSerialCommandTime>0) && ((millis() - lastSerialCommandTime) < SERIAL_CONTROL_TIMEOUT))
     {
         sleep_state |= SLEEP_SERIAL_CMD;
     }
-    else
+    else if (HAS_SERIAL_CMD)
     {
-      sleep_state &= ~SLEEP_SERIAL_CMD;
+        // reset printing state
+        sleep_state &= ~SLEEP_SERIAL_CMD;
+        printing_state = PRINT_STATE_NORMAL;
     }
 }
 
