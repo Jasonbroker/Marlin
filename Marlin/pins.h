@@ -1153,6 +1153,7 @@
 
 #endif
 
+// motherboard which we currently use
 #if MOTHERBOARD == 72
 #define KNOWN_BOARD
 /*****************************************************************
@@ -1210,7 +1211,7 @@
 #define SDSS                        53  // PB0 (?)
 #define MAX6675_SS                  13  // A13 or D13 (?) => PK5 or PB7
 #define LED_PIN                     8   // PH5
-#define FAN_PIN                     7   // PH4
+#define FAN_PIN                     7   // PH4 double 24 volt fan
 #define PS_ON_PIN                   24  // PA2 (?)
 #define KILL_PIN                    -1
 #define SUICIDE_PIN                 -1  // PIN that has to be turned on right after start, to keep power flowing.

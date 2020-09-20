@@ -505,6 +505,7 @@ void servo_init()
   #endif
 }
 
+// main entry for arduino
 void setup()
 {
   setup_killpin();
@@ -3219,7 +3220,7 @@ static void manage_inactivity()
   checkFilamentSensor();
   manage_led_timeout();
 
-  unsigned long m=millis();
+  unsigned long m = millis();
 
   if(printing_state == PRINT_STATE_RECOVER)
     previous_millis_cmd=m;
