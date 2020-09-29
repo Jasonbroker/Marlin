@@ -45,6 +45,7 @@
 
 #include "WString.h"
 
+// MYSERIAL is the serial marlin use
 #ifdef AT90USB
   #define MYSERIAL Serial
 #else
